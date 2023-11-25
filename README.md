@@ -2,39 +2,18 @@
 
 ## Grammer
 ```
-PROGRAM -> FUNCTION PROGRAM | ㅅ
+FunctionDecl = Type identifier "(" ParameterList ")" Block
+ParameterList = ParameterDecl { "," ParameterDecl }
+ParameterDecl = Type identifier
+Type = "int" | "void"
+Block = "{" StatementList "}"
+StatementList = { Statement ";" }
 
-FUNCTION -> TYPE IDENTIFIER ( ARGS_TYPE ) { STATEMENTS }
-
-ARGS_TYPE -> ARG_TYPE , ARGS_TYPE | ㅅ
-ARG_TYPE -> int IDENTIFIER
-
-ARGS -> ARG , ARGS | ㅅ
-ARG -> IDENTIFIER | NUMBER
-
-STATEMENTS -> STATEMENT STATEMENTS | ㅅ
-
-DECLAREMENT ->
-  int IDENTIFIER = NUMBER;
-
-STATEMENT ->
-  IDENTIFIER = EXPRESSION
-
-EXPRESSION ->
-  IDENTIFIER ( ARGS ) |
-  EXPRESSION + EXPRESSION' |
-  EXPRESSION - EXPRESSION' |
-  EXPRESSION'
-
-EXPRESSION' ->
-  EXPRESSION' * EXPRESSION' |
-  EXPRESSION' / EXPRESSION' |
-  EXPRESSION''
-
-EXPRESSION'' -> ( EXPRESSION )
-
-RETURN_TYPE -> int | void
-
-IDENTIFIER -> `C like identifier`
-NUMBER -> `literal decimal number`
+Statement =
+  Declaration |
+  SimpleStmt |
+  IfStmt |
+  WhileStmt
 ```
+> Reference: https://go.dev/ref/spec#SimpleStmt
+> Reference: https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.html
