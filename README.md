@@ -6,17 +6,17 @@
 
 ### Token
 ```
-identifier = letter { letter | unicode_digit } .
+identifier = letter { letter | unicode_digit }
 
-int_lit        = "0" | ( "1" … "9" ) .
-string_lit             = `"` { unicode_value | byte_value } `"` .
+int_lit        = "0" | ( "1" … "9" )
+string_lit             = `"` { unicode_value | byte_value } `"`
 
-log_op  = "||" | "&&" .
-rel_op     = "==" | "!=" | "<" | "<=" | ">" | ">=" .
-add_op     = "+" | "-" | "|" | "^" .
-mul_op     = "*" | "/" | "%" | "<<" | ">>" | "&" .
+log_op  = "||" | "&&"
+rel_op     = "==" | "!=" | "<" | "<=" | ">" | ">="
+add_op     = "+" | "-" | "|" | "^"
+mul_op     = "*" | "/" | "%" | "<<" | ">>" | "&"
 
-unary_op   = "+" | "-" | "!" | "~" | "*" | "&" .
+unary_op   = "+" | "-" | "!" | "~" | "*" | "&"
 
 pointer = "*"
 
@@ -28,73 +28,84 @@ lbracket = "["
 rbracket = "]"
 semicolon = ";"
 comma = ","
-assign_op = "=" .
+assign_op = "="
 
 if = "if"
 while = "while"
 return = "return"
 break = "break"
 continue = "continue"
+
+int = "int"
+void = "void"
 ```
 ### CFG
 ```
-Type      = TypeName | TypeLit | lparen Type rparen .
-TypeName  = identifier  .
-TypeLit   = ArrayType | PointerType .
+Program' -> Program
+Program -> FunctionDecl Program
+Program -> ''
 
-ArrayType   = Type lbracket int_list rbracket .
+Type -> int
+Type -> void
+Type -> ArrayType
+Type -> PointerType
 
-PointerType = pointer BaseType .
-BaseType    = Type .
+ArrayType -> Type lbracket int_lit rbracket
+PointerType -> Type pointer
 
-Block = lbrace StatementList rbrace .
-StatementList = { Statement semicolon } .
+Block -> lbrace StatementList rbrace
+StatementList -> Statement semicolon StatementList
+StatementList -> ''
 
-Declaration   = VarDecl .
-TopLevelDecl  = FunctionDecl .
+VarDecl -> Type identifier
 
-IdentifierList = identifier { comma identifier } .
-ExpressionList = Expression { comma Expression } .
+FunctionDecl -> Type identifier Parameters Block
+Parameters -> lparen ParameterList rparen
+ParameterList -> ParameterDecl comma ParameterList
+ParameterList -> ''
+ParameterDecl -> Type identifier
 
-VarDecl     = Type identifier [ "=" ExpressionList ] .
+Operand -> int_lit
+Operand -> string_lit
+Operand -> identifier
+Operand -> lparen Expression rparen
 
-FunctionDecl = Type identifier Parameters Block .
-Parameters     = lparen [ ParameterList ] rparen .
-ParameterList  = ParameterDecl { "," ParameterDecl } .
-ParameterDecl  = Type identifier .
+PrimaryExpr -> Operand
+PrimaryExpr -> PrimaryExpr Index
+PrimaryExpr -> PrimaryExpr Arguments
 
-Operand     = Literal | identifier | lparen Expression rparen .
-Literal     = int_lit | string_lit .
+Index -> lbracket Expression rbracket
+Arguments -> lparen ExpressionList rparen
+ExpressionList -> Expression comma ExpressionList
+ExpressionList -> ''
 
-PrimaryExpr =
-	Operand |
-	PrimaryExpr Index |
-	PrimaryExpr Arguments .
+Expression -> LogicalExpr
+LogicalExpr -> RelationalExpr
+LogicalExpr -> LogicalExpr log_op RelationalExpr
+RelationalExpr -> AdditiveExpr
+RelationalExpr -> RelationalExpr rel_op AdditiveExpr
+AdditiveExpr -> MultiplicativeExpr
+AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
+MultiplicativeExpr -> UnaryExpr
+MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
+UnaryExpr -> PrimaryExpr 
+UnaryExpr -> unary_op UnaryExpr
+UnaryExpr -> lparen Expression rparen
 
-Index          = lbracket Expression rbracket .
-Arguments      = lparen [ ExpressionList ] rparen .
-ExpressionList = Expression { comma Expression } .
+Statement -> Assignment
+Statement -> VarDecl
+Statement -> ReturnStmt
+Statement -> BreakStmt
+Statement -> ContinueStmt
+Statement -> IfStmt
+Statement -> WhileStmt
 
-Expression = LogicalExpr .
-
-LogicalExpr = RelationalExpr | LogicalExpr log_op RelationalExpr
-RelationalExpr = AdditiveExpr | RelationalExpr rel_op AdditiveExpr
-AdditiveExpr = MultiplicativeExpr | AdditiveExpr add_op MultiplicativeExpr
-MultiplicativeExpr = UnaryExpr | MultiplicativeExpr mul_op UnaryExpr
-UnaryExpr  = PrimaryExpr | unary_op UnaryExpr | lparen Expression rparen .
-
-Statement =
-    Assignment |
-	Declaration |
-	ReturnStmt | BreakStmt | ContinueStmt |
-	Block | IfStmt |  WhileStmt .
-
-Assignment = ExpressionList assign_op ExpressionList .
-IfStmt = if Expression Block .
-WhileStmt = while lparen Expression rparen Block .
-ReturnStmt = return Expression .
-BreakStmt = break .
-ContinueStmt = continue .
+Assignment -> ExpressionList assign_op ExpressionList
+IfStmt -> if lparen Expression rparen Block
+WhileStmt -> while lparen Expression rparen Block
+ReturnStmt -> return Expression
+BreakStmt -> break
+ContinueStmt -> continue
 ```
 
 ## Operator priority
