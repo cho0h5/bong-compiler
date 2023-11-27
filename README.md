@@ -130,11 +130,8 @@
 ```
 identifier = letter { letter | unicode_digit } .
 
-int_lit        = decimal_lit .
-decimal_lit    = "0" | ( "1" … "9" ) .
-
-string_lit             = raw_string_lit | interpreted_string_lit .
-interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
+int_lit        = "0" | ( "1" … "9" ) .
+string_lit             = `"` { unicode_value | byte_value } `"` .
 
 Type      = TypeName [ TypeArgs ] | TypeLit | "(" Type ")" .
 TypeName  = identifier  .
@@ -169,43 +166,41 @@ PrimaryExpr =
 
 Index          = "[" Expression [ "," ] "]" .
 Arguments      = "(" [ ExpressionList ] ")" .
+ExpressionList = Expression { "," Expression } .
 
-Expression = UnaryExpr | Expression binary_op Expression .
-UnaryExpr  = PrimaryExpr | unary_op UnaryExpr .
+Expression = LogicalExpr .
 
-binary_op  = "||" | "&&" | rel_op | add_op | mul_op .
+LogicalExpr = RelationalExpr | LogicalExpr log_op RelationalExpr
+RelationalExpr = AdditiveExpr | RelationalExpr rel_op AdditiveExpr
+AdditiveExpr = MultiplicativeExpr | AdditiveExpr add_op MultiplicativeExpr
+MultiplicativeExpr = UnaryExpr | MultiplicativeExpr mul_op UnaryExpr
+UnaryExpr  = PrimaryExpr | unary_op UnaryExpr | "(" Expression ")" .
+
+log_op  = "||" | "&&" .
 rel_op     = "==" | "!=" | "<" | "<=" | ">" | ">=" .
 add_op     = "+" | "-" | "|" | "^" .
 mul_op     = "*" | "/" | "%" | "<<" | ">>" | "&" .
 
-unary_op   = "+" | "-" | "!" | "^" | "*" | "&" .
+unary_op   = "+" | "-" | "!" | "~" | "*" | "&" .
 
 #	Precedence    Operator
-#	    5             *  /  %  <<  >>  &
-#	    4             +  -  |  ^
-#	    3             ==  !=  <  <=  >  >=
-#	    2             &&
-#	    1             ||
+#	    4             *  /  %  <<  >>  &
+#	    3             +  -  |  ^
+#	    2             ==  !=  <  <=  >  >=
+#	    1             && ||
 
 Statement =
-    ExpressionStmt | Assignment |
+    Assignment |
 	Declaration | SimpleStmt |
 	ReturnStmt | BreakStmt | ContinueStmt |
 	Block | IfStmt |  WhileStmt .
 
-ExpressionStmt = Expression .
-
 Assignment = ExpressionList assign_op ExpressionList .
 assign_op = [ add_op | mul_op ] "=" .
-
 IfStmt = "if" [ SimpleStmt ";" ] Expression Block [ "else" ( IfStmt | Block ) ] .
-
 WhileStmt = "while" "(" Condition ")" Block .
 Condition = Expression .
-
 ReturnStmt = "return" [ ExpressionList ] .
-
 BreakStmt = "break" .
-
 ContinueStmt = "continue" .
 ```
