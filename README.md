@@ -1,7 +1,7 @@
 # MIPS Compiler
 
 ## Grammer
-> Reference: https://go.dev/ref/spec#SimpleStmt
+> Reference: https://go.dev/ref/spec#SimpleStmt  
 > Reference: https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.html
 
 ### Token
@@ -113,8 +113,9 @@ ContinueStmt -> continue
 
 ## Operator priority
 
-  Precedence    Operator
-      4             *  /  %  <<  >>  &
-      3             +  -  |  ^
-      2             ==  !=  <  <=  >  >=
-      1             && ||
+| Precedence | Operator |
+| --- | --- |
+| 4 | `*` `/` `%` `<<` `>>` `&` |
+| 3 | `+` `-` `\|` `^` |
+| 2 | `==` `!=` `<` `<=` `>` `>=` |
+| 1 | `&&` `\|\|` |
