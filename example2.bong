@@ -1,0 +1,16 @@
+int identifier lparen int identifier comma rparen lbrace
+int identifier semicolon
+identifier assign_op int_lit add_op int_lit semicolon
+rbrace
+void identifier lparen rparen lbrace
+identifier lparen int_lit rparen semicolon
+rbrace
+int identifier lparen int identifier comma int identifier rparen lbrace
+identifier assign_op lparen int_lit add_op identifier rparen mul_op int_lit semicolon
+if lparen identifier rparen lbrace
+int_lit semicolon
+rbrace semicolon
+while lparen int_lit rel_op int_lit rparen lbrace
+rbrace semicolon
+return identifier lbracket int_lit rbracket semicolon
+rbrace
