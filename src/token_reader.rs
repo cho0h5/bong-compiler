@@ -86,31 +86,31 @@ pub enum Token {
 // VecDeque는 double-ended queue를 나타내는 rust의 기본 collection입니다.
 // read_tokens(...) 함수는 parsing된 token을 뒤에 추가하고, parser::parse(...) 함수는
 // token을 앞에서부터 읽기 때문에 VecDeque를 사용하였습니다.
-pub fn read_tokens(contents: &String) -> Result<Tokens, UnknownTokenError> {
+pub fn read_tokens(contents: &str) -> Result<Tokens, UnknownTokenError> {
     let mut tokens = VecDeque::new();
 
     for word in contents.split_whitespace() {
         let token = match word {
             "int" => Token::Int,
             "void" => Token::Void,
-            "lbracket" => Token::Lbracket,
-            "int_lit" => Token::IntLit,
-            "rbracket" => Token::Rbracket,
-            "pointer" => Token::Pointer,
-            "lbrace" => Token::Lbrace,
-            "rbrace" => Token::Rbrace,
-            "semicolon" => Token::Semicolon,
-            "identifier" => Token::Identifier,
-            "lparen" => Token::Lparen,
-            "rparen" => Token::Rparen,
-            "comma" => Token::Comma,
-            "string_lit" => Token::StringLit,
-            "log_op" => Token::LogOp,
-            "rel_op" => Token::RelOp,
-            "add_op" => Token::AddOp,
-            "mul_op" => Token::MulOp,
-            "unary_op" => Token::UnaryOp,
-            "assign_op" => Token::AssignOp,
+            "[" => Token::Lbracket,
+            "int_lit" => Token::IntLit, // TODO
+            "]" => Token::Rbracket,
+            "pointer" => Token::Pointer, // TODO
+            "{" => Token::Lbrace,
+            "}" => Token::Rbrace,
+            ";" => Token::Semicolon,
+            "identifier" => Token::Identifier, // TODO
+            "(" => Token::Lparen,
+            ")" => Token::Rparen,
+            "," => Token::Comma,
+            "string_lit" => Token::StringLit, // TODO
+            "log_op" => Token::LogOp,         // TODO
+            "rel_op" => Token::RelOp,         // TODO
+            "add_op" => Token::AddOp,         // TODO
+            "mul_op" => Token::MulOp,         // TODO
+            "unary_op" => Token::UnaryOp,     // TODO
+            "=" => Token::AssignOp,           // TODO
             "if" => Token::If,
             "while" => Token::While,
             "return" => Token::Return,
