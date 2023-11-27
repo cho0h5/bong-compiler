@@ -55,6 +55,7 @@ PointerType -> Type pointer
 
 Block -> lbrace StatementList rbrace
 StatementList -> Statement semicolon StatementList
+StatementList -> Statement
 StatementList -> ''
 
 VarDecl -> Type identifier
@@ -62,6 +63,7 @@ VarDecl -> Type identifier
 FunctionDecl -> Type identifier Parameters Block
 Parameters -> lparen ParameterList rparen
 ParameterList -> ParameterDecl comma ParameterList
+ParameterList -> ParameterDecl
 ParameterList -> ''
 ParameterDecl -> Type identifier
 
@@ -70,13 +72,14 @@ Operand -> string_lit
 Operand -> identifier
 Operand -> lparen Expression rparen
 
-PrimaryExpr -> Operand
 PrimaryExpr -> PrimaryExpr Index
 PrimaryExpr -> PrimaryExpr Arguments
+PrimaryExpr -> Operand
 
 Index -> lbracket Expression rbracket
 Arguments -> lparen ExpressionList rparen
 ExpressionList -> Expression comma ExpressionList
+ExpressionList -> Expression
 ExpressionList -> ''
 
 Expression -> LogicalExpr
@@ -98,8 +101,9 @@ Statement -> BreakStmt
 Statement -> ContinueStmt
 Statement -> IfStmt
 Statement -> WhileStmt
+Statement -> Expression
 
-Assignment -> ExpressionList assign_op ExpressionList
+Assignment -> Expression assign_op Expression
 IfStmt -> if lparen Expression rparen Block
 WhileStmt -> while lparen Expression rparen Block
 ReturnStmt -> return Expression
