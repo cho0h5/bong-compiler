@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
-use crate::parser::Node::Terminal;
 use crate::parser::formatting::Tokens;
+use crate::parser::Node::Terminal;
 
 // token을 읽는 중에 발생할 수 있는 에러를 나타내는 struct입니다.
 // read_tokens(...) 함수는 parsing에 성공하면 Tokens를,
@@ -15,50 +15,66 @@ pub struct UnknownTokenError<'a>(pub &'a str);
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub enum Token {
     // terminals
-    Vtype,      // for the types of variables and function
-    Num,        // for signed integers
-    Character,  // for a single character
-    Boolstr,    // for Boolean strings
-    Literal,    // for literal strings
-    Id,         // for the the identifiers of variables and functions
-    If,         // for if statements
-    Else,       // for else statements
-    While,      // for while statements
-    Return,     // for return statements
-    Class,      // for class declarations
-    Addsub,     // for + and - arithmetic
-    Multdiv,    // for * and / arithmetic operators
-    Assign,     // for assignment operators
-    Comp,       // for comparison operators
-    Semi,       // for semicolons
-    Comma,      // for commas
-    Lparen,     // for (
-    Rparen,     // for )
-    Lbrace,     // for {
-    Rbrace,     // for }
+    Int,
+    Void,
+    Lbracket,
+    IntLit,
+    Rbracket,
+    Pointer,
+    Lbrace,
+    Rbrace,
+    Semicolon,
+    Identifier,
+    Lparen,
+    Rparen,
+    Comma,
+    StringLit,
+    LogOp,
+    RelOp,
+    AddOp,
+    MulOp,
+    UnaryOp,
+    AssignOp,
+    If,
+    While,
+    Return,
+    Break,
+    Continue,
 
     // for EOL
     EOL,
 
     // non-terminals
-    CODE,
-    CODE_,
-    VDECL,
-    ASSIGN,
-    RHS,
-    EXPR,
-    EXPR_,
-    EXPR__,
-    FDECL,
-    ARG,
-    MOREARGS,
+    PROGRAM_,
+    PROGRAM,
+    TYPE,
+    ARRAY_TYPE,
+    POINTER_TYPE,
     BLOCK,
-    STMT,
-    COND,
-    ELSE,
-    RETURN,
-    CDECL,
-    ODECL,
+    STATEMENT_LIST,
+    VAR_DECL,
+    FUNCTION_DECL,
+    PARAMETERS,
+    PARAMETER_LIST,
+    PARAMETER_DECL,
+    OPERAND,
+    PRIMARY_EXPR,
+    INDEX,
+    ARGUMENTS,
+    EXPRESSION_LIST,
+    EXPRESSION,
+    LOGICAL_EXPR,
+    RELATIONAL_EXPR,
+    ADDITIVE_EXPR,
+    MULTIPLICATIVE_EXPR,
+    UNARY_EXPR,
+    STATEMENT,
+    ASSIGNMENT,
+    IF_STMT,
+    WHILE_STMT,
+    RETURN_STMT,
+    BREAK_STMT,
+    CONTINUE_STMT,
 }
 
 // token을 인식하는 함수입니다.
@@ -75,27 +91,31 @@ pub fn read_tokens(contents: &String) -> Result<Tokens, UnknownTokenError> {
 
     for word in contents.split_whitespace() {
         let token = match word {
-            "vtype" => Token::Vtype,
-            "num" => Token::Num,
-            "character" => Token::Character,
-            "boolstr" => Token::Boolstr,
-            "literal" => Token::Literal,
-            "id" => Token::Id,
-            "if" => Token::If,
-            "else" => Token::Else,
-            "while" => Token::While,
-            "return" => Token::Return,
-            "class" => Token::Class,
-            "addsub" => Token::Addsub,
-            "multdiv" => Token::Multdiv,
-            "assign" => Token::Assign,
-            "comp" => Token::Comp,
-            "semi" => Token::Semi,
-            "comma" => Token::Comma,
-            "lparen" => Token::Lparen,
-            "rparen" => Token::Rparen,
+            "int" => Token::Int,
+            "void" => Token::Void,
+            "lbracket" => Token::Lbracket,
+            "int_lit" => Token::IntLit,
+            "rbracket" => Token::Rbracket,
+            "pointer" => Token::Pointer,
             "lbrace" => Token::Lbrace,
             "rbrace" => Token::Rbrace,
+            "semicolon" => Token::Semicolon,
+            "identifier" => Token::Identifier,
+            "lparen" => Token::Lparen,
+            "rparen" => Token::Rparen,
+            "comma" => Token::Comma,
+            "string_lit" => Token::StringLit,
+            "log_op" => Token::LogOp,
+            "rel_op" => Token::RelOp,
+            "add_op" => Token::AddOp,
+            "mul_op" => Token::MulOp,
+            "unary_op" => Token::UnaryOp,
+            "assign_op" => Token::AssignOp,
+            "if" => Token::If,
+            "while" => Token::While,
+            "return" => Token::Return,
+            "break" => Token::Break,
+            "continue" => Token::Continue,
             // token 인식을 실패하면 UnknownTokenError에 정보를 담아 return합니다.
             unknown_token => return Err(UnknownTokenError(unknown_token)),
         };
