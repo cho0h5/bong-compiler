@@ -18,6 +18,8 @@ mul_op     = "*" | "/" | "%" | "<<" | ">>" | "&" .
 
 unary_op   = "+" | "-" | "!" | "~" | "*" | "&" .
 
+pointer = "*"
+
 lparen = "("
 rparen = ")"
 lbrace = "{"
@@ -36,12 +38,14 @@ continue = "continue"
 ```
 ### CFG
 ```
-Type      = TypeName [ TypeArgs ] | TypeLit | lparen Type rparen .
+Type      = TypeName | TypeLit | lparen Type rparen .
 TypeName  = identifier  .
-TypeArgs  = lbracket TypeList rbracket .
-TypeList  = Type { comma Type } .
-TypeLit   = ArrayType | StructType | PointerType | FunctionType | InterfaceType |
-            SliceType | MapType | ChannelType .
+TypeLit   = ArrayType | PointerType .
+
+ArrayType   = Type lbracket int_list rbracket .
+
+PointerType = pointer BaseType .
+BaseType    = Type .
 
 Block = lbrace StatementList rbrace .
 StatementList = { Statement semicolon } .
@@ -55,11 +59,11 @@ ExpressionList = Expression { comma Expression } .
 VarDecl     = Type identifier [ "=" ExpressionList ] .
 
 FunctionDecl = Type identifier Parameters Block .
-Parameters     = "(" [ ParameterList ] ")" .
+Parameters     = lparen [ ParameterList ] rparen .
 ParameterList  = ParameterDecl { "," ParameterDecl } .
 ParameterDecl  = Type identifier .
 
-Operand     = Literal | identifier [ TypeArgs ] | "(" Expression ")" .
+Operand     = Literal | identifier | lparen Expression rparen .
 Literal     = int_lit | string_lit .
 
 PrimaryExpr =
