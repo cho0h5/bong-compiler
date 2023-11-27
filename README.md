@@ -83,16 +83,16 @@ ExpressionList -> Expression
 ExpressionList -> ''
 
 Expression -> LogicalExpr
-LogicalExpr -> RelationalExpr
 LogicalExpr -> LogicalExpr log_op RelationalExpr
-RelationalExpr -> AdditiveExpr
+LogicalExpr -> RelationalExpr
 RelationalExpr -> RelationalExpr rel_op AdditiveExpr
-AdditiveExpr -> MultiplicativeExpr
+RelationalExpr -> AdditiveExpr
 AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
-MultiplicativeExpr -> UnaryExpr
+AdditiveExpr -> MultiplicativeExpr
 MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
-UnaryExpr -> PrimaryExpr 
+MultiplicativeExpr -> UnaryExpr
 UnaryExpr -> unary_op UnaryExpr
+UnaryExpr -> PrimaryExpr 
 
 Statement -> Assignment
 Statement -> VarDecl
