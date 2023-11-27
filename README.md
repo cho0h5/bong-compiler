@@ -90,7 +90,6 @@ MultiplicativeExpr -> UnaryExpr
 MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
 UnaryExpr -> PrimaryExpr 
 UnaryExpr -> unary_op UnaryExpr
-UnaryExpr -> lparen Expression rparen
 
 Statement -> Assignment
 Statement -> VarDecl
