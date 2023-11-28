@@ -263,12 +263,12 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 }
                 Token::IntLit
             }
-            Some(c) if c.is_alphanumeric() => {
+            Some(c) if c.is_alphanumeric() || c == '_' => {
                 temp.push(c);
                 char = iter.next();
                 loop {
                     match char {
-                        Some(c) if c.is_alphanumeric() => {
+                        Some(c) if c.is_alphanumeric() || c == '_' => {
                             temp.push(c);
                             char = iter.next();
                         }
@@ -277,7 +277,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 }
                 Token::Identifier
             }
-            Some(c) if c.is_ascii_whitespace() => {
+            Some(c) if c.is_whitespace() => {
                 char = iter.next();
                 continue;
             }
