@@ -327,11 +327,13 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                     "if" => {
                         let mut id = String::from("if");
                         id.push_str(&if_id_count.to_string());
+                        if_id_count += 1;
                         Token::If(id)
                     }
                     "while" => {
                         let mut id = String::from("while");
                         id.push_str(&while_id_count.to_string());
+                        while_id_count += 1;
                         Token::While(id)
                     }
                     "return" => Token::Return,
