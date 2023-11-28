@@ -1,7 +1,8 @@
-int identifier lparen int identifier comma rparen lbrace
-int identifier semicolon
-identifier assign_op int_lit add_op int_lit semicolon
-rbrace
-void identifier lparen rparen lbrace
-identifier lparen int_lit rparen semicolon
-rbrace
+int fib (int n) {
+	int a;
+	a = 7 + 4;
+}
+
+void main () {
+	fib(6);
+}
