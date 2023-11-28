@@ -19,7 +19,7 @@ pub struct SymbolTable(Vec<SymbolTableElement>);
 impl std::fmt::Display for SymbolTable {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         for e in &self.0 {
-            e.fmt(f);
+            e.fmt(f).ok();
         }
         Ok(())
     }
