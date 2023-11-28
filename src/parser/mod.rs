@@ -28,7 +28,7 @@ pub struct ParsingError(pub Token);
 // parsing tree를 나타내기 위한 node를 표현하는 enum입니다.
 // 모든 node는 Terminal이거나 NonTerminal이며
 // NonTerminal의 경우 재귀적으로 Node들의 벡터를 가집니다.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Node {
     Terminal(Token),
     NonTerminal(Token, Vec<Node>),

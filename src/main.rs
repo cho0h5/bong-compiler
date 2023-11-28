@@ -1,5 +1,6 @@
 mod lexer;
 mod parser;
+mod symbol_table;
 
 use std::env;
 use std::fs;
@@ -7,6 +8,7 @@ use std::process;
 
 use lexer::UnknownTokenError;
 use parser::ParsingError;
+use symbol_table::generate_symbol_table;
 
 fn main() {
     let filename = match env::args().nth(1) {
@@ -45,7 +47,7 @@ fn main() {
         }
     };
 
-    match parser::parse(tokens) {
+    let tree = match parser::parse(tokens) {
         Ok(tree) => {
             print!("\x1b[32m[4/4]\x1b[37m ");
             println!("Parse tree:\n{}", tree);
@@ -58,4 +60,7 @@ fn main() {
             process::exit(1);
         }
     };
+
+    let symbol_table = generate_symbol_table(&tree);
+    println!("{}", symbol_table);
 }
