@@ -6,6 +6,48 @@ use crate::parser::Node::Terminal;
 pub struct UnknownTokenError<'a>(pub &'a str);
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum LogicalOperator {
+    Or,  // ||
+    And, // &&
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum RelativeOperator {
+    Equal,        // =
+    NotEqual,     // !=
+    Less,         // <
+    LessEqual,    // <=
+    Greater,      // >
+    GreaterEqual, // >=
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum AdditiveOperator {
+    BitwiseOr,  // |
+    BitwiseAnd, // &
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum MultiplicativeOperator {
+    Div,        // /
+    Mod,        // %
+    LeftShift,  // <<
+    RightShift, // >>
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum UnaryOperator {
+    Not,        // !
+    BitwiseNot, // ~
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum AddMinusOperator {
+    Add,   // +
+    Minus, // -
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub enum Token {
     // terminals
     Int,
@@ -22,13 +64,13 @@ pub enum Token {
     Rparen,
     Comma,
     StringLit,
-    LogOp,
-    RelOp,
-    AddOp,
-    AddMinus,
-    MulOp,
+    LogOp(LogicalOperator),
+    RelOp(RelativeOperator),
+    AddOp(AdditiveOperator),
+    AddMinus(AddMinusOperator),
+    MulOp(MultiplicativeOperator),
     And,
-    UnaryOp,
+    UnaryOp(UnaryOperator),
     AssignOp,
     If,
     While,
@@ -123,34 +165,34 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
             }
             Some('+') => {
                 char = iter.next();
-                Token::AddMinus
+                Token::AddMinus(AddMinusOperator::Add)
             }
             Some('-') => {
                 char = iter.next();
-                Token::AddMinus
+                Token::AddMinus(AddMinusOperator::Minus)
             }
             Some('~') => {
                 char = iter.next();
-                Token::UnaryOp
+                Token::UnaryOp(UnaryOperator::BitwiseNot)
             }
             Some('/') => {
                 char = iter.next();
-                Token::MulOp
+                Token::MulOp(MultiplicativeOperator::Div)
             }
             Some('%') => {
                 char = iter.next();
-                Token::MulOp
+                Token::MulOp(MultiplicativeOperator::Mod)
             }
             Some('^') => {
                 char = iter.next();
-                Token::AddOp
+                Token::AddOp(AdditiveOperator::BitwiseAnd)
             }
             Some('=') => {
                 char = iter.next();
                 match char {
                     Some('=') => {
                         char = iter.next();
-                        Token::RelOp
+                        Token::RelOp(RelativeOperator::Equal)
                     }
                     _ => Token::AssignOp,
                 }
@@ -160,7 +202,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match char {
                     Some('&') => {
                         char = iter.next();
-                        Token::LogOp
+                        Token::LogOp(LogicalOperator::And)
                     }
                     _ => Token::And,
                 }
@@ -170,9 +212,9 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match char {
                     Some('|') => {
                         char = iter.next();
-                        Token::LogOp
+                        Token::LogOp(LogicalOperator::Or)
                     }
-                    _ => Token::AddOp,
+                    _ => Token::AddOp(AdditiveOperator::BitwiseOr),
                 }
             }
             Some('!') => {
@@ -180,9 +222,9 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match char {
                     Some('=') => {
                         char = iter.next();
-                        Token::RelOp
+                        Token::RelOp(RelativeOperator::NotEqual)
                     }
-                    _ => Token::UnaryOp,
+                    _ => Token::UnaryOp(UnaryOperator::Not),
                 }
             }
             Some('<') => {
@@ -190,13 +232,13 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match char {
                     Some('=') => {
                         char = iter.next();
-                        Token::RelOp
+                        Token::RelOp(RelativeOperator::LessEqual)
                     }
                     Some('<') => {
                         char = iter.next();
-                        Token::MulOp
+                        Token::MulOp(MultiplicativeOperator::LeftShift)
                     }
-                    _ => Token::RelOp,
+                    _ => Token::RelOp(RelativeOperator::Less),
                 }
             }
             Some('>') => {
@@ -204,13 +246,13 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match char {
                     Some('=') => {
                         char = iter.next();
-                        Token::RelOp
+                        Token::RelOp(RelativeOperator::GreaterEqual)
                     }
                     Some('>') => {
                         char = iter.next();
-                        Token::MulOp
+                        Token::MulOp(MultiplicativeOperator::RightShift)
                     }
-                    _ => Token::RelOp,
+                    _ => Token::RelOp(RelativeOperator::Greater),
                 }
             }
             Some('\"') => {
