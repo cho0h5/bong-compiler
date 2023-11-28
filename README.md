@@ -8,17 +8,19 @@
 ```
 identifier = letter { letter | unicode_digit }
 
-int_lit        = "0" | ( "1" … "9" )
-string_lit             = `"` { unicode_value | byte_value } `"`
+int_lit = "0" | ( "1" … "9" )
+string_lit = `"` { unicode_value | byte_value } `"`
 
 log_op  = "||" | "&&"
 rel_op     = "==" | "!=" | "<" | "<=" | ">" | ">="
-add_op     = "+" | "-" | "|" | "^"
-mul_op     = "*" | "/" | "%" | "<<" | ">>" | "&"
+add_op     = "|" | "^"
+mul_op     = "/" | "%" | "<<" | ">>"
 
-unary_op   = "+" | "-" | "!" | "~" | "*" | "&"
+unary_op   = "!" | "~"
 
-pointer = "*"
+star = "*"
+and = "&"
+add_minus = "+" | "-"
 
 lparen = "("
 rparen = ")"
@@ -51,7 +53,7 @@ Type -> ArrayType
 Type -> PointerType
 
 ArrayType -> Type lbracket int_lit rbracket
-PointerType -> Type pointer
+PointerType -> Type star
 
 Block -> lbrace StatementList rbrace
 StatementList -> Statement semicolon StatementList
@@ -88,10 +90,16 @@ LogicalExpr -> RelationalExpr
 RelationalExpr -> RelationalExpr rel_op AdditiveExpr
 RelationalExpr -> AdditiveExpr
 AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
+AdditiveExpr -> AdditiveExpr add_minus MultiplicativeExpr
 AdditiveExpr -> MultiplicativeExpr
 MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
+MultiplicativeExpr -> MultiplicativeExpr star UnaryExpr
+MultiplicativeExpr -> MultiplicativeExpr and UnaryExpr
 MultiplicativeExpr -> UnaryExpr
 UnaryExpr -> unary_op UnaryExpr
+UnaryExpr -> star UnaryExpr
+UnaryExpr -> and UnaryExpr
+UnaryExpr -> add_minus UnaryExpr
 UnaryExpr -> PrimaryExpr 
 
 Statement -> Assignment
