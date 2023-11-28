@@ -72,8 +72,8 @@ pub enum Token {
     And,
     UnaryOp(UnaryOperator),
     AssignOp,
-    If,
-    While,
+    If(String),
+    While(String),
     Return,
     Break,
     Continue,
@@ -117,6 +117,8 @@ pub enum Token {
 pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
     let mut tokens = VecDeque::new();
 
+    let mut if_id_count = 0;
+    let mut while_id_count = 0;
     let mut temp = String::new();
     let mut iter = contents.chars();
     let mut char = iter.next();
@@ -322,8 +324,16 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 match temp.as_str() {
                     "int" => Token::Int,
                     "void" => Token::Void,
-                    "if" => Token::If,
-                    "while" => Token::While,
+                    "if" => {
+                        let mut id = String::from("if");
+                        id.push_str(&if_id_count.to_string());
+                        Token::If(id)
+                    }
+                    "while" => {
+                        let mut id = String::from("while");
+                        id.push_str(&while_id_count.to_string());
+                        Token::While(id)
+                    }
                     "return" => Token::Return,
                     "break" => Token::Break,
                     "continue" => Token::Continue,

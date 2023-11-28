@@ -33,7 +33,7 @@ def parsing(line):
     print("    }")
 
 def print_line(content, j):
-    if label[j] == "LogOp" or label[j] == "RelOp" or label[j] == "AddOp" or label[j] == "MulOp" or label[j] == "UnaryOp" or label[j] == "AddMinus" or label[j] == "StringLit" or label[j] == "IntLit" or label[j] == "Identifier":
+    if label[j] == "LogOp" or label[j] == "RelOp" or label[j] == "AddOp" or label[j] == "MulOp" or label[j] == "UnaryOp" or label[j] == "AddMinus" or label[j] == "StringLit" or label[j] == "IntLit" or label[j] == "Identifier" or label[j] == "If" or label[j] == "While":
         print("            " + label[j] + "(_)" + " => ", end='')
 
     else:
