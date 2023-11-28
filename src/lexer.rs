@@ -75,6 +75,7 @@ pub enum Token {
 pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
     let mut tokens = VecDeque::new();
 
+    let mut temp = String::new();
     let mut iter = contents.chars();
     let mut char = iter.next();
     loop {
@@ -211,6 +212,24 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                     }
                     _ => Token::RelOp,
                 }
+            }
+            Some('\"') => {
+                char = iter.next();
+                loop {
+                    match char {
+                        Some('\"') => {
+                            char = iter.next();
+                            temp.clear();
+                            break;
+                        }
+                        Some(c) => {
+                            temp.push(c);
+                            char = iter.next();
+                        }
+                        _ => panic!("lexer error"),
+                    }
+                }
+                Token::StringLit
             }
             Some(c) if c.is_ascii_whitespace() => {
                 char = iter.next();
