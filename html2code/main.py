@@ -16,47 +16,11 @@ label = (
     ,"ADDITIVE_EXPR","MULTIPLICATIVE_EXPR","UNARY_EXPR","STATEMENT","ASSIGNMENT","IF_STMT","WHILE_STMT","RETURN_STMT","BREAK_STMT","CONTINUE_STMT"
 )
 
-t_LogOp = (
-    "Or",
-    "And",
-)
-
-t_RelOp = {
-    "Equal",
-    "NotEqual",
-    "Less",
-    "LessEqual",
-    "Greater",
-    "GreaterEqual",
-}
-
-t_AddOp = {
-    "BitwiseOr",
-    "BitwiseAnd",
-}
-
-t_MulOp = {
-    "Div",
-    "Mod",
-    "LeftShift",
-    "RightShift",
-}
-
-t_UnaryOp = {
-    "Not",
-    "BitwiseNot",
-}
-
-t_AddMinus = {
-    "Add",
-    "Minus",
-}
-
 i = 0
 
 def parsing(line):
-    print("    // for state", i)
-    print("    let mut hashmap = HashMap::new();")
+    print("    if state == " + str(i) + " {")
+    print("        match token {")
     j = 0
     for l in line.find_all('td'):
         content = l.get_text()
@@ -64,37 +28,25 @@ def parsing(line):
             print_line(content, j)
 
         j += 1
-    print("    table.push(hashmap);")
+    print("            _ => return None,")
+    print("        };")
+    print("    }")
 
 def print_line(content, j):
-    if label[j] == "LogOp":
-        print_mult(label[j], "LogicalOperator", t_LogOp, j, content)
-    elif label[j] == "RelOp":
-        print_mult(label[j], "RelativeOperator", t_RelOp, j, content)
-    elif label[j] == "AddOp":
-        print_mult(label[j], "AdditiveOperator", t_AddOp, j, content)
-    elif label[j] == "AddMinus":
-        print_mult(label[j], "AddMinusOperator", t_AddMinus, j, content)
-    elif label[j] == "MulOp":
-        print_mult(label[j], "MultiplicativeOperator", t_MulOp, j, content)
-    elif label[j] == "UnaryOp":
-        print_mult(label[j], "UnaryOperator", t_UnaryOp, j, content)
-    else:
-        print("    hashmap.insert({}, ".format(label[j]), end='')
-        print_rear(content)
+    if label[j] == "LogOp" or label[j] == "RelOp" or label[j] == "AddOp" or label[j] == "MulOp" or label[j] == "UnaryOp" or label[j] == "AddMinus" or label[j] == "StringLit" or label[j] == "IntLit" or label[j] == "Identifier":
+        print("            " + label[j] + "(_)" + " => ", end='')
 
-def print_mult(labelname, realname, tup, j, content):
-    for e in tup:
-        print("    hashmap.insert({}({}::{}), ".format(labelname, realname, e), end='')
-        print_rear(content)
+    else:
+        print("            " + label[j] + " => ", end='')
+    print_rear(content)
 
 def print_rear(content):
     if content[0] == 'r':
-        print("Reduce({}));".format(content[1:]))
+        print("return Some(Reduce({})),".format(content[1:]))
     elif content[0] == 's':
-        print("Shift({}));".format(content[1:]))
+        print("return Some(Shift({})),".format(content[1:]))
     else:
-        print("Goto({}));".format(content))
+        print("return Some(Goto({})),".format(content))
 
 f = open("table.html", 'r')
 

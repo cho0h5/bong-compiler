@@ -47,23 +47,23 @@ pub enum AddMinusOperator {
     Minus, // -
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub enum Token {
     // terminals
     Int,
     Void,
     Lbracket,
-    IntLit,
+    IntLit(u32),
     Rbracket,
     Star,
     Lbrace,
     Rbrace,
     Semicolon,
-    Identifier,
+    Identifier(String),
     Lparen,
     Rparen,
     Comma,
-    StringLit,
+    StringLit(String),
     LogOp(LogicalOperator),
     RelOp(RelativeOperator),
     AddOp(AdditiveOperator),
@@ -271,7 +271,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => panic!("lexer error"),
                     }
                 }
-                Token::StringLit
+                Token::StringLit(temp.clone())
             }
             Some('\'') => {
                 temp.clear();
@@ -289,7 +289,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => panic!("lexer error"),
                     }
                 }
-                Token::IntLit
+                Token::IntLit(0)
             }
             Some(c) if c.is_numeric() => {
                 temp.clear();
@@ -304,7 +304,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => break,
                     }
                 }
-                Token::IntLit
+                Token::IntLit(0)
             }
             Some(c) if c.is_alphanumeric() || c == '_' => {
                 temp.clear();
@@ -319,7 +319,6 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => break,
                     }
                 }
-                println!("keyward: \"{}\"", temp);
                 match temp.as_str() {
                     "int" => Token::Int,
                     "void" => Token::Void,
@@ -328,7 +327,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                     "return" => Token::Return,
                     "break" => Token::Break,
                     "continue" => Token::Continue,
-                    _ => Token::Identifier,
+                    _ => Token::Identifier(temp.clone()),
                 }
             }
             Some(c) if c.is_whitespace() => {

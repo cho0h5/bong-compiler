@@ -21,7 +21,7 @@ pub enum TableElement {
 // right는 CFG 우항의 non-terminal, termianl의 수를 나타냅니다.
 // VDECL -> vtype id semi
 //     => Reduction { left: VDECL, right: 3 }
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct Reduction {
     pub left: Token,
     pub right: usize,
@@ -112,4936 +112,4032 @@ pub fn get_reduction_table() -> Vec<Reduction> {
 // 반환 자료형인 Vec<HashMap<Token, TableElement>>는
 // usize(state)와 Token을 key로 하며 TableElement를 element로 가집니다.
 // 이 코드는 html2code/main.py에 의해 생성되었습니다.
-pub fn get_parsing_table() -> Vec<HashMap<Token, TableElement>> {
-    let mut table = vec![];
-
-    // for state 0
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(EOL, Reduce(2));
-    hashmap.insert(PROGRAM, Goto(1));
-    hashmap.insert(TYPE, Goto(3));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(FUNCTION_DECL, Goto(2));
-    table.push(hashmap);
-
-    // for state 1
-    let mut hashmap = HashMap::new();
-    hashmap.insert(EOL, Accepted);
-    table.push(hashmap);
-
-    // for state 2
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(EOL, Reduce(2));
-    hashmap.insert(PROGRAM, Goto(8));
-    hashmap.insert(TYPE, Goto(3));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(FUNCTION_DECL, Goto(2));
-    table.push(hashmap);
-
-    // for state 3
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(10));
-    hashmap.insert(Star, Shift(11));
-    hashmap.insert(Identifier, Shift(9));
-    table.push(hashmap);
-
-    // for state 4
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(3));
-    hashmap.insert(Star, Reduce(3));
-    hashmap.insert(Identifier, Reduce(3));
-    table.push(hashmap);
-
-    // for state 5
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(4));
-    hashmap.insert(Star, Reduce(4));
-    hashmap.insert(Identifier, Reduce(4));
-    table.push(hashmap);
-
-    // for state 6
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(5));
-    hashmap.insert(Star, Reduce(5));
-    hashmap.insert(Identifier, Reduce(5));
-    table.push(hashmap);
-
-    // for state 7
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(6));
-    hashmap.insert(Star, Reduce(6));
-    hashmap.insert(Identifier, Reduce(6));
-    table.push(hashmap);
-
-    // for state 8
-    let mut hashmap = HashMap::new();
-    hashmap.insert(EOL, Reduce(1));
-    table.push(hashmap);
-
-    // for state 9
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lparen, Shift(13));
-    hashmap.insert(PARAMETERS, Goto(12));
-    table.push(hashmap);
-
-    // for state 10
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(14));
-    table.push(hashmap);
-
-    // for state 11
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Identifier, Reduce(8));
-    table.push(hashmap);
-
-    // for state 12
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbrace, Shift(16));
-    hashmap.insert(BLOCK, Goto(15));
-    table.push(hashmap);
-
-    // for state 13
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(Rparen, Reduce(18));
-    hashmap.insert(TYPE, Goto(19));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(PARAMETER_LIST, Goto(17));
-    hashmap.insert(PARAMETER_DECL, Goto(18));
-    table.push(hashmap);
-
-    // for state 14
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(20));
-    table.push(hashmap);
-
-    // for state 15
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Reduce(14));
-    hashmap.insert(Void, Reduce(14));
-    hashmap.insert(EOL, Reduce(14));
-    table.push(hashmap);
-
-    // for state 16
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Rbrace, Reduce(12));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(If, Shift(35));
-    hashmap.insert(While, Shift(36));
-    hashmap.insert(Return, Shift(32));
-    hashmap.insert(Break, Shift(33));
-    hashmap.insert(Continue, Shift(34));
-    hashmap.insert(TYPE, Goto(31));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(STATEMENT_LIST, Goto(21));
-    hashmap.insert(VAR_DECL, Goto(24));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(EXPRESSION, Goto(30));
-    hashmap.insert(LOGICAL_EXPR, Goto(37));
-    hashmap.insert(RELATIONAL_EXPR, Goto(38));
-    hashmap.insert(ADDITIVE_EXPR, Goto(39));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(40));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    hashmap.insert(STATEMENT, Goto(22));
-    hashmap.insert(ASSIGNMENT, Goto(23));
-    hashmap.insert(IF_STMT, Goto(28));
-    hashmap.insert(WHILE_STMT, Goto(29));
-    hashmap.insert(RETURN_STMT, Goto(25));
-    hashmap.insert(BREAK_STMT, Goto(26));
-    hashmap.insert(CONTINUE_STMT, Goto(27));
-    table.push(hashmap);
-
-    // for state 17
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(52));
-    table.push(hashmap);
-
-    // for state 18
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(17));
-    hashmap.insert(Comma, Shift(53));
-    table.push(hashmap);
-
-    // for state 19
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(10));
-    hashmap.insert(Star, Shift(11));
-    hashmap.insert(Identifier, Shift(54));
-    table.push(hashmap);
-
-    // for state 20
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Identifier, Reduce(7));
-    table.push(hashmap);
-
-    // for state 21
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Shift(55));
-    table.push(hashmap);
-
-    // for state 22
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(11));
-    hashmap.insert(Semicolon, Shift(56));
-    table.push(hashmap);
-
-    // for state 23
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(49));
-    hashmap.insert(Semicolon, Reduce(49));
-    table.push(hashmap);
-
-    // for state 24
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(50));
-    hashmap.insert(Semicolon, Reduce(50));
-    table.push(hashmap);
-
-    // for state 25
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(51));
-    hashmap.insert(Semicolon, Reduce(51));
-    table.push(hashmap);
-
-    // for state 26
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(52));
-    hashmap.insert(Semicolon, Reduce(52));
-    table.push(hashmap);
-
-    // for state 27
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(53));
-    hashmap.insert(Semicolon, Reduce(53));
-    table.push(hashmap);
-
-    // for state 28
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(54));
-    hashmap.insert(Semicolon, Reduce(54));
-    table.push(hashmap);
-
-    // for state 29
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(55));
-    hashmap.insert(Semicolon, Reduce(55));
-    table.push(hashmap);
-
-    // for state 30
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(56));
-    hashmap.insert(Semicolon, Reduce(56));
-    hashmap.insert(AssignOp, Shift(57));
-    table.push(hashmap);
-
-    // for state 31
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(10));
-    hashmap.insert(Star, Shift(11));
-    hashmap.insert(Identifier, Shift(58));
-    table.push(hashmap);
-
-    // for state 32
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(EXPRESSION, Goto(59));
-    hashmap.insert(LOGICAL_EXPR, Goto(60));
-    hashmap.insert(RELATIONAL_EXPR, Goto(61));
-    hashmap.insert(ADDITIVE_EXPR, Goto(62));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(63));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 33
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(61));
-    hashmap.insert(Semicolon, Reduce(61));
-    table.push(hashmap);
-
-    // for state 34
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(62));
-    hashmap.insert(Semicolon, Reduce(62));
-    table.push(hashmap);
-
-    // for state 35
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lparen, Shift(75));
-    table.push(hashmap);
-
-    // for state 36
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lparen, Shift(76));
-    table.push(hashmap);
-
-    // for state 37
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(32));
-    hashmap.insert(Semicolon, Reduce(32));
-    hashmap.insert(LogOp(LogicalOperator::Or), Shift(77));
-    hashmap.insert(LogOp(LogicalOperator::And), Shift(77));
-    hashmap.insert(AssignOp, Reduce(32));
-    table.push(hashmap);
-
-    // for state 38
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(34));
-    hashmap.insert(Semicolon, Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(34));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(78));
-    hashmap.insert(AssignOp, Reduce(34));
-    table.push(hashmap);
-
-    // for state 39
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(36));
-    hashmap.insert(Semicolon, Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(36));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(79));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(79));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(80));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(80));
-    hashmap.insert(AssignOp, Reduce(36));
-    table.push(hashmap);
-
-    // for state 40
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(82));
-    hashmap.insert(Rbrace, Reduce(39));
-    hashmap.insert(Semicolon, Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(39));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(81));
-    hashmap.insert(And, Shift(83));
-    hashmap.insert(AssignOp, Reduce(39));
-    table.push(hashmap);
-
-    // for state 41
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(43));
-    hashmap.insert(Rbrace, Reduce(43));
-    hashmap.insert(Semicolon, Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(43));
-    hashmap.insert(And, Reduce(43));
-    hashmap.insert(AssignOp, Reduce(43));
-    table.push(hashmap);
-
-    // for state 42
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(84));
-    table.push(hashmap);
-
-    // for state 43
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(85));
-    table.push(hashmap);
-
-    // for state 44
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(86));
-    table.push(hashmap);
-
-    // for state 45
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(87));
-    table.push(hashmap);
-
-    // for state 46
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(90));
-    hashmap.insert(Star, Reduce(48));
-    hashmap.insert(Rbrace, Reduce(48));
-    hashmap.insert(Semicolon, Reduce(48));
-    hashmap.insert(Lparen, Shift(91));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(48));
-    hashmap.insert(And, Reduce(48));
-    hashmap.insert(AssignOp, Reduce(48));
-    hashmap.insert(INDEX, Goto(88));
-    hashmap.insert(ARGUMENTS, Goto(89));
-    table.push(hashmap);
-
-    // for state 47
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(26));
-    hashmap.insert(Star, Reduce(26));
-    hashmap.insert(Rbrace, Reduce(26));
-    hashmap.insert(Semicolon, Reduce(26));
-    hashmap.insert(Lparen, Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(26));
-    hashmap.insert(And, Reduce(26));
-    hashmap.insert(AssignOp, Reduce(26));
-    table.push(hashmap);
-
-    // for state 48
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(20));
-    hashmap.insert(Star, Reduce(20));
-    hashmap.insert(Rbrace, Reduce(20));
-    hashmap.insert(Semicolon, Reduce(20));
-    hashmap.insert(Lparen, Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(20));
-    hashmap.insert(And, Reduce(20));
-    hashmap.insert(AssignOp, Reduce(20));
-    table.push(hashmap);
-
-    // for state 49
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(21));
-    hashmap.insert(Star, Reduce(21));
-    hashmap.insert(Rbrace, Reduce(21));
-    hashmap.insert(Semicolon, Reduce(21));
-    hashmap.insert(Lparen, Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(21));
-    hashmap.insert(And, Reduce(21));
-    hashmap.insert(AssignOp, Reduce(21));
-    table.push(hashmap);
-
-    // for state 50
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(22));
-    hashmap.insert(Star, Reduce(22));
-    hashmap.insert(Rbrace, Reduce(22));
-    hashmap.insert(Semicolon, Reduce(22));
-    hashmap.insert(Lparen, Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(22));
-    hashmap.insert(And, Reduce(22));
-    hashmap.insert(AssignOp, Reduce(22));
-    table.push(hashmap);
-
-    // for state 51
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(92));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 52
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbrace, Reduce(15));
-    table.push(hashmap);
-
-    // for state 53
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(Rparen, Reduce(18));
-    hashmap.insert(TYPE, Goto(19));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(PARAMETER_LIST, Goto(108));
-    hashmap.insert(PARAMETER_DECL, Goto(18));
-    table.push(hashmap);
-
-    // for state 54
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(19));
-    hashmap.insert(Comma, Reduce(19));
-    table.push(hashmap);
-
-    // for state 55
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Reduce(9));
-    hashmap.insert(Void, Reduce(9));
-    hashmap.insert(EOL, Reduce(9));
-    table.push(hashmap);
-
-    // for state 56
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Rbrace, Reduce(12));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(If, Shift(35));
-    hashmap.insert(While, Shift(36));
-    hashmap.insert(Return, Shift(32));
-    hashmap.insert(Break, Shift(33));
-    hashmap.insert(Continue, Shift(34));
-    hashmap.insert(TYPE, Goto(31));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(STATEMENT_LIST, Goto(109));
-    hashmap.insert(VAR_DECL, Goto(24));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(EXPRESSION, Goto(30));
-    hashmap.insert(LOGICAL_EXPR, Goto(37));
-    hashmap.insert(RELATIONAL_EXPR, Goto(38));
-    hashmap.insert(ADDITIVE_EXPR, Goto(39));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(40));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    hashmap.insert(STATEMENT, Goto(22));
-    hashmap.insert(ASSIGNMENT, Goto(23));
-    hashmap.insert(IF_STMT, Goto(28));
-    hashmap.insert(WHILE_STMT, Goto(29));
-    hashmap.insert(RETURN_STMT, Goto(25));
-    hashmap.insert(BREAK_STMT, Goto(26));
-    hashmap.insert(CONTINUE_STMT, Goto(27));
-    table.push(hashmap);
-
-    // for state 57
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(EXPRESSION, Goto(110));
-    hashmap.insert(LOGICAL_EXPR, Goto(60));
-    hashmap.insert(RELATIONAL_EXPR, Goto(61));
-    hashmap.insert(ADDITIVE_EXPR, Goto(62));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(63));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 58
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(13));
-    hashmap.insert(Semicolon, Reduce(13));
-    table.push(hashmap);
-
-    // for state 59
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(60));
-    hashmap.insert(Semicolon, Reduce(60));
-    table.push(hashmap);
-
-    // for state 60
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(32));
-    hashmap.insert(Semicolon, Reduce(32));
-    hashmap.insert(LogOp(LogicalOperator::Or), Shift(111));
-    hashmap.insert(LogOp(LogicalOperator::And), Shift(111));
-    table.push(hashmap);
-
-    // for state 61
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(34));
-    hashmap.insert(Semicolon, Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(34));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(112));
-    table.push(hashmap);
-
-    // for state 62
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(36));
-    hashmap.insert(Semicolon, Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(36));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(113));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(113));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(114));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(114));
-    table.push(hashmap);
-
-    // for state 63
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(116));
-    hashmap.insert(Rbrace, Reduce(39));
-    hashmap.insert(Semicolon, Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(39));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(115));
-    hashmap.insert(And, Shift(117));
-    table.push(hashmap);
-
-    // for state 64
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(43));
-    hashmap.insert(Rbrace, Reduce(43));
-    hashmap.insert(Semicolon, Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(43));
-    hashmap.insert(And, Reduce(43));
-    table.push(hashmap);
-
-    // for state 65
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(118));
-    table.push(hashmap);
-
-    // for state 66
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(119));
-    table.push(hashmap);
-
-    // for state 67
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(120));
-    table.push(hashmap);
-
-    // for state 68
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(121));
-    table.push(hashmap);
-
-    // for state 69
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(124));
-    hashmap.insert(Star, Reduce(48));
-    hashmap.insert(Rbrace, Reduce(48));
-    hashmap.insert(Semicolon, Reduce(48));
-    hashmap.insert(Lparen, Shift(125));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(48));
-    hashmap.insert(And, Reduce(48));
-    hashmap.insert(INDEX, Goto(122));
-    hashmap.insert(ARGUMENTS, Goto(123));
-    table.push(hashmap);
-
-    // for state 70
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(26));
-    hashmap.insert(Star, Reduce(26));
-    hashmap.insert(Rbrace, Reduce(26));
-    hashmap.insert(Semicolon, Reduce(26));
-    hashmap.insert(Lparen, Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(26));
-    hashmap.insert(And, Reduce(26));
-    table.push(hashmap);
-
-    // for state 71
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(20));
-    hashmap.insert(Star, Reduce(20));
-    hashmap.insert(Rbrace, Reduce(20));
-    hashmap.insert(Semicolon, Reduce(20));
-    hashmap.insert(Lparen, Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(20));
-    hashmap.insert(And, Reduce(20));
-    table.push(hashmap);
-
-    // for state 72
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(21));
-    hashmap.insert(Star, Reduce(21));
-    hashmap.insert(Rbrace, Reduce(21));
-    hashmap.insert(Semicolon, Reduce(21));
-    hashmap.insert(Lparen, Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(21));
-    hashmap.insert(And, Reduce(21));
-    table.push(hashmap);
-
-    // for state 73
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(22));
-    hashmap.insert(Star, Reduce(22));
-    hashmap.insert(Rbrace, Reduce(22));
-    hashmap.insert(Semicolon, Reduce(22));
-    hashmap.insert(Lparen, Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(22));
-    hashmap.insert(And, Reduce(22));
-    table.push(hashmap);
-
-    // for state 74
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(126));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 75
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(127));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 76
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(128));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 77
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(RELATIONAL_EXPR, Goto(129));
-    hashmap.insert(ADDITIVE_EXPR, Goto(39));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(40));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    table.push(hashmap);
-
-    // for state 78
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(ADDITIVE_EXPR, Goto(130));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(40));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    table.push(hashmap);
-
-    // for state 79
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(131));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    table.push(hashmap);
-
-    // for state 80
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(132));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    table.push(hashmap);
-
-    // for state 81
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(133));
-    table.push(hashmap);
-
-    // for state 82
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(134));
-    table.push(hashmap);
-
-    // for state 83
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(UNARY_EXPR, Goto(135));
-    table.push(hashmap);
-
-    // for state 84
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(44));
-    hashmap.insert(Rbrace, Reduce(44));
-    hashmap.insert(Semicolon, Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(44));
-    hashmap.insert(And, Reduce(44));
-    hashmap.insert(AssignOp, Reduce(44));
-    table.push(hashmap);
-
-    // for state 85
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(45));
-    hashmap.insert(Rbrace, Reduce(45));
-    hashmap.insert(Semicolon, Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(45));
-    hashmap.insert(And, Reduce(45));
-    hashmap.insert(AssignOp, Reduce(45));
-    table.push(hashmap);
-
-    // for state 86
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(46));
-    hashmap.insert(Rbrace, Reduce(46));
-    hashmap.insert(Semicolon, Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(46));
-    hashmap.insert(And, Reduce(46));
-    hashmap.insert(AssignOp, Reduce(46));
-    table.push(hashmap);
-
-    // for state 87
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(47));
-    hashmap.insert(Rbrace, Reduce(47));
-    hashmap.insert(Semicolon, Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(47));
-    hashmap.insert(And, Reduce(47));
-    hashmap.insert(AssignOp, Reduce(47));
-    table.push(hashmap);
-
-    // for state 88
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(24));
-    hashmap.insert(Star, Reduce(24));
-    hashmap.insert(Rbrace, Reduce(24));
-    hashmap.insert(Semicolon, Reduce(24));
-    hashmap.insert(Lparen, Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(24));
-    hashmap.insert(And, Reduce(24));
-    hashmap.insert(AssignOp, Reduce(24));
-    table.push(hashmap);
-
-    // for state 89
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(25));
-    hashmap.insert(Star, Reduce(25));
-    hashmap.insert(Rbrace, Reduce(25));
-    hashmap.insert(Semicolon, Reduce(25));
-    hashmap.insert(Lparen, Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(25));
-    hashmap.insert(And, Reduce(25));
-    hashmap.insert(AssignOp, Reduce(25));
-    table.push(hashmap);
-
-    // for state 90
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(EXPRESSION, Goto(136));
-    hashmap.insert(LOGICAL_EXPR, Goto(137));
-    hashmap.insert(RELATIONAL_EXPR, Goto(138));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 91
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(152));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 92
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(169));
-    table.push(hashmap);
-
-    // for state 93
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(32));
-    hashmap.insert(LogOp(LogicalOperator::Or), Shift(170));
-    hashmap.insert(LogOp(LogicalOperator::And), Shift(170));
-    table.push(hashmap);
-
-    // for state 94
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(34));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(171));
-    table.push(hashmap);
-
-    // for state 95
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(36));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(172));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(172));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(173));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(173));
-    table.push(hashmap);
-
-    // for state 96
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(175));
-    hashmap.insert(Rparen, Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(39));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(174));
-    hashmap.insert(And, Shift(176));
-    table.push(hashmap);
-
-    // for state 97
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(43));
-    hashmap.insert(Rparen, Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(43));
-    hashmap.insert(And, Reduce(43));
-    table.push(hashmap);
-
-    // for state 98
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(177));
-    table.push(hashmap);
-
-    // for state 99
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(178));
-    table.push(hashmap);
-
-    // for state 100
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(179));
-    table.push(hashmap);
-
-    // for state 101
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(180));
-    table.push(hashmap);
-
-    // for state 102
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(183));
-    hashmap.insert(Star, Reduce(48));
-    hashmap.insert(Lparen, Shift(184));
-    hashmap.insert(Rparen, Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(48));
-    hashmap.insert(And, Reduce(48));
-    hashmap.insert(INDEX, Goto(181));
-    hashmap.insert(ARGUMENTS, Goto(182));
-    table.push(hashmap);
-
-    // for state 103
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(26));
-    hashmap.insert(Star, Reduce(26));
-    hashmap.insert(Lparen, Reduce(26));
-    hashmap.insert(Rparen, Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(26));
-    hashmap.insert(And, Reduce(26));
-    table.push(hashmap);
-
-    // for state 104
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(20));
-    hashmap.insert(Star, Reduce(20));
-    hashmap.insert(Lparen, Reduce(20));
-    hashmap.insert(Rparen, Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(20));
-    hashmap.insert(And, Reduce(20));
-    table.push(hashmap);
-
-    // for state 105
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(21));
-    hashmap.insert(Star, Reduce(21));
-    hashmap.insert(Lparen, Reduce(21));
-    hashmap.insert(Rparen, Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(21));
-    hashmap.insert(And, Reduce(21));
-    table.push(hashmap);
-
-    // for state 106
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(22));
-    hashmap.insert(Star, Reduce(22));
-    hashmap.insert(Lparen, Reduce(22));
-    hashmap.insert(Rparen, Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(22));
-    hashmap.insert(And, Reduce(22));
-    table.push(hashmap);
-
-    // for state 107
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(185));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 108
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(16));
-    table.push(hashmap);
-
-    // for state 109
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(10));
-    table.push(hashmap);
-
-    // for state 110
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(57));
-    hashmap.insert(Semicolon, Reduce(57));
-    table.push(hashmap);
-
-    // for state 111
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(RELATIONAL_EXPR, Goto(186));
-    hashmap.insert(ADDITIVE_EXPR, Goto(62));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(63));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 112
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(ADDITIVE_EXPR, Goto(187));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(63));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 113
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(188));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 114
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(189));
-    hashmap.insert(UNARY_EXPR, Goto(64));
-    table.push(hashmap);
-
-    // for state 115
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(190));
-    table.push(hashmap);
-
-    // for state 116
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(191));
-    table.push(hashmap);
-
-    // for state 117
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(71));
-    hashmap.insert(Star, Shift(66));
-    hashmap.insert(Identifier, Shift(73));
-    hashmap.insert(Lparen, Shift(74));
-    hashmap.insert(StringLit, Shift(72));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(68));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(68));
-    hashmap.insert(And, Shift(67));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(65));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(65));
-    hashmap.insert(OPERAND, Goto(70));
-    hashmap.insert(PRIMARY_EXPR, Goto(69));
-    hashmap.insert(UNARY_EXPR, Goto(192));
-    table.push(hashmap);
-
-    // for state 118
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(44));
-    hashmap.insert(Rbrace, Reduce(44));
-    hashmap.insert(Semicolon, Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(44));
-    hashmap.insert(And, Reduce(44));
-    table.push(hashmap);
-
-    // for state 119
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(45));
-    hashmap.insert(Rbrace, Reduce(45));
-    hashmap.insert(Semicolon, Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(45));
-    hashmap.insert(And, Reduce(45));
-    table.push(hashmap);
-
-    // for state 120
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(46));
-    hashmap.insert(Rbrace, Reduce(46));
-    hashmap.insert(Semicolon, Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(46));
-    hashmap.insert(And, Reduce(46));
-    table.push(hashmap);
-
-    // for state 121
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(47));
-    hashmap.insert(Rbrace, Reduce(47));
-    hashmap.insert(Semicolon, Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(47));
-    hashmap.insert(And, Reduce(47));
-    table.push(hashmap);
-
-    // for state 122
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(24));
-    hashmap.insert(Star, Reduce(24));
-    hashmap.insert(Rbrace, Reduce(24));
-    hashmap.insert(Semicolon, Reduce(24));
-    hashmap.insert(Lparen, Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(24));
-    hashmap.insert(And, Reduce(24));
-    table.push(hashmap);
-
-    // for state 123
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(25));
-    hashmap.insert(Star, Reduce(25));
-    hashmap.insert(Rbrace, Reduce(25));
-    hashmap.insert(Semicolon, Reduce(25));
-    hashmap.insert(Lparen, Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(25));
-    hashmap.insert(And, Reduce(25));
-    table.push(hashmap);
-
-    // for state 124
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(EXPRESSION, Goto(193));
-    hashmap.insert(LOGICAL_EXPR, Goto(137));
-    hashmap.insert(RELATIONAL_EXPR, Goto(138));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 125
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(194));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 126
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(195));
-    table.push(hashmap);
-
-    // for state 127
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(196));
-    table.push(hashmap);
-
-    // for state 128
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(197));
-    table.push(hashmap);
-
-    // for state 129
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(33));
-    hashmap.insert(Semicolon, Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(33));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(78));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(78));
-    hashmap.insert(AssignOp, Reduce(33));
-    table.push(hashmap);
-
-    // for state 130
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(35));
-    hashmap.insert(Semicolon, Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(35));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(79));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(79));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(80));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(80));
-    hashmap.insert(AssignOp, Reduce(35));
-    table.push(hashmap);
-
-    // for state 131
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(82));
-    hashmap.insert(Rbrace, Reduce(37));
-    hashmap.insert(Semicolon, Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(37));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(81));
-    hashmap.insert(And, Shift(83));
-    hashmap.insert(AssignOp, Reduce(37));
-    table.push(hashmap);
-
-    // for state 132
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(82));
-    hashmap.insert(Rbrace, Reduce(38));
-    hashmap.insert(Semicolon, Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(38));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(81));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(81));
-    hashmap.insert(And, Shift(83));
-    hashmap.insert(AssignOp, Reduce(38));
-    table.push(hashmap);
-
-    // for state 133
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(40));
-    hashmap.insert(Rbrace, Reduce(40));
-    hashmap.insert(Semicolon, Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(40));
-    hashmap.insert(And, Reduce(40));
-    hashmap.insert(AssignOp, Reduce(40));
-    table.push(hashmap);
-
-    // for state 134
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(41));
-    hashmap.insert(Rbrace, Reduce(41));
-    hashmap.insert(Semicolon, Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(41));
-    hashmap.insert(And, Reduce(41));
-    hashmap.insert(AssignOp, Reduce(41));
-    table.push(hashmap);
-
-    // for state 135
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(42));
-    hashmap.insert(Rbrace, Reduce(42));
-    hashmap.insert(Semicolon, Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(42));
-    hashmap.insert(And, Reduce(42));
-    hashmap.insert(AssignOp, Reduce(42));
-    table.push(hashmap);
-
-    // for state 136
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(198));
-    table.push(hashmap);
-
-    // for state 137
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(32));
-    hashmap.insert(LogOp(LogicalOperator::Or), Shift(199));
-    hashmap.insert(LogOp(LogicalOperator::And), Shift(199));
-    table.push(hashmap);
-
-    // for state 138
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(34));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(200));
-    table.push(hashmap);
-
-    // for state 139
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(36));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(201));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(201));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(202));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(202));
-    table.push(hashmap);
-
-    // for state 140
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(39));
-    hashmap.insert(Star, Shift(204));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(39));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(203));
-    hashmap.insert(And, Shift(205));
-    table.push(hashmap);
-
-    // for state 141
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(43));
-    hashmap.insert(Star, Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(43));
-    hashmap.insert(And, Reduce(43));
-    table.push(hashmap);
-
-    // for state 142
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(206));
-    table.push(hashmap);
-
-    // for state 143
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(207));
-    table.push(hashmap);
-
-    // for state 144
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(208));
-    table.push(hashmap);
-
-    // for state 145
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(209));
-    table.push(hashmap);
-
-    // for state 146
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(212));
-    hashmap.insert(Rbracket, Reduce(48));
-    hashmap.insert(Star, Reduce(48));
-    hashmap.insert(Lparen, Shift(213));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(48));
-    hashmap.insert(And, Reduce(48));
-    hashmap.insert(INDEX, Goto(210));
-    hashmap.insert(ARGUMENTS, Goto(211));
-    table.push(hashmap);
-
-    // for state 147
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(26));
-    hashmap.insert(Rbracket, Reduce(26));
-    hashmap.insert(Star, Reduce(26));
-    hashmap.insert(Lparen, Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(26));
-    hashmap.insert(And, Reduce(26));
-    table.push(hashmap);
-
-    // for state 148
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(20));
-    hashmap.insert(Rbracket, Reduce(20));
-    hashmap.insert(Star, Reduce(20));
-    hashmap.insert(Lparen, Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(20));
-    hashmap.insert(And, Reduce(20));
-    table.push(hashmap);
-
-    // for state 149
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(21));
-    hashmap.insert(Rbracket, Reduce(21));
-    hashmap.insert(Star, Reduce(21));
-    hashmap.insert(Lparen, Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(21));
-    hashmap.insert(And, Reduce(21));
-    table.push(hashmap);
-
-    // for state 150
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(22));
-    hashmap.insert(Rbracket, Reduce(22));
-    hashmap.insert(Star, Reduce(22));
-    hashmap.insert(Lparen, Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(22));
-    hashmap.insert(And, Reduce(22));
-    table.push(hashmap);
-
-    // for state 151
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(214));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 152
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(215));
-    table.push(hashmap);
-
-    // for state 153
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(30));
-    hashmap.insert(Comma, Shift(216));
-    table.push(hashmap);
-
-    // for state 154
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(32));
-    hashmap.insert(Comma, Reduce(32));
-    hashmap.insert(LogOp(LogicalOperator::Or), Shift(217));
-    hashmap.insert(LogOp(LogicalOperator::And), Shift(217));
-    table.push(hashmap);
-
-    // for state 155
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(34));
-    hashmap.insert(Comma, Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(34));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(34));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(218));
-    table.push(hashmap);
-
-    // for state 156
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(36));
-    hashmap.insert(Comma, Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(36));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(36));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(36));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(219));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(219));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(220));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(220));
-    table.push(hashmap);
-
-    // for state 157
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(222));
-    hashmap.insert(Rparen, Reduce(39));
-    hashmap.insert(Comma, Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(39));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(39));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(39));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(39));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(39));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(221));
-    hashmap.insert(And, Shift(223));
-    table.push(hashmap);
-
-    // for state 158
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(43));
-    hashmap.insert(Rparen, Reduce(43));
-    hashmap.insert(Comma, Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(43));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(43));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(43));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(43));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(43));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(43));
-    hashmap.insert(And, Reduce(43));
-    table.push(hashmap);
-
-    // for state 159
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(224));
-    table.push(hashmap);
-
-    // for state 160
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(225));
-    table.push(hashmap);
-
-    // for state 161
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(226));
-    table.push(hashmap);
-
-    // for state 162
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(227));
-    table.push(hashmap);
-
-    // for state 163
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Shift(230));
-    hashmap.insert(Star, Reduce(48));
-    hashmap.insert(Lparen, Shift(231));
-    hashmap.insert(Rparen, Reduce(48));
-    hashmap.insert(Comma, Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(48));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(48));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(48));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(48));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(48));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(48));
-    hashmap.insert(And, Reduce(48));
-    hashmap.insert(INDEX, Goto(228));
-    hashmap.insert(ARGUMENTS, Goto(229));
-    table.push(hashmap);
-
-    // for state 164
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(26));
-    hashmap.insert(Star, Reduce(26));
-    hashmap.insert(Lparen, Reduce(26));
-    hashmap.insert(Rparen, Reduce(26));
-    hashmap.insert(Comma, Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(26));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(26));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(26));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(26));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(26));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(26));
-    hashmap.insert(And, Reduce(26));
-    table.push(hashmap);
-
-    // for state 165
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(20));
-    hashmap.insert(Star, Reduce(20));
-    hashmap.insert(Lparen, Reduce(20));
-    hashmap.insert(Rparen, Reduce(20));
-    hashmap.insert(Comma, Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(20));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(20));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(20));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(20));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(20));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(20));
-    hashmap.insert(And, Reduce(20));
-    table.push(hashmap);
-
-    // for state 166
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(21));
-    hashmap.insert(Star, Reduce(21));
-    hashmap.insert(Lparen, Reduce(21));
-    hashmap.insert(Rparen, Reduce(21));
-    hashmap.insert(Comma, Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(21));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(21));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(21));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(21));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(21));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(21));
-    hashmap.insert(And, Reduce(21));
-    table.push(hashmap);
-
-    // for state 167
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(22));
-    hashmap.insert(Star, Reduce(22));
-    hashmap.insert(Lparen, Reduce(22));
-    hashmap.insert(Rparen, Reduce(22));
-    hashmap.insert(Comma, Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(22));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(22));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(22));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(22));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(22));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(22));
-    hashmap.insert(And, Reduce(22));
-    table.push(hashmap);
-
-    // for state 168
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(EXPRESSION, Goto(232));
-    hashmap.insert(LOGICAL_EXPR, Goto(93));
-    hashmap.insert(RELATIONAL_EXPR, Goto(94));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 169
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(23));
-    hashmap.insert(Star, Reduce(23));
-    hashmap.insert(Rbrace, Reduce(23));
-    hashmap.insert(Semicolon, Reduce(23));
-    hashmap.insert(Lparen, Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(23));
-    hashmap.insert(And, Reduce(23));
-    hashmap.insert(AssignOp, Reduce(23));
-    table.push(hashmap);
-
-    // for state 170
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(RELATIONAL_EXPR, Goto(233));
-    hashmap.insert(ADDITIVE_EXPR, Goto(95));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 171
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(ADDITIVE_EXPR, Goto(234));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(96));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 172
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(235));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 173
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(236));
-    hashmap.insert(UNARY_EXPR, Goto(97));
-    table.push(hashmap);
-
-    // for state 174
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(237));
-    table.push(hashmap);
-
-    // for state 175
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(238));
-    table.push(hashmap);
-
-    // for state 176
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(104));
-    hashmap.insert(Star, Shift(99));
-    hashmap.insert(Identifier, Shift(106));
-    hashmap.insert(Lparen, Shift(107));
-    hashmap.insert(StringLit, Shift(105));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(101));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(101));
-    hashmap.insert(And, Shift(100));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(98));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(98));
-    hashmap.insert(OPERAND, Goto(103));
-    hashmap.insert(PRIMARY_EXPR, Goto(102));
-    hashmap.insert(UNARY_EXPR, Goto(239));
-    table.push(hashmap);
-
-    // for state 177
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(44));
-    hashmap.insert(Rparen, Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(44));
-    hashmap.insert(And, Reduce(44));
-    table.push(hashmap);
-
-    // for state 178
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(45));
-    hashmap.insert(Rparen, Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(45));
-    hashmap.insert(And, Reduce(45));
-    table.push(hashmap);
-
-    // for state 179
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(46));
-    hashmap.insert(Rparen, Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(46));
-    hashmap.insert(And, Reduce(46));
-    table.push(hashmap);
-
-    // for state 180
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(47));
-    hashmap.insert(Rparen, Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(47));
-    hashmap.insert(And, Reduce(47));
-    table.push(hashmap);
-
-    // for state 181
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(24));
-    hashmap.insert(Star, Reduce(24));
-    hashmap.insert(Lparen, Reduce(24));
-    hashmap.insert(Rparen, Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(24));
-    hashmap.insert(And, Reduce(24));
-    table.push(hashmap);
-
-    // for state 182
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(25));
-    hashmap.insert(Star, Reduce(25));
-    hashmap.insert(Lparen, Reduce(25));
-    hashmap.insert(Rparen, Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(25));
-    hashmap.insert(And, Reduce(25));
-    table.push(hashmap);
-
-    // for state 183
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(EXPRESSION, Goto(240));
-    hashmap.insert(LOGICAL_EXPR, Goto(137));
-    hashmap.insert(RELATIONAL_EXPR, Goto(138));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 184
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(241));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 185
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(242));
-    table.push(hashmap);
-
-    // for state 186
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(33));
-    hashmap.insert(Semicolon, Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(33));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(112));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(112));
-    table.push(hashmap);
-
-    // for state 187
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(35));
-    hashmap.insert(Semicolon, Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(35));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(113));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(113));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(114));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(114));
-    table.push(hashmap);
-
-    // for state 188
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(116));
-    hashmap.insert(Rbrace, Reduce(37));
-    hashmap.insert(Semicolon, Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(37));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(115));
-    hashmap.insert(And, Shift(117));
-    table.push(hashmap);
-
-    // for state 189
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(116));
-    hashmap.insert(Rbrace, Reduce(38));
-    hashmap.insert(Semicolon, Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(38));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(115));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(115));
-    hashmap.insert(And, Shift(117));
-    table.push(hashmap);
-
-    // for state 190
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(40));
-    hashmap.insert(Rbrace, Reduce(40));
-    hashmap.insert(Semicolon, Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(40));
-    hashmap.insert(And, Reduce(40));
-    table.push(hashmap);
-
-    // for state 191
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(41));
-    hashmap.insert(Rbrace, Reduce(41));
-    hashmap.insert(Semicolon, Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(41));
-    hashmap.insert(And, Reduce(41));
-    table.push(hashmap);
-
-    // for state 192
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(42));
-    hashmap.insert(Rbrace, Reduce(42));
-    hashmap.insert(Semicolon, Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(42));
-    hashmap.insert(And, Reduce(42));
-    table.push(hashmap);
-
-    // for state 193
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(243));
-    table.push(hashmap);
-
-    // for state 194
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(244));
-    table.push(hashmap);
-
-    // for state 195
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(23));
-    hashmap.insert(Star, Reduce(23));
-    hashmap.insert(Rbrace, Reduce(23));
-    hashmap.insert(Semicolon, Reduce(23));
-    hashmap.insert(Lparen, Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(23));
-    hashmap.insert(And, Reduce(23));
-    table.push(hashmap);
-
-    // for state 196
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbrace, Shift(246));
-    hashmap.insert(BLOCK, Goto(245));
-    table.push(hashmap);
-
-    // for state 197
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbrace, Shift(246));
-    hashmap.insert(BLOCK, Goto(247));
-    table.push(hashmap);
-
-    // for state 198
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(27));
-    hashmap.insert(Star, Reduce(27));
-    hashmap.insert(Rbrace, Reduce(27));
-    hashmap.insert(Semicolon, Reduce(27));
-    hashmap.insert(Lparen, Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(27));
-    hashmap.insert(And, Reduce(27));
-    hashmap.insert(AssignOp, Reduce(27));
-    table.push(hashmap);
-
-    // for state 199
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(RELATIONAL_EXPR, Goto(248));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 200
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(ADDITIVE_EXPR, Goto(249));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 201
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(250));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 202
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(251));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 203
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(252));
-    table.push(hashmap);
-
-    // for state 204
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(253));
-    table.push(hashmap);
-
-    // for state 205
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(UNARY_EXPR, Goto(254));
-    table.push(hashmap);
-
-    // for state 206
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(44));
-    hashmap.insert(Star, Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(44));
-    hashmap.insert(And, Reduce(44));
-    table.push(hashmap);
-
-    // for state 207
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(45));
-    hashmap.insert(Star, Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(45));
-    hashmap.insert(And, Reduce(45));
-    table.push(hashmap);
-
-    // for state 208
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(46));
-    hashmap.insert(Star, Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(46));
-    hashmap.insert(And, Reduce(46));
-    table.push(hashmap);
-
-    // for state 209
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(47));
-    hashmap.insert(Star, Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(47));
-    hashmap.insert(And, Reduce(47));
-    table.push(hashmap);
-
-    // for state 210
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(24));
-    hashmap.insert(Rbracket, Reduce(24));
-    hashmap.insert(Star, Reduce(24));
-    hashmap.insert(Lparen, Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(24));
-    hashmap.insert(And, Reduce(24));
-    table.push(hashmap);
-
-    // for state 211
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(25));
-    hashmap.insert(Rbracket, Reduce(25));
-    hashmap.insert(Star, Reduce(25));
-    hashmap.insert(Lparen, Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(25));
-    hashmap.insert(And, Reduce(25));
-    table.push(hashmap);
-
-    // for state 212
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(EXPRESSION, Goto(255));
-    hashmap.insert(LOGICAL_EXPR, Goto(137));
-    hashmap.insert(RELATIONAL_EXPR, Goto(138));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 213
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(256));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 214
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(257));
-    table.push(hashmap);
-
-    // for state 215
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(28));
-    hashmap.insert(Star, Reduce(28));
-    hashmap.insert(Rbrace, Reduce(28));
-    hashmap.insert(Semicolon, Reduce(28));
-    hashmap.insert(Lparen, Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(28));
-    hashmap.insert(And, Reduce(28));
-    hashmap.insert(AssignOp, Reduce(28));
-    table.push(hashmap);
-
-    // for state 216
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(258));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 217
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(RELATIONAL_EXPR, Goto(259));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 218
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(ADDITIVE_EXPR, Goto(260));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 219
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(261));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 220
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(262));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 221
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(263));
-    table.push(hashmap);
-
-    // for state 222
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(264));
-    table.push(hashmap);
-
-    // for state 223
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(UNARY_EXPR, Goto(265));
-    table.push(hashmap);
-
-    // for state 224
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(44));
-    hashmap.insert(Rparen, Reduce(44));
-    hashmap.insert(Comma, Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(44));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(44));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(44));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(44));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(44));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(44));
-    hashmap.insert(And, Reduce(44));
-    table.push(hashmap);
-
-    // for state 225
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(45));
-    hashmap.insert(Rparen, Reduce(45));
-    hashmap.insert(Comma, Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(45));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(45));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(45));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(45));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(45));
-    hashmap.insert(And, Reduce(45));
-    table.push(hashmap);
-
-    // for state 226
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(46));
-    hashmap.insert(Rparen, Reduce(46));
-    hashmap.insert(Comma, Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(46));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(46));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(46));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(46));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(46));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(46));
-    hashmap.insert(And, Reduce(46));
-    table.push(hashmap);
-
-    // for state 227
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(47));
-    hashmap.insert(Rparen, Reduce(47));
-    hashmap.insert(Comma, Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(47));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(47));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(47));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(47));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(47));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(47));
-    hashmap.insert(And, Reduce(47));
-    table.push(hashmap);
-
-    // for state 228
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(24));
-    hashmap.insert(Star, Reduce(24));
-    hashmap.insert(Lparen, Reduce(24));
-    hashmap.insert(Rparen, Reduce(24));
-    hashmap.insert(Comma, Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(24));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(24));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(24));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(24));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(24));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(24));
-    hashmap.insert(And, Reduce(24));
-    table.push(hashmap);
-
-    // for state 229
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(25));
-    hashmap.insert(Star, Reduce(25));
-    hashmap.insert(Lparen, Reduce(25));
-    hashmap.insert(Rparen, Reduce(25));
-    hashmap.insert(Comma, Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(25));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(25));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(25));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(25));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(25));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(25));
-    hashmap.insert(And, Reduce(25));
-    table.push(hashmap);
-
-    // for state 230
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(148));
-    hashmap.insert(Star, Shift(143));
-    hashmap.insert(Identifier, Shift(150));
-    hashmap.insert(Lparen, Shift(151));
-    hashmap.insert(StringLit, Shift(149));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(145));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(145));
-    hashmap.insert(And, Shift(144));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(142));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(142));
-    hashmap.insert(OPERAND, Goto(147));
-    hashmap.insert(PRIMARY_EXPR, Goto(146));
-    hashmap.insert(EXPRESSION, Goto(266));
-    hashmap.insert(LOGICAL_EXPR, Goto(137));
-    hashmap.insert(RELATIONAL_EXPR, Goto(138));
-    hashmap.insert(ADDITIVE_EXPR, Goto(139));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(140));
-    hashmap.insert(UNARY_EXPR, Goto(141));
-    table.push(hashmap);
-
-    // for state 231
-    let mut hashmap = HashMap::new();
-    hashmap.insert(IntLit, Shift(165));
-    hashmap.insert(Star, Shift(160));
-    hashmap.insert(Identifier, Shift(167));
-    hashmap.insert(Lparen, Shift(168));
-    hashmap.insert(Rparen, Reduce(31));
-    hashmap.insert(StringLit, Shift(166));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(162));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(162));
-    hashmap.insert(And, Shift(161));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(159));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(159));
-    hashmap.insert(OPERAND, Goto(164));
-    hashmap.insert(PRIMARY_EXPR, Goto(163));
-    hashmap.insert(EXPRESSION_LIST, Goto(267));
-    hashmap.insert(EXPRESSION, Goto(153));
-    hashmap.insert(LOGICAL_EXPR, Goto(154));
-    hashmap.insert(RELATIONAL_EXPR, Goto(155));
-    hashmap.insert(ADDITIVE_EXPR, Goto(156));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(157));
-    hashmap.insert(UNARY_EXPR, Goto(158));
-    table.push(hashmap);
-
-    // for state 232
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(268));
-    table.push(hashmap);
-
-    // for state 233
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(33));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(171));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(171));
-    table.push(hashmap);
-
-    // for state 234
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(35));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(172));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(172));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(173));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(173));
-    table.push(hashmap);
-
-    // for state 235
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(175));
-    hashmap.insert(Rparen, Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(37));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(174));
-    hashmap.insert(And, Shift(176));
-    table.push(hashmap);
-
-    // for state 236
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(175));
-    hashmap.insert(Rparen, Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(38));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(174));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(174));
-    hashmap.insert(And, Shift(176));
-    table.push(hashmap);
-
-    // for state 237
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(40));
-    hashmap.insert(Rparen, Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(40));
-    hashmap.insert(And, Reduce(40));
-    table.push(hashmap);
-
-    // for state 238
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(41));
-    hashmap.insert(Rparen, Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(41));
-    hashmap.insert(And, Reduce(41));
-    table.push(hashmap);
-
-    // for state 239
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(42));
-    hashmap.insert(Rparen, Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(42));
-    hashmap.insert(And, Reduce(42));
-    table.push(hashmap);
-
-    // for state 240
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(269));
-    table.push(hashmap);
-
-    // for state 241
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(270));
-    table.push(hashmap);
-
-    // for state 242
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(23));
-    hashmap.insert(Star, Reduce(23));
-    hashmap.insert(Lparen, Reduce(23));
-    hashmap.insert(Rparen, Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(23));
-    hashmap.insert(And, Reduce(23));
-    table.push(hashmap);
-
-    // for state 243
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(27));
-    hashmap.insert(Star, Reduce(27));
-    hashmap.insert(Rbrace, Reduce(27));
-    hashmap.insert(Semicolon, Reduce(27));
-    hashmap.insert(Lparen, Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(27));
-    hashmap.insert(And, Reduce(27));
-    table.push(hashmap);
-
-    // for state 244
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(28));
-    hashmap.insert(Star, Reduce(28));
-    hashmap.insert(Rbrace, Reduce(28));
-    hashmap.insert(Semicolon, Reduce(28));
-    hashmap.insert(Lparen, Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(28));
-    hashmap.insert(And, Reduce(28));
-    table.push(hashmap);
-
-    // for state 245
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(58));
-    hashmap.insert(Semicolon, Reduce(58));
-    table.push(hashmap);
-
-    // for state 246
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Int, Shift(4));
-    hashmap.insert(Void, Shift(5));
-    hashmap.insert(IntLit, Shift(48));
-    hashmap.insert(Star, Shift(43));
-    hashmap.insert(Rbrace, Reduce(12));
-    hashmap.insert(Identifier, Shift(50));
-    hashmap.insert(Lparen, Shift(51));
-    hashmap.insert(StringLit, Shift(49));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(45));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(45));
-    hashmap.insert(And, Shift(44));
-    hashmap.insert(UnaryOp(UnaryOperator::Not), Shift(42));
-    hashmap.insert(UnaryOp(UnaryOperator::BitwiseNot), Shift(42));
-    hashmap.insert(If, Shift(35));
-    hashmap.insert(While, Shift(36));
-    hashmap.insert(Return, Shift(32));
-    hashmap.insert(Break, Shift(33));
-    hashmap.insert(Continue, Shift(34));
-    hashmap.insert(TYPE, Goto(31));
-    hashmap.insert(ARRAY_TYPE, Goto(6));
-    hashmap.insert(POINTER_TYPE, Goto(7));
-    hashmap.insert(STATEMENT_LIST, Goto(271));
-    hashmap.insert(VAR_DECL, Goto(24));
-    hashmap.insert(OPERAND, Goto(47));
-    hashmap.insert(PRIMARY_EXPR, Goto(46));
-    hashmap.insert(EXPRESSION, Goto(30));
-    hashmap.insert(LOGICAL_EXPR, Goto(37));
-    hashmap.insert(RELATIONAL_EXPR, Goto(38));
-    hashmap.insert(ADDITIVE_EXPR, Goto(39));
-    hashmap.insert(MULTIPLICATIVE_EXPR, Goto(40));
-    hashmap.insert(UNARY_EXPR, Goto(41));
-    hashmap.insert(STATEMENT, Goto(22));
-    hashmap.insert(ASSIGNMENT, Goto(23));
-    hashmap.insert(IF_STMT, Goto(28));
-    hashmap.insert(WHILE_STMT, Goto(29));
-    hashmap.insert(RETURN_STMT, Goto(25));
-    hashmap.insert(BREAK_STMT, Goto(26));
-    hashmap.insert(CONTINUE_STMT, Goto(27));
-    table.push(hashmap);
-
-    // for state 247
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(59));
-    hashmap.insert(Semicolon, Reduce(59));
-    table.push(hashmap);
-
-    // for state 248
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(33));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(200));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(200));
-    table.push(hashmap);
-
-    // for state 249
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(35));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(201));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(201));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(202));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(202));
-    table.push(hashmap);
-
-    // for state 250
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(37));
-    hashmap.insert(Star, Shift(204));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(37));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(203));
-    hashmap.insert(And, Shift(205));
-    table.push(hashmap);
-
-    // for state 251
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(38));
-    hashmap.insert(Star, Shift(204));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(38));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(203));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(203));
-    hashmap.insert(And, Shift(205));
-    table.push(hashmap);
-
-    // for state 252
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(40));
-    hashmap.insert(Star, Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(40));
-    hashmap.insert(And, Reduce(40));
-    table.push(hashmap);
-
-    // for state 253
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(41));
-    hashmap.insert(Star, Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(41));
-    hashmap.insert(And, Reduce(41));
-    table.push(hashmap);
-
-    // for state 254
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Reduce(42));
-    hashmap.insert(Star, Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(42));
-    hashmap.insert(And, Reduce(42));
-    table.push(hashmap);
-
-    // for state 255
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(272));
-    table.push(hashmap);
-
-    // for state 256
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(273));
-    table.push(hashmap);
-
-    // for state 257
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(23));
-    hashmap.insert(Rbracket, Reduce(23));
-    hashmap.insert(Star, Reduce(23));
-    hashmap.insert(Lparen, Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(23));
-    hashmap.insert(And, Reduce(23));
-    table.push(hashmap);
-
-    // for state 258
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(29));
-    table.push(hashmap);
-
-    // for state 259
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(33));
-    hashmap.insert(Comma, Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(33));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(33));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Shift(218));
-    hashmap.insert(RelOp(RelativeOperator::Less), Shift(218));
-    table.push(hashmap);
-
-    // for state 260
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Reduce(35));
-    hashmap.insert(Comma, Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(35));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(35));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(35));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Shift(219));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Shift(219));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Shift(220));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Shift(220));
-    table.push(hashmap);
-
-    // for state 261
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(222));
-    hashmap.insert(Rparen, Reduce(37));
-    hashmap.insert(Comma, Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(37));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(37));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(37));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(37));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(37));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(221));
-    hashmap.insert(And, Shift(223));
-    table.push(hashmap);
-
-    // for state 262
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Shift(222));
-    hashmap.insert(Rparen, Reduce(38));
-    hashmap.insert(Comma, Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(38));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(38));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(38));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(38));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(38));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Shift(221));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Shift(221));
-    hashmap.insert(And, Shift(223));
-    table.push(hashmap);
-
-    // for state 263
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(40));
-    hashmap.insert(Rparen, Reduce(40));
-    hashmap.insert(Comma, Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(40));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(40));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(40));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(40));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(40));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(40));
-    hashmap.insert(And, Reduce(40));
-    table.push(hashmap);
-
-    // for state 264
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(41));
-    hashmap.insert(Rparen, Reduce(41));
-    hashmap.insert(Comma, Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(41));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(41));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(41));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(41));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(41));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(41));
-    hashmap.insert(And, Reduce(41));
-    table.push(hashmap);
-
-    // for state 265
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Star, Reduce(42));
-    hashmap.insert(Rparen, Reduce(42));
-    hashmap.insert(Comma, Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(42));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(42));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(42));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(42));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(42));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(42));
-    hashmap.insert(And, Reduce(42));
-    table.push(hashmap);
-
-    // for state 266
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbracket, Shift(274));
-    table.push(hashmap);
-
-    // for state 267
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rparen, Shift(275));
-    table.push(hashmap);
-
-    // for state 268
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(23));
-    hashmap.insert(Star, Reduce(23));
-    hashmap.insert(Lparen, Reduce(23));
-    hashmap.insert(Rparen, Reduce(23));
-    hashmap.insert(Comma, Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(23));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(23));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(23));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(23));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(23));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(23));
-    hashmap.insert(And, Reduce(23));
-    table.push(hashmap);
-
-    // for state 269
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(27));
-    hashmap.insert(Star, Reduce(27));
-    hashmap.insert(Lparen, Reduce(27));
-    hashmap.insert(Rparen, Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(27));
-    hashmap.insert(And, Reduce(27));
-    table.push(hashmap);
-
-    // for state 270
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(28));
-    hashmap.insert(Star, Reduce(28));
-    hashmap.insert(Lparen, Reduce(28));
-    hashmap.insert(Rparen, Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(28));
-    hashmap.insert(And, Reduce(28));
-    table.push(hashmap);
-
-    // for state 271
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Shift(276));
-    table.push(hashmap);
-
-    // for state 272
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(27));
-    hashmap.insert(Rbracket, Reduce(27));
-    hashmap.insert(Star, Reduce(27));
-    hashmap.insert(Lparen, Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(27));
-    hashmap.insert(And, Reduce(27));
-    table.push(hashmap);
-
-    // for state 273
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(28));
-    hashmap.insert(Rbracket, Reduce(28));
-    hashmap.insert(Star, Reduce(28));
-    hashmap.insert(Lparen, Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(28));
-    hashmap.insert(And, Reduce(28));
-    table.push(hashmap);
-
-    // for state 274
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(27));
-    hashmap.insert(Star, Reduce(27));
-    hashmap.insert(Lparen, Reduce(27));
-    hashmap.insert(Rparen, Reduce(27));
-    hashmap.insert(Comma, Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(27));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(27));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(27));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(27));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(27));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(27));
-    hashmap.insert(And, Reduce(27));
-    table.push(hashmap);
-
-    // for state 275
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Lbracket, Reduce(28));
-    hashmap.insert(Star, Reduce(28));
-    hashmap.insert(Lparen, Reduce(28));
-    hashmap.insert(Rparen, Reduce(28));
-    hashmap.insert(Comma, Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::Or), Reduce(28));
-    hashmap.insert(LogOp(LogicalOperator::And), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::NotEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Greater), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::LessEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::GreaterEqual), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Equal), Reduce(28));
-    hashmap.insert(RelOp(RelativeOperator::Less), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseAnd), Reduce(28));
-    hashmap.insert(AddOp(AdditiveOperator::BitwiseOr), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Minus), Reduce(28));
-    hashmap.insert(AddMinus(AddMinusOperator::Add), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Mod), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::RightShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::LeftShift), Reduce(28));
-    hashmap.insert(MulOp(MultiplicativeOperator::Div), Reduce(28));
-    hashmap.insert(And, Reduce(28));
-    table.push(hashmap);
-
-    // for state 276
-    let mut hashmap = HashMap::new();
-    hashmap.insert(Rbrace, Reduce(9));
-    hashmap.insert(Semicolon, Reduce(9));
-    table.push(hashmap);
-
-    table
+pub fn get_rule(state: usize, token: &Token) -> Option<TableElement> {
+    if state == 0 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            EOL => return Some(Reduce(2)),
+            PROGRAM => return Some(Goto(1)),
+            TYPE => return Some(Goto(3)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            FUNCTION_DECL => return Some(Goto(2)),
+            _ => return None,
+        };
+    }
+
+    if state == 1 {
+        match token {
+            EOL => return Some(Accepted),
+            _ => return None,
+        };
+    }
+
+    if state == 2 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            EOL => return Some(Reduce(2)),
+            PROGRAM => return Some(Goto(8)),
+            TYPE => return Some(Goto(3)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            FUNCTION_DECL => return Some(Goto(2)),
+            _ => return None,
+        };
+    }
+
+    if state == 3 {
+        match token {
+            Lbracket => return Some(Shift(10)),
+            Star => return Some(Shift(11)),
+            Identifier(_) => return Some(Shift(9)),
+            _ => return None,
+        };
+    }
+
+    if state == 4 {
+        match token {
+            Lbracket => return Some(Reduce(3)),
+            Star => return Some(Reduce(3)),
+            Identifier(_) => return Some(Reduce(3)),
+            _ => return None,
+        };
+    }
+
+    if state == 5 {
+        match token {
+            Lbracket => return Some(Reduce(4)),
+            Star => return Some(Reduce(4)),
+            Identifier(_) => return Some(Reduce(4)),
+            _ => return None,
+        };
+    }
+
+    if state == 6 {
+        match token {
+            Lbracket => return Some(Reduce(5)),
+            Star => return Some(Reduce(5)),
+            Identifier(_) => return Some(Reduce(5)),
+            _ => return None,
+        };
+    }
+
+    if state == 7 {
+        match token {
+            Lbracket => return Some(Reduce(6)),
+            Star => return Some(Reduce(6)),
+            Identifier(_) => return Some(Reduce(6)),
+            _ => return None,
+        };
+    }
+
+    if state == 8 {
+        match token {
+            EOL => return Some(Reduce(1)),
+            _ => return None,
+        };
+    }
+
+    if state == 9 {
+        match token {
+            Lparen => return Some(Shift(13)),
+            PARAMETERS => return Some(Goto(12)),
+            _ => return None,
+        };
+    }
+
+    if state == 10 {
+        match token {
+            IntLit(_) => return Some(Shift(14)),
+            _ => return None,
+        };
+    }
+
+    if state == 11 {
+        match token {
+            Identifier(_) => return Some(Reduce(8)),
+            _ => return None,
+        };
+    }
+
+    if state == 12 {
+        match token {
+            Lbrace => return Some(Shift(16)),
+            BLOCK => return Some(Goto(15)),
+            _ => return None,
+        };
+    }
+
+    if state == 13 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            Rparen => return Some(Reduce(18)),
+            TYPE => return Some(Goto(19)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            PARAMETER_LIST => return Some(Goto(17)),
+            PARAMETER_DECL => return Some(Goto(18)),
+            _ => return None,
+        };
+    }
+
+    if state == 14 {
+        match token {
+            Rbracket => return Some(Shift(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 15 {
+        match token {
+            Int => return Some(Reduce(14)),
+            Void => return Some(Reduce(14)),
+            EOL => return Some(Reduce(14)),
+            _ => return None,
+        };
+    }
+
+    if state == 16 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Rbrace => return Some(Reduce(12)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            If => return Some(Shift(35)),
+            While => return Some(Shift(36)),
+            Return => return Some(Shift(32)),
+            Break => return Some(Shift(33)),
+            Continue => return Some(Shift(34)),
+            TYPE => return Some(Goto(31)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            STATEMENT_LIST => return Some(Goto(21)),
+            VAR_DECL => return Some(Goto(24)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            EXPRESSION => return Some(Goto(30)),
+            LOGICAL_EXPR => return Some(Goto(37)),
+            RELATIONAL_EXPR => return Some(Goto(38)),
+            ADDITIVE_EXPR => return Some(Goto(39)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(40)),
+            UNARY_EXPR => return Some(Goto(41)),
+            STATEMENT => return Some(Goto(22)),
+            ASSIGNMENT => return Some(Goto(23)),
+            IF_STMT => return Some(Goto(28)),
+            WHILE_STMT => return Some(Goto(29)),
+            RETURN_STMT => return Some(Goto(25)),
+            BREAK_STMT => return Some(Goto(26)),
+            CONTINUE_STMT => return Some(Goto(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 17 {
+        match token {
+            Rparen => return Some(Shift(52)),
+            _ => return None,
+        };
+    }
+
+    if state == 18 {
+        match token {
+            Rparen => return Some(Reduce(17)),
+            Comma => return Some(Shift(53)),
+            _ => return None,
+        };
+    }
+
+    if state == 19 {
+        match token {
+            Lbracket => return Some(Shift(10)),
+            Star => return Some(Shift(11)),
+            Identifier(_) => return Some(Shift(54)),
+            _ => return None,
+        };
+    }
+
+    if state == 20 {
+        match token {
+            Identifier(_) => return Some(Reduce(7)),
+            _ => return None,
+        };
+    }
+
+    if state == 21 {
+        match token {
+            Rbrace => return Some(Shift(55)),
+            _ => return None,
+        };
+    }
+
+    if state == 22 {
+        match token {
+            Rbrace => return Some(Reduce(11)),
+            Semicolon => return Some(Shift(56)),
+            _ => return None,
+        };
+    }
+
+    if state == 23 {
+        match token {
+            Rbrace => return Some(Reduce(49)),
+            Semicolon => return Some(Reduce(49)),
+            _ => return None,
+        };
+    }
+
+    if state == 24 {
+        match token {
+            Rbrace => return Some(Reduce(50)),
+            Semicolon => return Some(Reduce(50)),
+            _ => return None,
+        };
+    }
+
+    if state == 25 {
+        match token {
+            Rbrace => return Some(Reduce(51)),
+            Semicolon => return Some(Reduce(51)),
+            _ => return None,
+        };
+    }
+
+    if state == 26 {
+        match token {
+            Rbrace => return Some(Reduce(52)),
+            Semicolon => return Some(Reduce(52)),
+            _ => return None,
+        };
+    }
+
+    if state == 27 {
+        match token {
+            Rbrace => return Some(Reduce(53)),
+            Semicolon => return Some(Reduce(53)),
+            _ => return None,
+        };
+    }
+
+    if state == 28 {
+        match token {
+            Rbrace => return Some(Reduce(54)),
+            Semicolon => return Some(Reduce(54)),
+            _ => return None,
+        };
+    }
+
+    if state == 29 {
+        match token {
+            Rbrace => return Some(Reduce(55)),
+            Semicolon => return Some(Reduce(55)),
+            _ => return None,
+        };
+    }
+
+    if state == 30 {
+        match token {
+            Rbrace => return Some(Reduce(56)),
+            Semicolon => return Some(Reduce(56)),
+            AssignOp => return Some(Shift(57)),
+            _ => return None,
+        };
+    }
+
+    if state == 31 {
+        match token {
+            Lbracket => return Some(Shift(10)),
+            Star => return Some(Shift(11)),
+            Identifier(_) => return Some(Shift(58)),
+            _ => return None,
+        };
+    }
+
+    if state == 32 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            EXPRESSION => return Some(Goto(59)),
+            LOGICAL_EXPR => return Some(Goto(60)),
+            RELATIONAL_EXPR => return Some(Goto(61)),
+            ADDITIVE_EXPR => return Some(Goto(62)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(63)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 33 {
+        match token {
+            Rbrace => return Some(Reduce(61)),
+            Semicolon => return Some(Reduce(61)),
+            _ => return None,
+        };
+    }
+
+    if state == 34 {
+        match token {
+            Rbrace => return Some(Reduce(62)),
+            Semicolon => return Some(Reduce(62)),
+            _ => return None,
+        };
+    }
+
+    if state == 35 {
+        match token {
+            Lparen => return Some(Shift(75)),
+            _ => return None,
+        };
+    }
+
+    if state == 36 {
+        match token {
+            Lparen => return Some(Shift(76)),
+            _ => return None,
+        };
+    }
+
+    if state == 37 {
+        match token {
+            Rbrace => return Some(Reduce(32)),
+            Semicolon => return Some(Reduce(32)),
+            LogOp(_) => return Some(Shift(77)),
+            AssignOp => return Some(Reduce(32)),
+            _ => return None,
+        };
+    }
+
+    if state == 38 {
+        match token {
+            Rbrace => return Some(Reduce(34)),
+            Semicolon => return Some(Reduce(34)),
+            LogOp(_) => return Some(Reduce(34)),
+            RelOp(_) => return Some(Shift(78)),
+            AssignOp => return Some(Reduce(34)),
+            _ => return None,
+        };
+    }
+
+    if state == 39 {
+        match token {
+            Rbrace => return Some(Reduce(36)),
+            Semicolon => return Some(Reduce(36)),
+            LogOp(_) => return Some(Reduce(36)),
+            RelOp(_) => return Some(Reduce(36)),
+            AddOp(_) => return Some(Shift(79)),
+            AddMinus(_) => return Some(Shift(80)),
+            AssignOp => return Some(Reduce(36)),
+            _ => return None,
+        };
+    }
+
+    if state == 40 {
+        match token {
+            Star => return Some(Shift(82)),
+            Rbrace => return Some(Reduce(39)),
+            Semicolon => return Some(Reduce(39)),
+            LogOp(_) => return Some(Reduce(39)),
+            RelOp(_) => return Some(Reduce(39)),
+            AddOp(_) => return Some(Reduce(39)),
+            AddMinus(_) => return Some(Reduce(39)),
+            MulOp(_) => return Some(Shift(81)),
+            And => return Some(Shift(83)),
+            AssignOp => return Some(Reduce(39)),
+            _ => return None,
+        };
+    }
+
+    if state == 41 {
+        match token {
+            Star => return Some(Reduce(43)),
+            Rbrace => return Some(Reduce(43)),
+            Semicolon => return Some(Reduce(43)),
+            LogOp(_) => return Some(Reduce(43)),
+            RelOp(_) => return Some(Reduce(43)),
+            AddOp(_) => return Some(Reduce(43)),
+            AddMinus(_) => return Some(Reduce(43)),
+            MulOp(_) => return Some(Reduce(43)),
+            And => return Some(Reduce(43)),
+            AssignOp => return Some(Reduce(43)),
+            _ => return None,
+        };
+    }
+
+    if state == 42 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(84)),
+            _ => return None,
+        };
+    }
+
+    if state == 43 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(85)),
+            _ => return None,
+        };
+    }
+
+    if state == 44 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(86)),
+            _ => return None,
+        };
+    }
+
+    if state == 45 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(87)),
+            _ => return None,
+        };
+    }
+
+    if state == 46 {
+        match token {
+            Lbracket => return Some(Shift(90)),
+            Star => return Some(Reduce(48)),
+            Rbrace => return Some(Reduce(48)),
+            Semicolon => return Some(Reduce(48)),
+            Lparen => return Some(Shift(91)),
+            LogOp(_) => return Some(Reduce(48)),
+            RelOp(_) => return Some(Reduce(48)),
+            AddOp(_) => return Some(Reduce(48)),
+            AddMinus(_) => return Some(Reduce(48)),
+            MulOp(_) => return Some(Reduce(48)),
+            And => return Some(Reduce(48)),
+            AssignOp => return Some(Reduce(48)),
+            INDEX => return Some(Goto(88)),
+            ARGUMENTS => return Some(Goto(89)),
+            _ => return None,
+        };
+    }
+
+    if state == 47 {
+        match token {
+            Lbracket => return Some(Reduce(26)),
+            Star => return Some(Reduce(26)),
+            Rbrace => return Some(Reduce(26)),
+            Semicolon => return Some(Reduce(26)),
+            Lparen => return Some(Reduce(26)),
+            LogOp(_) => return Some(Reduce(26)),
+            RelOp(_) => return Some(Reduce(26)),
+            AddOp(_) => return Some(Reduce(26)),
+            AddMinus(_) => return Some(Reduce(26)),
+            MulOp(_) => return Some(Reduce(26)),
+            And => return Some(Reduce(26)),
+            AssignOp => return Some(Reduce(26)),
+            _ => return None,
+        };
+    }
+
+    if state == 48 {
+        match token {
+            Lbracket => return Some(Reduce(20)),
+            Star => return Some(Reduce(20)),
+            Rbrace => return Some(Reduce(20)),
+            Semicolon => return Some(Reduce(20)),
+            Lparen => return Some(Reduce(20)),
+            LogOp(_) => return Some(Reduce(20)),
+            RelOp(_) => return Some(Reduce(20)),
+            AddOp(_) => return Some(Reduce(20)),
+            AddMinus(_) => return Some(Reduce(20)),
+            MulOp(_) => return Some(Reduce(20)),
+            And => return Some(Reduce(20)),
+            AssignOp => return Some(Reduce(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 49 {
+        match token {
+            Lbracket => return Some(Reduce(21)),
+            Star => return Some(Reduce(21)),
+            Rbrace => return Some(Reduce(21)),
+            Semicolon => return Some(Reduce(21)),
+            Lparen => return Some(Reduce(21)),
+            LogOp(_) => return Some(Reduce(21)),
+            RelOp(_) => return Some(Reduce(21)),
+            AddOp(_) => return Some(Reduce(21)),
+            AddMinus(_) => return Some(Reduce(21)),
+            MulOp(_) => return Some(Reduce(21)),
+            And => return Some(Reduce(21)),
+            AssignOp => return Some(Reduce(21)),
+            _ => return None,
+        };
+    }
+
+    if state == 50 {
+        match token {
+            Lbracket => return Some(Reduce(22)),
+            Star => return Some(Reduce(22)),
+            Rbrace => return Some(Reduce(22)),
+            Semicolon => return Some(Reduce(22)),
+            Lparen => return Some(Reduce(22)),
+            LogOp(_) => return Some(Reduce(22)),
+            RelOp(_) => return Some(Reduce(22)),
+            AddOp(_) => return Some(Reduce(22)),
+            AddMinus(_) => return Some(Reduce(22)),
+            MulOp(_) => return Some(Reduce(22)),
+            And => return Some(Reduce(22)),
+            AssignOp => return Some(Reduce(22)),
+            _ => return None,
+        };
+    }
+
+    if state == 51 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(92)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 52 {
+        match token {
+            Lbrace => return Some(Reduce(15)),
+            _ => return None,
+        };
+    }
+
+    if state == 53 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            Rparen => return Some(Reduce(18)),
+            TYPE => return Some(Goto(19)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            PARAMETER_LIST => return Some(Goto(108)),
+            PARAMETER_DECL => return Some(Goto(18)),
+            _ => return None,
+        };
+    }
+
+    if state == 54 {
+        match token {
+            Rparen => return Some(Reduce(19)),
+            Comma => return Some(Reduce(19)),
+            _ => return None,
+        };
+    }
+
+    if state == 55 {
+        match token {
+            Int => return Some(Reduce(9)),
+            Void => return Some(Reduce(9)),
+            EOL => return Some(Reduce(9)),
+            _ => return None,
+        };
+    }
+
+    if state == 56 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Rbrace => return Some(Reduce(12)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            If => return Some(Shift(35)),
+            While => return Some(Shift(36)),
+            Return => return Some(Shift(32)),
+            Break => return Some(Shift(33)),
+            Continue => return Some(Shift(34)),
+            TYPE => return Some(Goto(31)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            STATEMENT_LIST => return Some(Goto(109)),
+            VAR_DECL => return Some(Goto(24)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            EXPRESSION => return Some(Goto(30)),
+            LOGICAL_EXPR => return Some(Goto(37)),
+            RELATIONAL_EXPR => return Some(Goto(38)),
+            ADDITIVE_EXPR => return Some(Goto(39)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(40)),
+            UNARY_EXPR => return Some(Goto(41)),
+            STATEMENT => return Some(Goto(22)),
+            ASSIGNMENT => return Some(Goto(23)),
+            IF_STMT => return Some(Goto(28)),
+            WHILE_STMT => return Some(Goto(29)),
+            RETURN_STMT => return Some(Goto(25)),
+            BREAK_STMT => return Some(Goto(26)),
+            CONTINUE_STMT => return Some(Goto(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 57 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            EXPRESSION => return Some(Goto(110)),
+            LOGICAL_EXPR => return Some(Goto(60)),
+            RELATIONAL_EXPR => return Some(Goto(61)),
+            ADDITIVE_EXPR => return Some(Goto(62)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(63)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 58 {
+        match token {
+            Rbrace => return Some(Reduce(13)),
+            Semicolon => return Some(Reduce(13)),
+            _ => return None,
+        };
+    }
+
+    if state == 59 {
+        match token {
+            Rbrace => return Some(Reduce(60)),
+            Semicolon => return Some(Reduce(60)),
+            _ => return None,
+        };
+    }
+
+    if state == 60 {
+        match token {
+            Rbrace => return Some(Reduce(32)),
+            Semicolon => return Some(Reduce(32)),
+            LogOp(_) => return Some(Shift(111)),
+            _ => return None,
+        };
+    }
+
+    if state == 61 {
+        match token {
+            Rbrace => return Some(Reduce(34)),
+            Semicolon => return Some(Reduce(34)),
+            LogOp(_) => return Some(Reduce(34)),
+            RelOp(_) => return Some(Shift(112)),
+            _ => return None,
+        };
+    }
+
+    if state == 62 {
+        match token {
+            Rbrace => return Some(Reduce(36)),
+            Semicolon => return Some(Reduce(36)),
+            LogOp(_) => return Some(Reduce(36)),
+            RelOp(_) => return Some(Reduce(36)),
+            AddOp(_) => return Some(Shift(113)),
+            AddMinus(_) => return Some(Shift(114)),
+            _ => return None,
+        };
+    }
+
+    if state == 63 {
+        match token {
+            Star => return Some(Shift(116)),
+            Rbrace => return Some(Reduce(39)),
+            Semicolon => return Some(Reduce(39)),
+            LogOp(_) => return Some(Reduce(39)),
+            RelOp(_) => return Some(Reduce(39)),
+            AddOp(_) => return Some(Reduce(39)),
+            AddMinus(_) => return Some(Reduce(39)),
+            MulOp(_) => return Some(Shift(115)),
+            And => return Some(Shift(117)),
+            _ => return None,
+        };
+    }
+
+    if state == 64 {
+        match token {
+            Star => return Some(Reduce(43)),
+            Rbrace => return Some(Reduce(43)),
+            Semicolon => return Some(Reduce(43)),
+            LogOp(_) => return Some(Reduce(43)),
+            RelOp(_) => return Some(Reduce(43)),
+            AddOp(_) => return Some(Reduce(43)),
+            AddMinus(_) => return Some(Reduce(43)),
+            MulOp(_) => return Some(Reduce(43)),
+            And => return Some(Reduce(43)),
+            _ => return None,
+        };
+    }
+
+    if state == 65 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(118)),
+            _ => return None,
+        };
+    }
+
+    if state == 66 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(119)),
+            _ => return None,
+        };
+    }
+
+    if state == 67 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(120)),
+            _ => return None,
+        };
+    }
+
+    if state == 68 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(121)),
+            _ => return None,
+        };
+    }
+
+    if state == 69 {
+        match token {
+            Lbracket => return Some(Shift(124)),
+            Star => return Some(Reduce(48)),
+            Rbrace => return Some(Reduce(48)),
+            Semicolon => return Some(Reduce(48)),
+            Lparen => return Some(Shift(125)),
+            LogOp(_) => return Some(Reduce(48)),
+            RelOp(_) => return Some(Reduce(48)),
+            AddOp(_) => return Some(Reduce(48)),
+            AddMinus(_) => return Some(Reduce(48)),
+            MulOp(_) => return Some(Reduce(48)),
+            And => return Some(Reduce(48)),
+            INDEX => return Some(Goto(122)),
+            ARGUMENTS => return Some(Goto(123)),
+            _ => return None,
+        };
+    }
+
+    if state == 70 {
+        match token {
+            Lbracket => return Some(Reduce(26)),
+            Star => return Some(Reduce(26)),
+            Rbrace => return Some(Reduce(26)),
+            Semicolon => return Some(Reduce(26)),
+            Lparen => return Some(Reduce(26)),
+            LogOp(_) => return Some(Reduce(26)),
+            RelOp(_) => return Some(Reduce(26)),
+            AddOp(_) => return Some(Reduce(26)),
+            AddMinus(_) => return Some(Reduce(26)),
+            MulOp(_) => return Some(Reduce(26)),
+            And => return Some(Reduce(26)),
+            _ => return None,
+        };
+    }
+
+    if state == 71 {
+        match token {
+            Lbracket => return Some(Reduce(20)),
+            Star => return Some(Reduce(20)),
+            Rbrace => return Some(Reduce(20)),
+            Semicolon => return Some(Reduce(20)),
+            Lparen => return Some(Reduce(20)),
+            LogOp(_) => return Some(Reduce(20)),
+            RelOp(_) => return Some(Reduce(20)),
+            AddOp(_) => return Some(Reduce(20)),
+            AddMinus(_) => return Some(Reduce(20)),
+            MulOp(_) => return Some(Reduce(20)),
+            And => return Some(Reduce(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 72 {
+        match token {
+            Lbracket => return Some(Reduce(21)),
+            Star => return Some(Reduce(21)),
+            Rbrace => return Some(Reduce(21)),
+            Semicolon => return Some(Reduce(21)),
+            Lparen => return Some(Reduce(21)),
+            LogOp(_) => return Some(Reduce(21)),
+            RelOp(_) => return Some(Reduce(21)),
+            AddOp(_) => return Some(Reduce(21)),
+            AddMinus(_) => return Some(Reduce(21)),
+            MulOp(_) => return Some(Reduce(21)),
+            And => return Some(Reduce(21)),
+            _ => return None,
+        };
+    }
+
+    if state == 73 {
+        match token {
+            Lbracket => return Some(Reduce(22)),
+            Star => return Some(Reduce(22)),
+            Rbrace => return Some(Reduce(22)),
+            Semicolon => return Some(Reduce(22)),
+            Lparen => return Some(Reduce(22)),
+            LogOp(_) => return Some(Reduce(22)),
+            RelOp(_) => return Some(Reduce(22)),
+            AddOp(_) => return Some(Reduce(22)),
+            AddMinus(_) => return Some(Reduce(22)),
+            MulOp(_) => return Some(Reduce(22)),
+            And => return Some(Reduce(22)),
+            _ => return None,
+        };
+    }
+
+    if state == 74 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(126)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 75 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(127)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 76 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(128)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 77 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            RELATIONAL_EXPR => return Some(Goto(129)),
+            ADDITIVE_EXPR => return Some(Goto(39)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(40)),
+            UNARY_EXPR => return Some(Goto(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 78 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            ADDITIVE_EXPR => return Some(Goto(130)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(40)),
+            UNARY_EXPR => return Some(Goto(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 79 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(131)),
+            UNARY_EXPR => return Some(Goto(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 80 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(132)),
+            UNARY_EXPR => return Some(Goto(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 81 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(133)),
+            _ => return None,
+        };
+    }
+
+    if state == 82 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(134)),
+            _ => return None,
+        };
+    }
+
+    if state == 83 {
+        match token {
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            UNARY_EXPR => return Some(Goto(135)),
+            _ => return None,
+        };
+    }
+
+    if state == 84 {
+        match token {
+            Star => return Some(Reduce(44)),
+            Rbrace => return Some(Reduce(44)),
+            Semicolon => return Some(Reduce(44)),
+            LogOp(_) => return Some(Reduce(44)),
+            RelOp(_) => return Some(Reduce(44)),
+            AddOp(_) => return Some(Reduce(44)),
+            AddMinus(_) => return Some(Reduce(44)),
+            MulOp(_) => return Some(Reduce(44)),
+            And => return Some(Reduce(44)),
+            AssignOp => return Some(Reduce(44)),
+            _ => return None,
+        };
+    }
+
+    if state == 85 {
+        match token {
+            Star => return Some(Reduce(45)),
+            Rbrace => return Some(Reduce(45)),
+            Semicolon => return Some(Reduce(45)),
+            LogOp(_) => return Some(Reduce(45)),
+            RelOp(_) => return Some(Reduce(45)),
+            AddOp(_) => return Some(Reduce(45)),
+            AddMinus(_) => return Some(Reduce(45)),
+            MulOp(_) => return Some(Reduce(45)),
+            And => return Some(Reduce(45)),
+            AssignOp => return Some(Reduce(45)),
+            _ => return None,
+        };
+    }
+
+    if state == 86 {
+        match token {
+            Star => return Some(Reduce(46)),
+            Rbrace => return Some(Reduce(46)),
+            Semicolon => return Some(Reduce(46)),
+            LogOp(_) => return Some(Reduce(46)),
+            RelOp(_) => return Some(Reduce(46)),
+            AddOp(_) => return Some(Reduce(46)),
+            AddMinus(_) => return Some(Reduce(46)),
+            MulOp(_) => return Some(Reduce(46)),
+            And => return Some(Reduce(46)),
+            AssignOp => return Some(Reduce(46)),
+            _ => return None,
+        };
+    }
+
+    if state == 87 {
+        match token {
+            Star => return Some(Reduce(47)),
+            Rbrace => return Some(Reduce(47)),
+            Semicolon => return Some(Reduce(47)),
+            LogOp(_) => return Some(Reduce(47)),
+            RelOp(_) => return Some(Reduce(47)),
+            AddOp(_) => return Some(Reduce(47)),
+            AddMinus(_) => return Some(Reduce(47)),
+            MulOp(_) => return Some(Reduce(47)),
+            And => return Some(Reduce(47)),
+            AssignOp => return Some(Reduce(47)),
+            _ => return None,
+        };
+    }
+
+    if state == 88 {
+        match token {
+            Lbracket => return Some(Reduce(24)),
+            Star => return Some(Reduce(24)),
+            Rbrace => return Some(Reduce(24)),
+            Semicolon => return Some(Reduce(24)),
+            Lparen => return Some(Reduce(24)),
+            LogOp(_) => return Some(Reduce(24)),
+            RelOp(_) => return Some(Reduce(24)),
+            AddOp(_) => return Some(Reduce(24)),
+            AddMinus(_) => return Some(Reduce(24)),
+            MulOp(_) => return Some(Reduce(24)),
+            And => return Some(Reduce(24)),
+            AssignOp => return Some(Reduce(24)),
+            _ => return None,
+        };
+    }
+
+    if state == 89 {
+        match token {
+            Lbracket => return Some(Reduce(25)),
+            Star => return Some(Reduce(25)),
+            Rbrace => return Some(Reduce(25)),
+            Semicolon => return Some(Reduce(25)),
+            Lparen => return Some(Reduce(25)),
+            LogOp(_) => return Some(Reduce(25)),
+            RelOp(_) => return Some(Reduce(25)),
+            AddOp(_) => return Some(Reduce(25)),
+            AddMinus(_) => return Some(Reduce(25)),
+            MulOp(_) => return Some(Reduce(25)),
+            And => return Some(Reduce(25)),
+            AssignOp => return Some(Reduce(25)),
+            _ => return None,
+        };
+    }
+
+    if state == 90 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            EXPRESSION => return Some(Goto(136)),
+            LOGICAL_EXPR => return Some(Goto(137)),
+            RELATIONAL_EXPR => return Some(Goto(138)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 91 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(152)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 92 {
+        match token {
+            Rparen => return Some(Shift(169)),
+            _ => return None,
+        };
+    }
+
+    if state == 93 {
+        match token {
+            Rparen => return Some(Reduce(32)),
+            LogOp(_) => return Some(Shift(170)),
+            _ => return None,
+        };
+    }
+
+    if state == 94 {
+        match token {
+            Rparen => return Some(Reduce(34)),
+            LogOp(_) => return Some(Reduce(34)),
+            RelOp(_) => return Some(Shift(171)),
+            _ => return None,
+        };
+    }
+
+    if state == 95 {
+        match token {
+            Rparen => return Some(Reduce(36)),
+            LogOp(_) => return Some(Reduce(36)),
+            RelOp(_) => return Some(Reduce(36)),
+            AddOp(_) => return Some(Shift(172)),
+            AddMinus(_) => return Some(Shift(173)),
+            _ => return None,
+        };
+    }
+
+    if state == 96 {
+        match token {
+            Star => return Some(Shift(175)),
+            Rparen => return Some(Reduce(39)),
+            LogOp(_) => return Some(Reduce(39)),
+            RelOp(_) => return Some(Reduce(39)),
+            AddOp(_) => return Some(Reduce(39)),
+            AddMinus(_) => return Some(Reduce(39)),
+            MulOp(_) => return Some(Shift(174)),
+            And => return Some(Shift(176)),
+            _ => return None,
+        };
+    }
+
+    if state == 97 {
+        match token {
+            Star => return Some(Reduce(43)),
+            Rparen => return Some(Reduce(43)),
+            LogOp(_) => return Some(Reduce(43)),
+            RelOp(_) => return Some(Reduce(43)),
+            AddOp(_) => return Some(Reduce(43)),
+            AddMinus(_) => return Some(Reduce(43)),
+            MulOp(_) => return Some(Reduce(43)),
+            And => return Some(Reduce(43)),
+            _ => return None,
+        };
+    }
+
+    if state == 98 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(177)),
+            _ => return None,
+        };
+    }
+
+    if state == 99 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(178)),
+            _ => return None,
+        };
+    }
+
+    if state == 100 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(179)),
+            _ => return None,
+        };
+    }
+
+    if state == 101 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(180)),
+            _ => return None,
+        };
+    }
+
+    if state == 102 {
+        match token {
+            Lbracket => return Some(Shift(183)),
+            Star => return Some(Reduce(48)),
+            Lparen => return Some(Shift(184)),
+            Rparen => return Some(Reduce(48)),
+            LogOp(_) => return Some(Reduce(48)),
+            RelOp(_) => return Some(Reduce(48)),
+            AddOp(_) => return Some(Reduce(48)),
+            AddMinus(_) => return Some(Reduce(48)),
+            MulOp(_) => return Some(Reduce(48)),
+            And => return Some(Reduce(48)),
+            INDEX => return Some(Goto(181)),
+            ARGUMENTS => return Some(Goto(182)),
+            _ => return None,
+        };
+    }
+
+    if state == 103 {
+        match token {
+            Lbracket => return Some(Reduce(26)),
+            Star => return Some(Reduce(26)),
+            Lparen => return Some(Reduce(26)),
+            Rparen => return Some(Reduce(26)),
+            LogOp(_) => return Some(Reduce(26)),
+            RelOp(_) => return Some(Reduce(26)),
+            AddOp(_) => return Some(Reduce(26)),
+            AddMinus(_) => return Some(Reduce(26)),
+            MulOp(_) => return Some(Reduce(26)),
+            And => return Some(Reduce(26)),
+            _ => return None,
+        };
+    }
+
+    if state == 104 {
+        match token {
+            Lbracket => return Some(Reduce(20)),
+            Star => return Some(Reduce(20)),
+            Lparen => return Some(Reduce(20)),
+            Rparen => return Some(Reduce(20)),
+            LogOp(_) => return Some(Reduce(20)),
+            RelOp(_) => return Some(Reduce(20)),
+            AddOp(_) => return Some(Reduce(20)),
+            AddMinus(_) => return Some(Reduce(20)),
+            MulOp(_) => return Some(Reduce(20)),
+            And => return Some(Reduce(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 105 {
+        match token {
+            Lbracket => return Some(Reduce(21)),
+            Star => return Some(Reduce(21)),
+            Lparen => return Some(Reduce(21)),
+            Rparen => return Some(Reduce(21)),
+            LogOp(_) => return Some(Reduce(21)),
+            RelOp(_) => return Some(Reduce(21)),
+            AddOp(_) => return Some(Reduce(21)),
+            AddMinus(_) => return Some(Reduce(21)),
+            MulOp(_) => return Some(Reduce(21)),
+            And => return Some(Reduce(21)),
+            _ => return None,
+        };
+    }
+
+    if state == 106 {
+        match token {
+            Lbracket => return Some(Reduce(22)),
+            Star => return Some(Reduce(22)),
+            Lparen => return Some(Reduce(22)),
+            Rparen => return Some(Reduce(22)),
+            LogOp(_) => return Some(Reduce(22)),
+            RelOp(_) => return Some(Reduce(22)),
+            AddOp(_) => return Some(Reduce(22)),
+            AddMinus(_) => return Some(Reduce(22)),
+            MulOp(_) => return Some(Reduce(22)),
+            And => return Some(Reduce(22)),
+            _ => return None,
+        };
+    }
+
+    if state == 107 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(185)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 108 {
+        match token {
+            Rparen => return Some(Reduce(16)),
+            _ => return None,
+        };
+    }
+
+    if state == 109 {
+        match token {
+            Rbrace => return Some(Reduce(10)),
+            _ => return None,
+        };
+    }
+
+    if state == 110 {
+        match token {
+            Rbrace => return Some(Reduce(57)),
+            Semicolon => return Some(Reduce(57)),
+            _ => return None,
+        };
+    }
+
+    if state == 111 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            RELATIONAL_EXPR => return Some(Goto(186)),
+            ADDITIVE_EXPR => return Some(Goto(62)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(63)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 112 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            ADDITIVE_EXPR => return Some(Goto(187)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(63)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 113 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(188)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 114 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(189)),
+            UNARY_EXPR => return Some(Goto(64)),
+            _ => return None,
+        };
+    }
+
+    if state == 115 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(190)),
+            _ => return None,
+        };
+    }
+
+    if state == 116 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(191)),
+            _ => return None,
+        };
+    }
+
+    if state == 117 {
+        match token {
+            IntLit(_) => return Some(Shift(71)),
+            Star => return Some(Shift(66)),
+            Identifier(_) => return Some(Shift(73)),
+            Lparen => return Some(Shift(74)),
+            StringLit(_) => return Some(Shift(72)),
+            AddMinus(_) => return Some(Shift(68)),
+            And => return Some(Shift(67)),
+            UnaryOp(_) => return Some(Shift(65)),
+            OPERAND => return Some(Goto(70)),
+            PRIMARY_EXPR => return Some(Goto(69)),
+            UNARY_EXPR => return Some(Goto(192)),
+            _ => return None,
+        };
+    }
+
+    if state == 118 {
+        match token {
+            Star => return Some(Reduce(44)),
+            Rbrace => return Some(Reduce(44)),
+            Semicolon => return Some(Reduce(44)),
+            LogOp(_) => return Some(Reduce(44)),
+            RelOp(_) => return Some(Reduce(44)),
+            AddOp(_) => return Some(Reduce(44)),
+            AddMinus(_) => return Some(Reduce(44)),
+            MulOp(_) => return Some(Reduce(44)),
+            And => return Some(Reduce(44)),
+            _ => return None,
+        };
+    }
+
+    if state == 119 {
+        match token {
+            Star => return Some(Reduce(45)),
+            Rbrace => return Some(Reduce(45)),
+            Semicolon => return Some(Reduce(45)),
+            LogOp(_) => return Some(Reduce(45)),
+            RelOp(_) => return Some(Reduce(45)),
+            AddOp(_) => return Some(Reduce(45)),
+            AddMinus(_) => return Some(Reduce(45)),
+            MulOp(_) => return Some(Reduce(45)),
+            And => return Some(Reduce(45)),
+            _ => return None,
+        };
+    }
+
+    if state == 120 {
+        match token {
+            Star => return Some(Reduce(46)),
+            Rbrace => return Some(Reduce(46)),
+            Semicolon => return Some(Reduce(46)),
+            LogOp(_) => return Some(Reduce(46)),
+            RelOp(_) => return Some(Reduce(46)),
+            AddOp(_) => return Some(Reduce(46)),
+            AddMinus(_) => return Some(Reduce(46)),
+            MulOp(_) => return Some(Reduce(46)),
+            And => return Some(Reduce(46)),
+            _ => return None,
+        };
+    }
+
+    if state == 121 {
+        match token {
+            Star => return Some(Reduce(47)),
+            Rbrace => return Some(Reduce(47)),
+            Semicolon => return Some(Reduce(47)),
+            LogOp(_) => return Some(Reduce(47)),
+            RelOp(_) => return Some(Reduce(47)),
+            AddOp(_) => return Some(Reduce(47)),
+            AddMinus(_) => return Some(Reduce(47)),
+            MulOp(_) => return Some(Reduce(47)),
+            And => return Some(Reduce(47)),
+            _ => return None,
+        };
+    }
+
+    if state == 122 {
+        match token {
+            Lbracket => return Some(Reduce(24)),
+            Star => return Some(Reduce(24)),
+            Rbrace => return Some(Reduce(24)),
+            Semicolon => return Some(Reduce(24)),
+            Lparen => return Some(Reduce(24)),
+            LogOp(_) => return Some(Reduce(24)),
+            RelOp(_) => return Some(Reduce(24)),
+            AddOp(_) => return Some(Reduce(24)),
+            AddMinus(_) => return Some(Reduce(24)),
+            MulOp(_) => return Some(Reduce(24)),
+            And => return Some(Reduce(24)),
+            _ => return None,
+        };
+    }
+
+    if state == 123 {
+        match token {
+            Lbracket => return Some(Reduce(25)),
+            Star => return Some(Reduce(25)),
+            Rbrace => return Some(Reduce(25)),
+            Semicolon => return Some(Reduce(25)),
+            Lparen => return Some(Reduce(25)),
+            LogOp(_) => return Some(Reduce(25)),
+            RelOp(_) => return Some(Reduce(25)),
+            AddOp(_) => return Some(Reduce(25)),
+            AddMinus(_) => return Some(Reduce(25)),
+            MulOp(_) => return Some(Reduce(25)),
+            And => return Some(Reduce(25)),
+            _ => return None,
+        };
+    }
+
+    if state == 124 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            EXPRESSION => return Some(Goto(193)),
+            LOGICAL_EXPR => return Some(Goto(137)),
+            RELATIONAL_EXPR => return Some(Goto(138)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 125 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(194)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 126 {
+        match token {
+            Rparen => return Some(Shift(195)),
+            _ => return None,
+        };
+    }
+
+    if state == 127 {
+        match token {
+            Rparen => return Some(Shift(196)),
+            _ => return None,
+        };
+    }
+
+    if state == 128 {
+        match token {
+            Rparen => return Some(Shift(197)),
+            _ => return None,
+        };
+    }
+
+    if state == 129 {
+        match token {
+            Rbrace => return Some(Reduce(33)),
+            Semicolon => return Some(Reduce(33)),
+            LogOp(_) => return Some(Reduce(33)),
+            RelOp(_) => return Some(Shift(78)),
+            AssignOp => return Some(Reduce(33)),
+            _ => return None,
+        };
+    }
+
+    if state == 130 {
+        match token {
+            Rbrace => return Some(Reduce(35)),
+            Semicolon => return Some(Reduce(35)),
+            LogOp(_) => return Some(Reduce(35)),
+            RelOp(_) => return Some(Reduce(35)),
+            AddOp(_) => return Some(Shift(79)),
+            AddMinus(_) => return Some(Shift(80)),
+            AssignOp => return Some(Reduce(35)),
+            _ => return None,
+        };
+    }
+
+    if state == 131 {
+        match token {
+            Star => return Some(Shift(82)),
+            Rbrace => return Some(Reduce(37)),
+            Semicolon => return Some(Reduce(37)),
+            LogOp(_) => return Some(Reduce(37)),
+            RelOp(_) => return Some(Reduce(37)),
+            AddOp(_) => return Some(Reduce(37)),
+            AddMinus(_) => return Some(Reduce(37)),
+            MulOp(_) => return Some(Shift(81)),
+            And => return Some(Shift(83)),
+            AssignOp => return Some(Reduce(37)),
+            _ => return None,
+        };
+    }
+
+    if state == 132 {
+        match token {
+            Star => return Some(Shift(82)),
+            Rbrace => return Some(Reduce(38)),
+            Semicolon => return Some(Reduce(38)),
+            LogOp(_) => return Some(Reduce(38)),
+            RelOp(_) => return Some(Reduce(38)),
+            AddOp(_) => return Some(Reduce(38)),
+            AddMinus(_) => return Some(Reduce(38)),
+            MulOp(_) => return Some(Shift(81)),
+            And => return Some(Shift(83)),
+            AssignOp => return Some(Reduce(38)),
+            _ => return None,
+        };
+    }
+
+    if state == 133 {
+        match token {
+            Star => return Some(Reduce(40)),
+            Rbrace => return Some(Reduce(40)),
+            Semicolon => return Some(Reduce(40)),
+            LogOp(_) => return Some(Reduce(40)),
+            RelOp(_) => return Some(Reduce(40)),
+            AddOp(_) => return Some(Reduce(40)),
+            AddMinus(_) => return Some(Reduce(40)),
+            MulOp(_) => return Some(Reduce(40)),
+            And => return Some(Reduce(40)),
+            AssignOp => return Some(Reduce(40)),
+            _ => return None,
+        };
+    }
+
+    if state == 134 {
+        match token {
+            Star => return Some(Reduce(41)),
+            Rbrace => return Some(Reduce(41)),
+            Semicolon => return Some(Reduce(41)),
+            LogOp(_) => return Some(Reduce(41)),
+            RelOp(_) => return Some(Reduce(41)),
+            AddOp(_) => return Some(Reduce(41)),
+            AddMinus(_) => return Some(Reduce(41)),
+            MulOp(_) => return Some(Reduce(41)),
+            And => return Some(Reduce(41)),
+            AssignOp => return Some(Reduce(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 135 {
+        match token {
+            Star => return Some(Reduce(42)),
+            Rbrace => return Some(Reduce(42)),
+            Semicolon => return Some(Reduce(42)),
+            LogOp(_) => return Some(Reduce(42)),
+            RelOp(_) => return Some(Reduce(42)),
+            AddOp(_) => return Some(Reduce(42)),
+            AddMinus(_) => return Some(Reduce(42)),
+            MulOp(_) => return Some(Reduce(42)),
+            And => return Some(Reduce(42)),
+            AssignOp => return Some(Reduce(42)),
+            _ => return None,
+        };
+    }
+
+    if state == 136 {
+        match token {
+            Rbracket => return Some(Shift(198)),
+            _ => return None,
+        };
+    }
+
+    if state == 137 {
+        match token {
+            Rbracket => return Some(Reduce(32)),
+            LogOp(_) => return Some(Shift(199)),
+            _ => return None,
+        };
+    }
+
+    if state == 138 {
+        match token {
+            Rbracket => return Some(Reduce(34)),
+            LogOp(_) => return Some(Reduce(34)),
+            RelOp(_) => return Some(Shift(200)),
+            _ => return None,
+        };
+    }
+
+    if state == 139 {
+        match token {
+            Rbracket => return Some(Reduce(36)),
+            LogOp(_) => return Some(Reduce(36)),
+            RelOp(_) => return Some(Reduce(36)),
+            AddOp(_) => return Some(Shift(201)),
+            AddMinus(_) => return Some(Shift(202)),
+            _ => return None,
+        };
+    }
+
+    if state == 140 {
+        match token {
+            Rbracket => return Some(Reduce(39)),
+            Star => return Some(Shift(204)),
+            LogOp(_) => return Some(Reduce(39)),
+            RelOp(_) => return Some(Reduce(39)),
+            AddOp(_) => return Some(Reduce(39)),
+            AddMinus(_) => return Some(Reduce(39)),
+            MulOp(_) => return Some(Shift(203)),
+            And => return Some(Shift(205)),
+            _ => return None,
+        };
+    }
+
+    if state == 141 {
+        match token {
+            Rbracket => return Some(Reduce(43)),
+            Star => return Some(Reduce(43)),
+            LogOp(_) => return Some(Reduce(43)),
+            RelOp(_) => return Some(Reduce(43)),
+            AddOp(_) => return Some(Reduce(43)),
+            AddMinus(_) => return Some(Reduce(43)),
+            MulOp(_) => return Some(Reduce(43)),
+            And => return Some(Reduce(43)),
+            _ => return None,
+        };
+    }
+
+    if state == 142 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(206)),
+            _ => return None,
+        };
+    }
+
+    if state == 143 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(207)),
+            _ => return None,
+        };
+    }
+
+    if state == 144 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(208)),
+            _ => return None,
+        };
+    }
+
+    if state == 145 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(209)),
+            _ => return None,
+        };
+    }
+
+    if state == 146 {
+        match token {
+            Lbracket => return Some(Shift(212)),
+            Rbracket => return Some(Reduce(48)),
+            Star => return Some(Reduce(48)),
+            Lparen => return Some(Shift(213)),
+            LogOp(_) => return Some(Reduce(48)),
+            RelOp(_) => return Some(Reduce(48)),
+            AddOp(_) => return Some(Reduce(48)),
+            AddMinus(_) => return Some(Reduce(48)),
+            MulOp(_) => return Some(Reduce(48)),
+            And => return Some(Reduce(48)),
+            INDEX => return Some(Goto(210)),
+            ARGUMENTS => return Some(Goto(211)),
+            _ => return None,
+        };
+    }
+
+    if state == 147 {
+        match token {
+            Lbracket => return Some(Reduce(26)),
+            Rbracket => return Some(Reduce(26)),
+            Star => return Some(Reduce(26)),
+            Lparen => return Some(Reduce(26)),
+            LogOp(_) => return Some(Reduce(26)),
+            RelOp(_) => return Some(Reduce(26)),
+            AddOp(_) => return Some(Reduce(26)),
+            AddMinus(_) => return Some(Reduce(26)),
+            MulOp(_) => return Some(Reduce(26)),
+            And => return Some(Reduce(26)),
+            _ => return None,
+        };
+    }
+
+    if state == 148 {
+        match token {
+            Lbracket => return Some(Reduce(20)),
+            Rbracket => return Some(Reduce(20)),
+            Star => return Some(Reduce(20)),
+            Lparen => return Some(Reduce(20)),
+            LogOp(_) => return Some(Reduce(20)),
+            RelOp(_) => return Some(Reduce(20)),
+            AddOp(_) => return Some(Reduce(20)),
+            AddMinus(_) => return Some(Reduce(20)),
+            MulOp(_) => return Some(Reduce(20)),
+            And => return Some(Reduce(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 149 {
+        match token {
+            Lbracket => return Some(Reduce(21)),
+            Rbracket => return Some(Reduce(21)),
+            Star => return Some(Reduce(21)),
+            Lparen => return Some(Reduce(21)),
+            LogOp(_) => return Some(Reduce(21)),
+            RelOp(_) => return Some(Reduce(21)),
+            AddOp(_) => return Some(Reduce(21)),
+            AddMinus(_) => return Some(Reduce(21)),
+            MulOp(_) => return Some(Reduce(21)),
+            And => return Some(Reduce(21)),
+            _ => return None,
+        };
+    }
+
+    if state == 150 {
+        match token {
+            Lbracket => return Some(Reduce(22)),
+            Rbracket => return Some(Reduce(22)),
+            Star => return Some(Reduce(22)),
+            Lparen => return Some(Reduce(22)),
+            LogOp(_) => return Some(Reduce(22)),
+            RelOp(_) => return Some(Reduce(22)),
+            AddOp(_) => return Some(Reduce(22)),
+            AddMinus(_) => return Some(Reduce(22)),
+            MulOp(_) => return Some(Reduce(22)),
+            And => return Some(Reduce(22)),
+            _ => return None,
+        };
+    }
+
+    if state == 151 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(214)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 152 {
+        match token {
+            Rparen => return Some(Shift(215)),
+            _ => return None,
+        };
+    }
+
+    if state == 153 {
+        match token {
+            Rparen => return Some(Reduce(30)),
+            Comma => return Some(Shift(216)),
+            _ => return None,
+        };
+    }
+
+    if state == 154 {
+        match token {
+            Rparen => return Some(Reduce(32)),
+            Comma => return Some(Reduce(32)),
+            LogOp(_) => return Some(Shift(217)),
+            _ => return None,
+        };
+    }
+
+    if state == 155 {
+        match token {
+            Rparen => return Some(Reduce(34)),
+            Comma => return Some(Reduce(34)),
+            LogOp(_) => return Some(Reduce(34)),
+            RelOp(_) => return Some(Shift(218)),
+            _ => return None,
+        };
+    }
+
+    if state == 156 {
+        match token {
+            Rparen => return Some(Reduce(36)),
+            Comma => return Some(Reduce(36)),
+            LogOp(_) => return Some(Reduce(36)),
+            RelOp(_) => return Some(Reduce(36)),
+            AddOp(_) => return Some(Shift(219)),
+            AddMinus(_) => return Some(Shift(220)),
+            _ => return None,
+        };
+    }
+
+    if state == 157 {
+        match token {
+            Star => return Some(Shift(222)),
+            Rparen => return Some(Reduce(39)),
+            Comma => return Some(Reduce(39)),
+            LogOp(_) => return Some(Reduce(39)),
+            RelOp(_) => return Some(Reduce(39)),
+            AddOp(_) => return Some(Reduce(39)),
+            AddMinus(_) => return Some(Reduce(39)),
+            MulOp(_) => return Some(Shift(221)),
+            And => return Some(Shift(223)),
+            _ => return None,
+        };
+    }
+
+    if state == 158 {
+        match token {
+            Star => return Some(Reduce(43)),
+            Rparen => return Some(Reduce(43)),
+            Comma => return Some(Reduce(43)),
+            LogOp(_) => return Some(Reduce(43)),
+            RelOp(_) => return Some(Reduce(43)),
+            AddOp(_) => return Some(Reduce(43)),
+            AddMinus(_) => return Some(Reduce(43)),
+            MulOp(_) => return Some(Reduce(43)),
+            And => return Some(Reduce(43)),
+            _ => return None,
+        };
+    }
+
+    if state == 159 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(224)),
+            _ => return None,
+        };
+    }
+
+    if state == 160 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(225)),
+            _ => return None,
+        };
+    }
+
+    if state == 161 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(226)),
+            _ => return None,
+        };
+    }
+
+    if state == 162 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(227)),
+            _ => return None,
+        };
+    }
+
+    if state == 163 {
+        match token {
+            Lbracket => return Some(Shift(230)),
+            Star => return Some(Reduce(48)),
+            Lparen => return Some(Shift(231)),
+            Rparen => return Some(Reduce(48)),
+            Comma => return Some(Reduce(48)),
+            LogOp(_) => return Some(Reduce(48)),
+            RelOp(_) => return Some(Reduce(48)),
+            AddOp(_) => return Some(Reduce(48)),
+            AddMinus(_) => return Some(Reduce(48)),
+            MulOp(_) => return Some(Reduce(48)),
+            And => return Some(Reduce(48)),
+            INDEX => return Some(Goto(228)),
+            ARGUMENTS => return Some(Goto(229)),
+            _ => return None,
+        };
+    }
+
+    if state == 164 {
+        match token {
+            Lbracket => return Some(Reduce(26)),
+            Star => return Some(Reduce(26)),
+            Lparen => return Some(Reduce(26)),
+            Rparen => return Some(Reduce(26)),
+            Comma => return Some(Reduce(26)),
+            LogOp(_) => return Some(Reduce(26)),
+            RelOp(_) => return Some(Reduce(26)),
+            AddOp(_) => return Some(Reduce(26)),
+            AddMinus(_) => return Some(Reduce(26)),
+            MulOp(_) => return Some(Reduce(26)),
+            And => return Some(Reduce(26)),
+            _ => return None,
+        };
+    }
+
+    if state == 165 {
+        match token {
+            Lbracket => return Some(Reduce(20)),
+            Star => return Some(Reduce(20)),
+            Lparen => return Some(Reduce(20)),
+            Rparen => return Some(Reduce(20)),
+            Comma => return Some(Reduce(20)),
+            LogOp(_) => return Some(Reduce(20)),
+            RelOp(_) => return Some(Reduce(20)),
+            AddOp(_) => return Some(Reduce(20)),
+            AddMinus(_) => return Some(Reduce(20)),
+            MulOp(_) => return Some(Reduce(20)),
+            And => return Some(Reduce(20)),
+            _ => return None,
+        };
+    }
+
+    if state == 166 {
+        match token {
+            Lbracket => return Some(Reduce(21)),
+            Star => return Some(Reduce(21)),
+            Lparen => return Some(Reduce(21)),
+            Rparen => return Some(Reduce(21)),
+            Comma => return Some(Reduce(21)),
+            LogOp(_) => return Some(Reduce(21)),
+            RelOp(_) => return Some(Reduce(21)),
+            AddOp(_) => return Some(Reduce(21)),
+            AddMinus(_) => return Some(Reduce(21)),
+            MulOp(_) => return Some(Reduce(21)),
+            And => return Some(Reduce(21)),
+            _ => return None,
+        };
+    }
+
+    if state == 167 {
+        match token {
+            Lbracket => return Some(Reduce(22)),
+            Star => return Some(Reduce(22)),
+            Lparen => return Some(Reduce(22)),
+            Rparen => return Some(Reduce(22)),
+            Comma => return Some(Reduce(22)),
+            LogOp(_) => return Some(Reduce(22)),
+            RelOp(_) => return Some(Reduce(22)),
+            AddOp(_) => return Some(Reduce(22)),
+            AddMinus(_) => return Some(Reduce(22)),
+            MulOp(_) => return Some(Reduce(22)),
+            And => return Some(Reduce(22)),
+            _ => return None,
+        };
+    }
+
+    if state == 168 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            EXPRESSION => return Some(Goto(232)),
+            LOGICAL_EXPR => return Some(Goto(93)),
+            RELATIONAL_EXPR => return Some(Goto(94)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 169 {
+        match token {
+            Lbracket => return Some(Reduce(23)),
+            Star => return Some(Reduce(23)),
+            Rbrace => return Some(Reduce(23)),
+            Semicolon => return Some(Reduce(23)),
+            Lparen => return Some(Reduce(23)),
+            LogOp(_) => return Some(Reduce(23)),
+            RelOp(_) => return Some(Reduce(23)),
+            AddOp(_) => return Some(Reduce(23)),
+            AddMinus(_) => return Some(Reduce(23)),
+            MulOp(_) => return Some(Reduce(23)),
+            And => return Some(Reduce(23)),
+            AssignOp => return Some(Reduce(23)),
+            _ => return None,
+        };
+    }
+
+    if state == 170 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            RELATIONAL_EXPR => return Some(Goto(233)),
+            ADDITIVE_EXPR => return Some(Goto(95)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 171 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            ADDITIVE_EXPR => return Some(Goto(234)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(96)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 172 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(235)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 173 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(236)),
+            UNARY_EXPR => return Some(Goto(97)),
+            _ => return None,
+        };
+    }
+
+    if state == 174 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(237)),
+            _ => return None,
+        };
+    }
+
+    if state == 175 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(238)),
+            _ => return None,
+        };
+    }
+
+    if state == 176 {
+        match token {
+            IntLit(_) => return Some(Shift(104)),
+            Star => return Some(Shift(99)),
+            Identifier(_) => return Some(Shift(106)),
+            Lparen => return Some(Shift(107)),
+            StringLit(_) => return Some(Shift(105)),
+            AddMinus(_) => return Some(Shift(101)),
+            And => return Some(Shift(100)),
+            UnaryOp(_) => return Some(Shift(98)),
+            OPERAND => return Some(Goto(103)),
+            PRIMARY_EXPR => return Some(Goto(102)),
+            UNARY_EXPR => return Some(Goto(239)),
+            _ => return None,
+        };
+    }
+
+    if state == 177 {
+        match token {
+            Star => return Some(Reduce(44)),
+            Rparen => return Some(Reduce(44)),
+            LogOp(_) => return Some(Reduce(44)),
+            RelOp(_) => return Some(Reduce(44)),
+            AddOp(_) => return Some(Reduce(44)),
+            AddMinus(_) => return Some(Reduce(44)),
+            MulOp(_) => return Some(Reduce(44)),
+            And => return Some(Reduce(44)),
+            _ => return None,
+        };
+    }
+
+    if state == 178 {
+        match token {
+            Star => return Some(Reduce(45)),
+            Rparen => return Some(Reduce(45)),
+            LogOp(_) => return Some(Reduce(45)),
+            RelOp(_) => return Some(Reduce(45)),
+            AddOp(_) => return Some(Reduce(45)),
+            AddMinus(_) => return Some(Reduce(45)),
+            MulOp(_) => return Some(Reduce(45)),
+            And => return Some(Reduce(45)),
+            _ => return None,
+        };
+    }
+
+    if state == 179 {
+        match token {
+            Star => return Some(Reduce(46)),
+            Rparen => return Some(Reduce(46)),
+            LogOp(_) => return Some(Reduce(46)),
+            RelOp(_) => return Some(Reduce(46)),
+            AddOp(_) => return Some(Reduce(46)),
+            AddMinus(_) => return Some(Reduce(46)),
+            MulOp(_) => return Some(Reduce(46)),
+            And => return Some(Reduce(46)),
+            _ => return None,
+        };
+    }
+
+    if state == 180 {
+        match token {
+            Star => return Some(Reduce(47)),
+            Rparen => return Some(Reduce(47)),
+            LogOp(_) => return Some(Reduce(47)),
+            RelOp(_) => return Some(Reduce(47)),
+            AddOp(_) => return Some(Reduce(47)),
+            AddMinus(_) => return Some(Reduce(47)),
+            MulOp(_) => return Some(Reduce(47)),
+            And => return Some(Reduce(47)),
+            _ => return None,
+        };
+    }
+
+    if state == 181 {
+        match token {
+            Lbracket => return Some(Reduce(24)),
+            Star => return Some(Reduce(24)),
+            Lparen => return Some(Reduce(24)),
+            Rparen => return Some(Reduce(24)),
+            LogOp(_) => return Some(Reduce(24)),
+            RelOp(_) => return Some(Reduce(24)),
+            AddOp(_) => return Some(Reduce(24)),
+            AddMinus(_) => return Some(Reduce(24)),
+            MulOp(_) => return Some(Reduce(24)),
+            And => return Some(Reduce(24)),
+            _ => return None,
+        };
+    }
+
+    if state == 182 {
+        match token {
+            Lbracket => return Some(Reduce(25)),
+            Star => return Some(Reduce(25)),
+            Lparen => return Some(Reduce(25)),
+            Rparen => return Some(Reduce(25)),
+            LogOp(_) => return Some(Reduce(25)),
+            RelOp(_) => return Some(Reduce(25)),
+            AddOp(_) => return Some(Reduce(25)),
+            AddMinus(_) => return Some(Reduce(25)),
+            MulOp(_) => return Some(Reduce(25)),
+            And => return Some(Reduce(25)),
+            _ => return None,
+        };
+    }
+
+    if state == 183 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            EXPRESSION => return Some(Goto(240)),
+            LOGICAL_EXPR => return Some(Goto(137)),
+            RELATIONAL_EXPR => return Some(Goto(138)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 184 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(241)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 185 {
+        match token {
+            Rparen => return Some(Shift(242)),
+            _ => return None,
+        };
+    }
+
+    if state == 186 {
+        match token {
+            Rbrace => return Some(Reduce(33)),
+            Semicolon => return Some(Reduce(33)),
+            LogOp(_) => return Some(Reduce(33)),
+            RelOp(_) => return Some(Shift(112)),
+            _ => return None,
+        };
+    }
+
+    if state == 187 {
+        match token {
+            Rbrace => return Some(Reduce(35)),
+            Semicolon => return Some(Reduce(35)),
+            LogOp(_) => return Some(Reduce(35)),
+            RelOp(_) => return Some(Reduce(35)),
+            AddOp(_) => return Some(Shift(113)),
+            AddMinus(_) => return Some(Shift(114)),
+            _ => return None,
+        };
+    }
+
+    if state == 188 {
+        match token {
+            Star => return Some(Shift(116)),
+            Rbrace => return Some(Reduce(37)),
+            Semicolon => return Some(Reduce(37)),
+            LogOp(_) => return Some(Reduce(37)),
+            RelOp(_) => return Some(Reduce(37)),
+            AddOp(_) => return Some(Reduce(37)),
+            AddMinus(_) => return Some(Reduce(37)),
+            MulOp(_) => return Some(Shift(115)),
+            And => return Some(Shift(117)),
+            _ => return None,
+        };
+    }
+
+    if state == 189 {
+        match token {
+            Star => return Some(Shift(116)),
+            Rbrace => return Some(Reduce(38)),
+            Semicolon => return Some(Reduce(38)),
+            LogOp(_) => return Some(Reduce(38)),
+            RelOp(_) => return Some(Reduce(38)),
+            AddOp(_) => return Some(Reduce(38)),
+            AddMinus(_) => return Some(Reduce(38)),
+            MulOp(_) => return Some(Shift(115)),
+            And => return Some(Shift(117)),
+            _ => return None,
+        };
+    }
+
+    if state == 190 {
+        match token {
+            Star => return Some(Reduce(40)),
+            Rbrace => return Some(Reduce(40)),
+            Semicolon => return Some(Reduce(40)),
+            LogOp(_) => return Some(Reduce(40)),
+            RelOp(_) => return Some(Reduce(40)),
+            AddOp(_) => return Some(Reduce(40)),
+            AddMinus(_) => return Some(Reduce(40)),
+            MulOp(_) => return Some(Reduce(40)),
+            And => return Some(Reduce(40)),
+            _ => return None,
+        };
+    }
+
+    if state == 191 {
+        match token {
+            Star => return Some(Reduce(41)),
+            Rbrace => return Some(Reduce(41)),
+            Semicolon => return Some(Reduce(41)),
+            LogOp(_) => return Some(Reduce(41)),
+            RelOp(_) => return Some(Reduce(41)),
+            AddOp(_) => return Some(Reduce(41)),
+            AddMinus(_) => return Some(Reduce(41)),
+            MulOp(_) => return Some(Reduce(41)),
+            And => return Some(Reduce(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 192 {
+        match token {
+            Star => return Some(Reduce(42)),
+            Rbrace => return Some(Reduce(42)),
+            Semicolon => return Some(Reduce(42)),
+            LogOp(_) => return Some(Reduce(42)),
+            RelOp(_) => return Some(Reduce(42)),
+            AddOp(_) => return Some(Reduce(42)),
+            AddMinus(_) => return Some(Reduce(42)),
+            MulOp(_) => return Some(Reduce(42)),
+            And => return Some(Reduce(42)),
+            _ => return None,
+        };
+    }
+
+    if state == 193 {
+        match token {
+            Rbracket => return Some(Shift(243)),
+            _ => return None,
+        };
+    }
+
+    if state == 194 {
+        match token {
+            Rparen => return Some(Shift(244)),
+            _ => return None,
+        };
+    }
+
+    if state == 195 {
+        match token {
+            Lbracket => return Some(Reduce(23)),
+            Star => return Some(Reduce(23)),
+            Rbrace => return Some(Reduce(23)),
+            Semicolon => return Some(Reduce(23)),
+            Lparen => return Some(Reduce(23)),
+            LogOp(_) => return Some(Reduce(23)),
+            RelOp(_) => return Some(Reduce(23)),
+            AddOp(_) => return Some(Reduce(23)),
+            AddMinus(_) => return Some(Reduce(23)),
+            MulOp(_) => return Some(Reduce(23)),
+            And => return Some(Reduce(23)),
+            _ => return None,
+        };
+    }
+
+    if state == 196 {
+        match token {
+            Lbrace => return Some(Shift(246)),
+            BLOCK => return Some(Goto(245)),
+            _ => return None,
+        };
+    }
+
+    if state == 197 {
+        match token {
+            Lbrace => return Some(Shift(246)),
+            BLOCK => return Some(Goto(247)),
+            _ => return None,
+        };
+    }
+
+    if state == 198 {
+        match token {
+            Lbracket => return Some(Reduce(27)),
+            Star => return Some(Reduce(27)),
+            Rbrace => return Some(Reduce(27)),
+            Semicolon => return Some(Reduce(27)),
+            Lparen => return Some(Reduce(27)),
+            LogOp(_) => return Some(Reduce(27)),
+            RelOp(_) => return Some(Reduce(27)),
+            AddOp(_) => return Some(Reduce(27)),
+            AddMinus(_) => return Some(Reduce(27)),
+            MulOp(_) => return Some(Reduce(27)),
+            And => return Some(Reduce(27)),
+            AssignOp => return Some(Reduce(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 199 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            RELATIONAL_EXPR => return Some(Goto(248)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 200 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            ADDITIVE_EXPR => return Some(Goto(249)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 201 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(250)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 202 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(251)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 203 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(252)),
+            _ => return None,
+        };
+    }
+
+    if state == 204 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(253)),
+            _ => return None,
+        };
+    }
+
+    if state == 205 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            UNARY_EXPR => return Some(Goto(254)),
+            _ => return None,
+        };
+    }
+
+    if state == 206 {
+        match token {
+            Rbracket => return Some(Reduce(44)),
+            Star => return Some(Reduce(44)),
+            LogOp(_) => return Some(Reduce(44)),
+            RelOp(_) => return Some(Reduce(44)),
+            AddOp(_) => return Some(Reduce(44)),
+            AddMinus(_) => return Some(Reduce(44)),
+            MulOp(_) => return Some(Reduce(44)),
+            And => return Some(Reduce(44)),
+            _ => return None,
+        };
+    }
+
+    if state == 207 {
+        match token {
+            Rbracket => return Some(Reduce(45)),
+            Star => return Some(Reduce(45)),
+            LogOp(_) => return Some(Reduce(45)),
+            RelOp(_) => return Some(Reduce(45)),
+            AddOp(_) => return Some(Reduce(45)),
+            AddMinus(_) => return Some(Reduce(45)),
+            MulOp(_) => return Some(Reduce(45)),
+            And => return Some(Reduce(45)),
+            _ => return None,
+        };
+    }
+
+    if state == 208 {
+        match token {
+            Rbracket => return Some(Reduce(46)),
+            Star => return Some(Reduce(46)),
+            LogOp(_) => return Some(Reduce(46)),
+            RelOp(_) => return Some(Reduce(46)),
+            AddOp(_) => return Some(Reduce(46)),
+            AddMinus(_) => return Some(Reduce(46)),
+            MulOp(_) => return Some(Reduce(46)),
+            And => return Some(Reduce(46)),
+            _ => return None,
+        };
+    }
+
+    if state == 209 {
+        match token {
+            Rbracket => return Some(Reduce(47)),
+            Star => return Some(Reduce(47)),
+            LogOp(_) => return Some(Reduce(47)),
+            RelOp(_) => return Some(Reduce(47)),
+            AddOp(_) => return Some(Reduce(47)),
+            AddMinus(_) => return Some(Reduce(47)),
+            MulOp(_) => return Some(Reduce(47)),
+            And => return Some(Reduce(47)),
+            _ => return None,
+        };
+    }
+
+    if state == 210 {
+        match token {
+            Lbracket => return Some(Reduce(24)),
+            Rbracket => return Some(Reduce(24)),
+            Star => return Some(Reduce(24)),
+            Lparen => return Some(Reduce(24)),
+            LogOp(_) => return Some(Reduce(24)),
+            RelOp(_) => return Some(Reduce(24)),
+            AddOp(_) => return Some(Reduce(24)),
+            AddMinus(_) => return Some(Reduce(24)),
+            MulOp(_) => return Some(Reduce(24)),
+            And => return Some(Reduce(24)),
+            _ => return None,
+        };
+    }
+
+    if state == 211 {
+        match token {
+            Lbracket => return Some(Reduce(25)),
+            Rbracket => return Some(Reduce(25)),
+            Star => return Some(Reduce(25)),
+            Lparen => return Some(Reduce(25)),
+            LogOp(_) => return Some(Reduce(25)),
+            RelOp(_) => return Some(Reduce(25)),
+            AddOp(_) => return Some(Reduce(25)),
+            AddMinus(_) => return Some(Reduce(25)),
+            MulOp(_) => return Some(Reduce(25)),
+            And => return Some(Reduce(25)),
+            _ => return None,
+        };
+    }
+
+    if state == 212 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            EXPRESSION => return Some(Goto(255)),
+            LOGICAL_EXPR => return Some(Goto(137)),
+            RELATIONAL_EXPR => return Some(Goto(138)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 213 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(256)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 214 {
+        match token {
+            Rparen => return Some(Shift(257)),
+            _ => return None,
+        };
+    }
+
+    if state == 215 {
+        match token {
+            Lbracket => return Some(Reduce(28)),
+            Star => return Some(Reduce(28)),
+            Rbrace => return Some(Reduce(28)),
+            Semicolon => return Some(Reduce(28)),
+            Lparen => return Some(Reduce(28)),
+            LogOp(_) => return Some(Reduce(28)),
+            RelOp(_) => return Some(Reduce(28)),
+            AddOp(_) => return Some(Reduce(28)),
+            AddMinus(_) => return Some(Reduce(28)),
+            MulOp(_) => return Some(Reduce(28)),
+            And => return Some(Reduce(28)),
+            AssignOp => return Some(Reduce(28)),
+            _ => return None,
+        };
+    }
+
+    if state == 216 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(258)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 217 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            RELATIONAL_EXPR => return Some(Goto(259)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 218 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            ADDITIVE_EXPR => return Some(Goto(260)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 219 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(261)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 220 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(262)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 221 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(263)),
+            _ => return None,
+        };
+    }
+
+    if state == 222 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(264)),
+            _ => return None,
+        };
+    }
+
+    if state == 223 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            UNARY_EXPR => return Some(Goto(265)),
+            _ => return None,
+        };
+    }
+
+    if state == 224 {
+        match token {
+            Star => return Some(Reduce(44)),
+            Rparen => return Some(Reduce(44)),
+            Comma => return Some(Reduce(44)),
+            LogOp(_) => return Some(Reduce(44)),
+            RelOp(_) => return Some(Reduce(44)),
+            AddOp(_) => return Some(Reduce(44)),
+            AddMinus(_) => return Some(Reduce(44)),
+            MulOp(_) => return Some(Reduce(44)),
+            And => return Some(Reduce(44)),
+            _ => return None,
+        };
+    }
+
+    if state == 225 {
+        match token {
+            Star => return Some(Reduce(45)),
+            Rparen => return Some(Reduce(45)),
+            Comma => return Some(Reduce(45)),
+            LogOp(_) => return Some(Reduce(45)),
+            RelOp(_) => return Some(Reduce(45)),
+            AddOp(_) => return Some(Reduce(45)),
+            AddMinus(_) => return Some(Reduce(45)),
+            MulOp(_) => return Some(Reduce(45)),
+            And => return Some(Reduce(45)),
+            _ => return None,
+        };
+    }
+
+    if state == 226 {
+        match token {
+            Star => return Some(Reduce(46)),
+            Rparen => return Some(Reduce(46)),
+            Comma => return Some(Reduce(46)),
+            LogOp(_) => return Some(Reduce(46)),
+            RelOp(_) => return Some(Reduce(46)),
+            AddOp(_) => return Some(Reduce(46)),
+            AddMinus(_) => return Some(Reduce(46)),
+            MulOp(_) => return Some(Reduce(46)),
+            And => return Some(Reduce(46)),
+            _ => return None,
+        };
+    }
+
+    if state == 227 {
+        match token {
+            Star => return Some(Reduce(47)),
+            Rparen => return Some(Reduce(47)),
+            Comma => return Some(Reduce(47)),
+            LogOp(_) => return Some(Reduce(47)),
+            RelOp(_) => return Some(Reduce(47)),
+            AddOp(_) => return Some(Reduce(47)),
+            AddMinus(_) => return Some(Reduce(47)),
+            MulOp(_) => return Some(Reduce(47)),
+            And => return Some(Reduce(47)),
+            _ => return None,
+        };
+    }
+
+    if state == 228 {
+        match token {
+            Lbracket => return Some(Reduce(24)),
+            Star => return Some(Reduce(24)),
+            Lparen => return Some(Reduce(24)),
+            Rparen => return Some(Reduce(24)),
+            Comma => return Some(Reduce(24)),
+            LogOp(_) => return Some(Reduce(24)),
+            RelOp(_) => return Some(Reduce(24)),
+            AddOp(_) => return Some(Reduce(24)),
+            AddMinus(_) => return Some(Reduce(24)),
+            MulOp(_) => return Some(Reduce(24)),
+            And => return Some(Reduce(24)),
+            _ => return None,
+        };
+    }
+
+    if state == 229 {
+        match token {
+            Lbracket => return Some(Reduce(25)),
+            Star => return Some(Reduce(25)),
+            Lparen => return Some(Reduce(25)),
+            Rparen => return Some(Reduce(25)),
+            Comma => return Some(Reduce(25)),
+            LogOp(_) => return Some(Reduce(25)),
+            RelOp(_) => return Some(Reduce(25)),
+            AddOp(_) => return Some(Reduce(25)),
+            AddMinus(_) => return Some(Reduce(25)),
+            MulOp(_) => return Some(Reduce(25)),
+            And => return Some(Reduce(25)),
+            _ => return None,
+        };
+    }
+
+    if state == 230 {
+        match token {
+            IntLit(_) => return Some(Shift(148)),
+            Star => return Some(Shift(143)),
+            Identifier(_) => return Some(Shift(150)),
+            Lparen => return Some(Shift(151)),
+            StringLit(_) => return Some(Shift(149)),
+            AddMinus(_) => return Some(Shift(145)),
+            And => return Some(Shift(144)),
+            UnaryOp(_) => return Some(Shift(142)),
+            OPERAND => return Some(Goto(147)),
+            PRIMARY_EXPR => return Some(Goto(146)),
+            EXPRESSION => return Some(Goto(266)),
+            LOGICAL_EXPR => return Some(Goto(137)),
+            RELATIONAL_EXPR => return Some(Goto(138)),
+            ADDITIVE_EXPR => return Some(Goto(139)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(140)),
+            UNARY_EXPR => return Some(Goto(141)),
+            _ => return None,
+        };
+    }
+
+    if state == 231 {
+        match token {
+            IntLit(_) => return Some(Shift(165)),
+            Star => return Some(Shift(160)),
+            Identifier(_) => return Some(Shift(167)),
+            Lparen => return Some(Shift(168)),
+            Rparen => return Some(Reduce(31)),
+            StringLit(_) => return Some(Shift(166)),
+            AddMinus(_) => return Some(Shift(162)),
+            And => return Some(Shift(161)),
+            UnaryOp(_) => return Some(Shift(159)),
+            OPERAND => return Some(Goto(164)),
+            PRIMARY_EXPR => return Some(Goto(163)),
+            EXPRESSION_LIST => return Some(Goto(267)),
+            EXPRESSION => return Some(Goto(153)),
+            LOGICAL_EXPR => return Some(Goto(154)),
+            RELATIONAL_EXPR => return Some(Goto(155)),
+            ADDITIVE_EXPR => return Some(Goto(156)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(157)),
+            UNARY_EXPR => return Some(Goto(158)),
+            _ => return None,
+        };
+    }
+
+    if state == 232 {
+        match token {
+            Rparen => return Some(Shift(268)),
+            _ => return None,
+        };
+    }
+
+    if state == 233 {
+        match token {
+            Rparen => return Some(Reduce(33)),
+            LogOp(_) => return Some(Reduce(33)),
+            RelOp(_) => return Some(Shift(171)),
+            _ => return None,
+        };
+    }
+
+    if state == 234 {
+        match token {
+            Rparen => return Some(Reduce(35)),
+            LogOp(_) => return Some(Reduce(35)),
+            RelOp(_) => return Some(Reduce(35)),
+            AddOp(_) => return Some(Shift(172)),
+            AddMinus(_) => return Some(Shift(173)),
+            _ => return None,
+        };
+    }
+
+    if state == 235 {
+        match token {
+            Star => return Some(Shift(175)),
+            Rparen => return Some(Reduce(37)),
+            LogOp(_) => return Some(Reduce(37)),
+            RelOp(_) => return Some(Reduce(37)),
+            AddOp(_) => return Some(Reduce(37)),
+            AddMinus(_) => return Some(Reduce(37)),
+            MulOp(_) => return Some(Shift(174)),
+            And => return Some(Shift(176)),
+            _ => return None,
+        };
+    }
+
+    if state == 236 {
+        match token {
+            Star => return Some(Shift(175)),
+            Rparen => return Some(Reduce(38)),
+            LogOp(_) => return Some(Reduce(38)),
+            RelOp(_) => return Some(Reduce(38)),
+            AddOp(_) => return Some(Reduce(38)),
+            AddMinus(_) => return Some(Reduce(38)),
+            MulOp(_) => return Some(Shift(174)),
+            And => return Some(Shift(176)),
+            _ => return None,
+        };
+    }
+
+    if state == 237 {
+        match token {
+            Star => return Some(Reduce(40)),
+            Rparen => return Some(Reduce(40)),
+            LogOp(_) => return Some(Reduce(40)),
+            RelOp(_) => return Some(Reduce(40)),
+            AddOp(_) => return Some(Reduce(40)),
+            AddMinus(_) => return Some(Reduce(40)),
+            MulOp(_) => return Some(Reduce(40)),
+            And => return Some(Reduce(40)),
+            _ => return None,
+        };
+    }
+
+    if state == 238 {
+        match token {
+            Star => return Some(Reduce(41)),
+            Rparen => return Some(Reduce(41)),
+            LogOp(_) => return Some(Reduce(41)),
+            RelOp(_) => return Some(Reduce(41)),
+            AddOp(_) => return Some(Reduce(41)),
+            AddMinus(_) => return Some(Reduce(41)),
+            MulOp(_) => return Some(Reduce(41)),
+            And => return Some(Reduce(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 239 {
+        match token {
+            Star => return Some(Reduce(42)),
+            Rparen => return Some(Reduce(42)),
+            LogOp(_) => return Some(Reduce(42)),
+            RelOp(_) => return Some(Reduce(42)),
+            AddOp(_) => return Some(Reduce(42)),
+            AddMinus(_) => return Some(Reduce(42)),
+            MulOp(_) => return Some(Reduce(42)),
+            And => return Some(Reduce(42)),
+            _ => return None,
+        };
+    }
+
+    if state == 240 {
+        match token {
+            Rbracket => return Some(Shift(269)),
+            _ => return None,
+        };
+    }
+
+    if state == 241 {
+        match token {
+            Rparen => return Some(Shift(270)),
+            _ => return None,
+        };
+    }
+
+    if state == 242 {
+        match token {
+            Lbracket => return Some(Reduce(23)),
+            Star => return Some(Reduce(23)),
+            Lparen => return Some(Reduce(23)),
+            Rparen => return Some(Reduce(23)),
+            LogOp(_) => return Some(Reduce(23)),
+            RelOp(_) => return Some(Reduce(23)),
+            AddOp(_) => return Some(Reduce(23)),
+            AddMinus(_) => return Some(Reduce(23)),
+            MulOp(_) => return Some(Reduce(23)),
+            And => return Some(Reduce(23)),
+            _ => return None,
+        };
+    }
+
+    if state == 243 {
+        match token {
+            Lbracket => return Some(Reduce(27)),
+            Star => return Some(Reduce(27)),
+            Rbrace => return Some(Reduce(27)),
+            Semicolon => return Some(Reduce(27)),
+            Lparen => return Some(Reduce(27)),
+            LogOp(_) => return Some(Reduce(27)),
+            RelOp(_) => return Some(Reduce(27)),
+            AddOp(_) => return Some(Reduce(27)),
+            AddMinus(_) => return Some(Reduce(27)),
+            MulOp(_) => return Some(Reduce(27)),
+            And => return Some(Reduce(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 244 {
+        match token {
+            Lbracket => return Some(Reduce(28)),
+            Star => return Some(Reduce(28)),
+            Rbrace => return Some(Reduce(28)),
+            Semicolon => return Some(Reduce(28)),
+            Lparen => return Some(Reduce(28)),
+            LogOp(_) => return Some(Reduce(28)),
+            RelOp(_) => return Some(Reduce(28)),
+            AddOp(_) => return Some(Reduce(28)),
+            AddMinus(_) => return Some(Reduce(28)),
+            MulOp(_) => return Some(Reduce(28)),
+            And => return Some(Reduce(28)),
+            _ => return None,
+        };
+    }
+
+    if state == 245 {
+        match token {
+            Rbrace => return Some(Reduce(58)),
+            Semicolon => return Some(Reduce(58)),
+            _ => return None,
+        };
+    }
+
+    if state == 246 {
+        match token {
+            Int => return Some(Shift(4)),
+            Void => return Some(Shift(5)),
+            IntLit(_) => return Some(Shift(48)),
+            Star => return Some(Shift(43)),
+            Rbrace => return Some(Reduce(12)),
+            Identifier(_) => return Some(Shift(50)),
+            Lparen => return Some(Shift(51)),
+            StringLit(_) => return Some(Shift(49)),
+            AddMinus(_) => return Some(Shift(45)),
+            And => return Some(Shift(44)),
+            UnaryOp(_) => return Some(Shift(42)),
+            If => return Some(Shift(35)),
+            While => return Some(Shift(36)),
+            Return => return Some(Shift(32)),
+            Break => return Some(Shift(33)),
+            Continue => return Some(Shift(34)),
+            TYPE => return Some(Goto(31)),
+            ARRAY_TYPE => return Some(Goto(6)),
+            POINTER_TYPE => return Some(Goto(7)),
+            STATEMENT_LIST => return Some(Goto(271)),
+            VAR_DECL => return Some(Goto(24)),
+            OPERAND => return Some(Goto(47)),
+            PRIMARY_EXPR => return Some(Goto(46)),
+            EXPRESSION => return Some(Goto(30)),
+            LOGICAL_EXPR => return Some(Goto(37)),
+            RELATIONAL_EXPR => return Some(Goto(38)),
+            ADDITIVE_EXPR => return Some(Goto(39)),
+            MULTIPLICATIVE_EXPR => return Some(Goto(40)),
+            UNARY_EXPR => return Some(Goto(41)),
+            STATEMENT => return Some(Goto(22)),
+            ASSIGNMENT => return Some(Goto(23)),
+            IF_STMT => return Some(Goto(28)),
+            WHILE_STMT => return Some(Goto(29)),
+            RETURN_STMT => return Some(Goto(25)),
+            BREAK_STMT => return Some(Goto(26)),
+            CONTINUE_STMT => return Some(Goto(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 247 {
+        match token {
+            Rbrace => return Some(Reduce(59)),
+            Semicolon => return Some(Reduce(59)),
+            _ => return None,
+        };
+    }
+
+    if state == 248 {
+        match token {
+            Rbracket => return Some(Reduce(33)),
+            LogOp(_) => return Some(Reduce(33)),
+            RelOp(_) => return Some(Shift(200)),
+            _ => return None,
+        };
+    }
+
+    if state == 249 {
+        match token {
+            Rbracket => return Some(Reduce(35)),
+            LogOp(_) => return Some(Reduce(35)),
+            RelOp(_) => return Some(Reduce(35)),
+            AddOp(_) => return Some(Shift(201)),
+            AddMinus(_) => return Some(Shift(202)),
+            _ => return None,
+        };
+    }
+
+    if state == 250 {
+        match token {
+            Rbracket => return Some(Reduce(37)),
+            Star => return Some(Shift(204)),
+            LogOp(_) => return Some(Reduce(37)),
+            RelOp(_) => return Some(Reduce(37)),
+            AddOp(_) => return Some(Reduce(37)),
+            AddMinus(_) => return Some(Reduce(37)),
+            MulOp(_) => return Some(Shift(203)),
+            And => return Some(Shift(205)),
+            _ => return None,
+        };
+    }
+
+    if state == 251 {
+        match token {
+            Rbracket => return Some(Reduce(38)),
+            Star => return Some(Shift(204)),
+            LogOp(_) => return Some(Reduce(38)),
+            RelOp(_) => return Some(Reduce(38)),
+            AddOp(_) => return Some(Reduce(38)),
+            AddMinus(_) => return Some(Reduce(38)),
+            MulOp(_) => return Some(Shift(203)),
+            And => return Some(Shift(205)),
+            _ => return None,
+        };
+    }
+
+    if state == 252 {
+        match token {
+            Rbracket => return Some(Reduce(40)),
+            Star => return Some(Reduce(40)),
+            LogOp(_) => return Some(Reduce(40)),
+            RelOp(_) => return Some(Reduce(40)),
+            AddOp(_) => return Some(Reduce(40)),
+            AddMinus(_) => return Some(Reduce(40)),
+            MulOp(_) => return Some(Reduce(40)),
+            And => return Some(Reduce(40)),
+            _ => return None,
+        };
+    }
+
+    if state == 253 {
+        match token {
+            Rbracket => return Some(Reduce(41)),
+            Star => return Some(Reduce(41)),
+            LogOp(_) => return Some(Reduce(41)),
+            RelOp(_) => return Some(Reduce(41)),
+            AddOp(_) => return Some(Reduce(41)),
+            AddMinus(_) => return Some(Reduce(41)),
+            MulOp(_) => return Some(Reduce(41)),
+            And => return Some(Reduce(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 254 {
+        match token {
+            Rbracket => return Some(Reduce(42)),
+            Star => return Some(Reduce(42)),
+            LogOp(_) => return Some(Reduce(42)),
+            RelOp(_) => return Some(Reduce(42)),
+            AddOp(_) => return Some(Reduce(42)),
+            AddMinus(_) => return Some(Reduce(42)),
+            MulOp(_) => return Some(Reduce(42)),
+            And => return Some(Reduce(42)),
+            _ => return None,
+        };
+    }
+
+    if state == 255 {
+        match token {
+            Rbracket => return Some(Shift(272)),
+            _ => return None,
+        };
+    }
+
+    if state == 256 {
+        match token {
+            Rparen => return Some(Shift(273)),
+            _ => return None,
+        };
+    }
+
+    if state == 257 {
+        match token {
+            Lbracket => return Some(Reduce(23)),
+            Rbracket => return Some(Reduce(23)),
+            Star => return Some(Reduce(23)),
+            Lparen => return Some(Reduce(23)),
+            LogOp(_) => return Some(Reduce(23)),
+            RelOp(_) => return Some(Reduce(23)),
+            AddOp(_) => return Some(Reduce(23)),
+            AddMinus(_) => return Some(Reduce(23)),
+            MulOp(_) => return Some(Reduce(23)),
+            And => return Some(Reduce(23)),
+            _ => return None,
+        };
+    }
+
+    if state == 258 {
+        match token {
+            Rparen => return Some(Reduce(29)),
+            _ => return None,
+        };
+    }
+
+    if state == 259 {
+        match token {
+            Rparen => return Some(Reduce(33)),
+            Comma => return Some(Reduce(33)),
+            LogOp(_) => return Some(Reduce(33)),
+            RelOp(_) => return Some(Shift(218)),
+            _ => return None,
+        };
+    }
+
+    if state == 260 {
+        match token {
+            Rparen => return Some(Reduce(35)),
+            Comma => return Some(Reduce(35)),
+            LogOp(_) => return Some(Reduce(35)),
+            RelOp(_) => return Some(Reduce(35)),
+            AddOp(_) => return Some(Shift(219)),
+            AddMinus(_) => return Some(Shift(220)),
+            _ => return None,
+        };
+    }
+
+    if state == 261 {
+        match token {
+            Star => return Some(Shift(222)),
+            Rparen => return Some(Reduce(37)),
+            Comma => return Some(Reduce(37)),
+            LogOp(_) => return Some(Reduce(37)),
+            RelOp(_) => return Some(Reduce(37)),
+            AddOp(_) => return Some(Reduce(37)),
+            AddMinus(_) => return Some(Reduce(37)),
+            MulOp(_) => return Some(Shift(221)),
+            And => return Some(Shift(223)),
+            _ => return None,
+        };
+    }
+
+    if state == 262 {
+        match token {
+            Star => return Some(Shift(222)),
+            Rparen => return Some(Reduce(38)),
+            Comma => return Some(Reduce(38)),
+            LogOp(_) => return Some(Reduce(38)),
+            RelOp(_) => return Some(Reduce(38)),
+            AddOp(_) => return Some(Reduce(38)),
+            AddMinus(_) => return Some(Reduce(38)),
+            MulOp(_) => return Some(Shift(221)),
+            And => return Some(Shift(223)),
+            _ => return None,
+        };
+    }
+
+    if state == 263 {
+        match token {
+            Star => return Some(Reduce(40)),
+            Rparen => return Some(Reduce(40)),
+            Comma => return Some(Reduce(40)),
+            LogOp(_) => return Some(Reduce(40)),
+            RelOp(_) => return Some(Reduce(40)),
+            AddOp(_) => return Some(Reduce(40)),
+            AddMinus(_) => return Some(Reduce(40)),
+            MulOp(_) => return Some(Reduce(40)),
+            And => return Some(Reduce(40)),
+            _ => return None,
+        };
+    }
+
+    if state == 264 {
+        match token {
+            Star => return Some(Reduce(41)),
+            Rparen => return Some(Reduce(41)),
+            Comma => return Some(Reduce(41)),
+            LogOp(_) => return Some(Reduce(41)),
+            RelOp(_) => return Some(Reduce(41)),
+            AddOp(_) => return Some(Reduce(41)),
+            AddMinus(_) => return Some(Reduce(41)),
+            MulOp(_) => return Some(Reduce(41)),
+            And => return Some(Reduce(41)),
+            _ => return None,
+        };
+    }
+
+    if state == 265 {
+        match token {
+            Star => return Some(Reduce(42)),
+            Rparen => return Some(Reduce(42)),
+            Comma => return Some(Reduce(42)),
+            LogOp(_) => return Some(Reduce(42)),
+            RelOp(_) => return Some(Reduce(42)),
+            AddOp(_) => return Some(Reduce(42)),
+            AddMinus(_) => return Some(Reduce(42)),
+            MulOp(_) => return Some(Reduce(42)),
+            And => return Some(Reduce(42)),
+            _ => return None,
+        };
+    }
+
+    if state == 266 {
+        match token {
+            Rbracket => return Some(Shift(274)),
+            _ => return None,
+        };
+    }
+
+    if state == 267 {
+        match token {
+            Rparen => return Some(Shift(275)),
+            _ => return None,
+        };
+    }
+
+    if state == 268 {
+        match token {
+            Lbracket => return Some(Reduce(23)),
+            Star => return Some(Reduce(23)),
+            Lparen => return Some(Reduce(23)),
+            Rparen => return Some(Reduce(23)),
+            Comma => return Some(Reduce(23)),
+            LogOp(_) => return Some(Reduce(23)),
+            RelOp(_) => return Some(Reduce(23)),
+            AddOp(_) => return Some(Reduce(23)),
+            AddMinus(_) => return Some(Reduce(23)),
+            MulOp(_) => return Some(Reduce(23)),
+            And => return Some(Reduce(23)),
+            _ => return None,
+        };
+    }
+
+    if state == 269 {
+        match token {
+            Lbracket => return Some(Reduce(27)),
+            Star => return Some(Reduce(27)),
+            Lparen => return Some(Reduce(27)),
+            Rparen => return Some(Reduce(27)),
+            LogOp(_) => return Some(Reduce(27)),
+            RelOp(_) => return Some(Reduce(27)),
+            AddOp(_) => return Some(Reduce(27)),
+            AddMinus(_) => return Some(Reduce(27)),
+            MulOp(_) => return Some(Reduce(27)),
+            And => return Some(Reduce(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 270 {
+        match token {
+            Lbracket => return Some(Reduce(28)),
+            Star => return Some(Reduce(28)),
+            Lparen => return Some(Reduce(28)),
+            Rparen => return Some(Reduce(28)),
+            LogOp(_) => return Some(Reduce(28)),
+            RelOp(_) => return Some(Reduce(28)),
+            AddOp(_) => return Some(Reduce(28)),
+            AddMinus(_) => return Some(Reduce(28)),
+            MulOp(_) => return Some(Reduce(28)),
+            And => return Some(Reduce(28)),
+            _ => return None,
+        };
+    }
+
+    if state == 271 {
+        match token {
+            Rbrace => return Some(Shift(276)),
+            _ => return None,
+        };
+    }
+
+    if state == 272 {
+        match token {
+            Lbracket => return Some(Reduce(27)),
+            Rbracket => return Some(Reduce(27)),
+            Star => return Some(Reduce(27)),
+            Lparen => return Some(Reduce(27)),
+            LogOp(_) => return Some(Reduce(27)),
+            RelOp(_) => return Some(Reduce(27)),
+            AddOp(_) => return Some(Reduce(27)),
+            AddMinus(_) => return Some(Reduce(27)),
+            MulOp(_) => return Some(Reduce(27)),
+            And => return Some(Reduce(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 273 {
+        match token {
+            Lbracket => return Some(Reduce(28)),
+            Rbracket => return Some(Reduce(28)),
+            Star => return Some(Reduce(28)),
+            Lparen => return Some(Reduce(28)),
+            LogOp(_) => return Some(Reduce(28)),
+            RelOp(_) => return Some(Reduce(28)),
+            AddOp(_) => return Some(Reduce(28)),
+            AddMinus(_) => return Some(Reduce(28)),
+            MulOp(_) => return Some(Reduce(28)),
+            And => return Some(Reduce(28)),
+            _ => return None,
+        };
+    }
+
+    if state == 274 {
+        match token {
+            Lbracket => return Some(Reduce(27)),
+            Star => return Some(Reduce(27)),
+            Lparen => return Some(Reduce(27)),
+            Rparen => return Some(Reduce(27)),
+            Comma => return Some(Reduce(27)),
+            LogOp(_) => return Some(Reduce(27)),
+            RelOp(_) => return Some(Reduce(27)),
+            AddOp(_) => return Some(Reduce(27)),
+            AddMinus(_) => return Some(Reduce(27)),
+            MulOp(_) => return Some(Reduce(27)),
+            And => return Some(Reduce(27)),
+            _ => return None,
+        };
+    }
+
+    if state == 275 {
+        match token {
+            Lbracket => return Some(Reduce(28)),
+            Star => return Some(Reduce(28)),
+            Lparen => return Some(Reduce(28)),
+            Rparen => return Some(Reduce(28)),
+            Comma => return Some(Reduce(28)),
+            LogOp(_) => return Some(Reduce(28)),
+            RelOp(_) => return Some(Reduce(28)),
+            AddOp(_) => return Some(Reduce(28)),
+            AddMinus(_) => return Some(Reduce(28)),
+            MulOp(_) => return Some(Reduce(28)),
+            And => return Some(Reduce(28)),
+            _ => return None,
+        };
+    }
+
+    if state == 276 {
+        match token {
+            Rbrace => return Some(Reduce(9)),
+            Semicolon => return Some(Reduce(9)),
+            _ => return None,
+        };
+    }
+
+    None
 }

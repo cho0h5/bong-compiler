@@ -52,10 +52,9 @@ fn main() {
             println!("Accepted!");
             tree
         }
-        Err(ParsingError(expected, found)) => {
+        Err(ParsingError(found)) => {
             println!("\x1b[31m[4/4] error\x1b[37m: parsing error");
-            println!("\texpected: {:?}", expected);
-            println!("\tbut found: {:?}", found);
+            println!("\tfound: {:?}", found);
             process::exit(1);
         }
     };
