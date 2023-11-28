@@ -7,7 +7,7 @@ use crate::{lexer::*, symbol_table};
 #[derive(Debug)]
 enum Address {
     Label(String),
-    Offset(i32),
+    Offset(u32),
 }
 
 #[derive(Debug)]
@@ -33,14 +33,14 @@ pub struct SymbolTableElement {
     identifier: String,
     symbol_type: SymbolType,
     size: u32,
-    address: Option<Address>,
+    address: Address,
 }
 
 impl std::fmt::Display for SymbolTableElement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "{:20}\t{:10}\t{:20?}\t{:5}\t{:<20?}\n",
+            "{:20}\t{:10}\t{:20?}\t{:5}\t{:?}\n",
             self.scope, self.identifier, self.symbol_type, self.size, self.address
         )
     }
@@ -52,7 +52,7 @@ impl SymbolTableElement {
         identifier: &str,
         symbol_type: SymbolType,
         size: u32,
-        address: Option<Address>,
+        address: Address,
     ) -> Self {
         SymbolTableElement {
             scope: scope.to_string(),
@@ -73,8 +73,6 @@ pub fn generate_symbol_table(syntax_tree: &Tree) -> SymbolTable {
 
 fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope: &str) {
     match node {
-        // Node::Terminal(token) => println!("{}\t\t{:?}", scope, token),
-        Node::Terminal(token) => (),
         Node::NonTerminal(token, children) => {
             let mut scope = scope.to_string();
             match token {
@@ -104,7 +102,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         id,
                         SymbolType::Func(var_type.clone()),
                         0,
-                        None,
+                        Address::Label(id.clone()),
                     );
                     scope.push('/');
                     scope.push_str(id);
@@ -119,13 +117,16 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         Node::Terminal(Token::Identifier(id)) => id,
                         _ => panic!("can't find type"),
                     };
+                    let func_name = find_function_name(&scope);
+                    let size = calculate_type_size(var_type);
                     let element = SymbolTableElement::new(
                         &scope,
                         id,
                         SymbolType::Var(var_type.clone()),
-                        calculate_type_size(var_type),
-                        None,
+                        size,
+                        Address::Offset(search_function_size(symbol_table, &func_name)),
                     );
+                    increase_function_size(symbol_table, &func_name, size);
                     symbol_table.push(element);
                 }
                 Token::VAR_DECL => {
@@ -137,22 +138,25 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         Node::Terminal(Token::Identifier(id)) => id,
                         _ => panic!("can't find type"),
                     };
+                    let func_name = find_function_name(&scope);
+                    let size = calculate_type_size(var_type);
                     let element = SymbolTableElement::new(
                         &scope,
                         id,
                         SymbolType::Var(var_type.clone()),
-                        calculate_type_size(var_type),
-                        None,
+                        size,
+                        Address::Offset(search_function_size(symbol_table, &func_name)),
                     );
+                    increase_function_size(symbol_table, &func_name, size);
                     symbol_table.push(element);
                 }
                 _ => (),
             }
-            // println!("{}\t\t{:?}", scope, token);
             for child in children {
                 traverse_tree(symbol_table, child, &scope);
             }
         }
+        _ => (),
     }
 }
 
@@ -165,5 +169,27 @@ fn calculate_type_size(var_type: &Node) -> u32 {
             _ => panic!("can't find size"),
         },
         x => panic!("failed to calculate type size: {:?}", x),
+    }
+}
+
+fn find_function_name(scope: &str) -> String {
+    scope.split('/').nth(1).unwrap().to_string()
+}
+
+fn search_function_size(symbol_table: &Vec<SymbolTableElement>, func_name: &str) -> u32 {
+    for element in symbol_table {
+        if element.scope.is_empty() && element.identifier == func_name {
+            return element.size;
+        }
+    }
+    panic!("function ({}) not found", func_name)
+}
+
+fn increase_function_size(symbol_table: &mut Vec<SymbolTableElement>, func_name: &str, gap: u32) {
+    for element in symbol_table {
+        if element.scope.is_empty() && element.identifier == func_name {
+            element.size += gap;
+            break;
+        }
     }
 }

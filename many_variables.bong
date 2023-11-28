@@ -30,4 +30,5 @@ void main() {
 	b = 'a';
 	int* y;
 	int[12] z;
+	int o;
 }
