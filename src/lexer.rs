@@ -249,12 +249,12 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 }
                 Token::IntLit
             }
-            Some(c) if c.is_ascii_digit() => {
+            Some(c) if c.is_numeric() => {
                 temp.push(c);
                 char = iter.next();
                 loop {
                     match char {
-                        Some(c) if c.is_ascii_digit() => {
+                        Some(c) if c.is_numeric() => {
                             temp.push(c);
                             char = iter.next();
                         }
@@ -262,6 +262,20 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                     }
                 }
                 Token::IntLit
+            }
+            Some(c) if c.is_alphanumeric() => {
+                temp.push(c);
+                char = iter.next();
+                loop {
+                    match char {
+                        Some(c) if c.is_alphanumeric() => {
+                            temp.push(c);
+                            char = iter.next();
+                        }
+                        _ => break,
+                    }
+                }
+                Token::Identifier
             }
             Some(c) if c.is_ascii_whitespace() => {
                 char = iter.next();
@@ -283,7 +297,6 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
     //            "break" => Token::Break,
     //            "continue" => Token::Continue,
     //
-    //            "int_lit" => Token::IntLit, // TODO : 숫자로 시작, 또는 작은 따옴표
     //            "identifier" => Token::Identifier, // TODO : 문자로 시작
     //            unknown_token => return Err(UnknownTokenError(unknown_token)),
     //        };
