@@ -291,7 +291,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => panic!("lexer error"),
                     }
                 }
-                Token::IntLit(0)
+                Token::IntLit(temp.chars().next().unwrap() as u32)
             }
             Some(c) if c.is_numeric() => {
                 temp.clear();
@@ -306,7 +306,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => break,
                     }
                 }
-                Token::IntLit(0)
+                Token::IntLit(temp.parse().unwrap())
             }
             Some(c) if c.is_alphanumeric() || c == '_' => {
                 temp.clear();
