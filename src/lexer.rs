@@ -214,12 +214,12 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 }
             }
             Some('\"') => {
+                temp.clear();
                 char = iter.next();
                 loop {
                     match char {
                         Some('\"') => {
                             char = iter.next();
-                            temp.clear();
                             break;
                         }
                         Some(c) => {
@@ -232,12 +232,12 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 Token::StringLit
             }
             Some('\'') => {
+                temp.clear();
                 char = iter.next();
                 loop {
                     match char {
                         Some('\'') => {
                             char = iter.next();
-                            temp.clear();
                             break;
                         }
                         Some(c) => {
@@ -250,6 +250,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 Token::IntLit
             }
             Some(c) if c.is_numeric() => {
+                temp.clear();
                 temp.push(c);
                 char = iter.next();
                 loop {
@@ -264,6 +265,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 Token::IntLit
             }
             Some(c) if c.is_alphanumeric() || c == '_' => {
+                temp.clear();
                 temp.push(c);
                 char = iter.next();
                 loop {
@@ -275,7 +277,17 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => break,
                     }
                 }
-                Token::Identifier
+                println!("keyward: \"{}\"", temp);
+                match temp.as_str() {
+                    "int" => Token::Int,
+                    "void" => Token::Void,
+                    "if" => Token::If,
+                    "while" => Token::While,
+                    "return" => Token::Return,
+                    "break" => Token::Break,
+                    "continue" => Token::Continue,
+                    _ => Token::Identifier,
+                }
             }
             Some(c) if c.is_whitespace() => {
                 char = iter.next();
@@ -286,22 +298,6 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
         };
         tokens.push_back(Terminal(token));
     }
-
-    //    for word in contents.split_whitespace() {
-    //        let token = match word {
-    //            "int" => Token::Int,
-    //            "void" => Token::Void,
-    //            "if" => Token::If,
-    //            "while" => Token::While,
-    //            "return" => Token::Return,
-    //            "break" => Token::Break,
-    //            "continue" => Token::Continue,
-    //
-    //            "identifier" => Token::Identifier, // TODO : 문자로 시작
-    //            unknown_token => return Err(UnknownTokenError(unknown_token)),
-    //        };
-    //        tokens.push_back(Terminal(token));
-    //    }
 
     tokens.push_back(Terminal(Token::EOL));
     Ok(Tokens(tokens))
