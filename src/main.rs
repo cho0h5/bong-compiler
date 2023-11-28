@@ -13,19 +13,19 @@ use symbol_table::generate_symbol_table;
 fn main() {
     let filename = match env::args().nth(1) {
         Some(filename) => {
-            print!("\x1b[32m[1/4]\x1b[37m ");
+            print!("\x1b[32m[1/5]\x1b[37m ");
             println!("File name: {}\n", filename);
             filename
         }
         None => {
-            println!("\x1b[31m[1/4] error\x1b[37m: no input file");
+            println!("\x1b[31m[1/5] error\x1b[37m: no input file");
             process::exit(1);
         }
     };
 
     let raw_contents = match fs::read_to_string(filename) {
         Ok(contents) => {
-            print!("\x1b[32m[2/4]\x1b[37m ");
+            print!("\x1b[32m[2/5]\x1b[37m ");
             println!("File contents: \n{}\n", contents.trim());
             contents
         }
@@ -37,7 +37,7 @@ fn main() {
 
     let tokens = match lexer::read_lexeme(&raw_contents) {
         Ok(tokens) => {
-            print!("\x1b[32m[3/4]\x1b[37m ");
+            print!("\x1b[32m[3/5]\x1b[37m ");
             println!("Read tokens:\n{}\n", tokens);
             tokens
         }
@@ -49,9 +49,8 @@ fn main() {
 
     let tree = match parser::parse(tokens) {
         Ok(tree) => {
-            print!("\x1b[32m[4/4]\x1b[37m ");
-            println!("Parse tree:\n{}", tree);
-            println!("Accepted!");
+            print!("\x1b[32m[4/5]\x1b[37m ");
+            println!("Parse tree:\n{}\n", tree);
             tree
         }
         Err(ParsingError(found)) => {
@@ -62,5 +61,6 @@ fn main() {
     };
 
     let symbol_table = generate_symbol_table(&tree);
-    println!("{}", symbol_table);
+    print!("\x1b[32m[5/5]\x1b[37m ");
+    println!("Symbol table:\n{}\n", symbol_table);
 }

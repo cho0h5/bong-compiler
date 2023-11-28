@@ -71,7 +71,8 @@ pub fn generate_symbol_table(syntax_tree: &Tree) -> SymbolTable {
 
 fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope: &str) {
     match node {
-        Node::Terminal(token) => println!("{}\t\t{:?}", scope, token),
+        // Node::Terminal(token) => println!("{}\t\t{:?}", scope, token),
+        Node::Terminal(token) => (),
         Node::NonTerminal(token, children) => {
             let mut scope = scope.to_string();
             match token {

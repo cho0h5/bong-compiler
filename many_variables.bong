@@ -26,4 +26,7 @@ void main() {
 		d = 3;
 	};
 	print_integer(a);
+
+	int* y;
+	int[6] z;
 }
