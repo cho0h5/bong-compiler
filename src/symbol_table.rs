@@ -1,3 +1,5 @@
+use core::panic;
+
 use crate::parser::formatting::Tree;
 use crate::parser::Node;
 use crate::{lexer::*, symbol_table};
@@ -121,7 +123,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         &scope,
                         id,
                         SymbolType::Var(var_type.clone()),
-                        4,
+                        calculate_type_size(var_type),
                         None,
                     );
                     symbol_table.push(element);
@@ -139,7 +141,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         &scope,
                         id,
                         SymbolType::Var(var_type.clone()),
-                        4,
+                        calculate_type_size(var_type),
                         None,
                     );
                     symbol_table.push(element);
@@ -151,5 +153,17 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                 traverse_tree(symbol_table, child, &scope);
             }
         }
+    }
+}
+
+fn calculate_type_size(var_type: &Node) -> u32 {
+    match var_type {
+        Node::Terminal(_) => 4,
+        Node::NonTerminal(Token::POINTER_TYPE, _) => 4,
+        Node::NonTerminal(Token::ARRAY_TYPE, children) => match &children[2] {
+            Node::Terminal(Token::IntLit(size)) => *size * 4,
+            _ => panic!("can't find size"),
+        },
+        x => panic!("failed to calculate type size: {:?}", x),
     }
 }
