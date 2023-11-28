@@ -231,6 +231,20 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                 }
                 Token::StringLit
             }
+            Some(c) if c.is_ascii_digit() => {
+                temp.push(c);
+                char = iter.next();
+                loop {
+                    match char {
+                        Some(c) if c.is_ascii_digit() => {
+                            temp.push(c);
+                            char = iter.next();
+                        }
+                        _ => break,
+                    }
+                }
+                Token::IntLit
+            }
             Some(c) if c.is_ascii_whitespace() => {
                 char = iter.next();
                 continue;
