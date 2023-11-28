@@ -10,10 +10,10 @@ pub mod formatting;
 
 use std::collections::VecDeque;
 
-use crate::token_reader::Token;
+use crate::lexer::Token;
 
-use crate::parser::parsing_table::TableElement::*;
 use crate::parser::parsing_table::Reduction;
+use crate::parser::parsing_table::TableElement::*;
 
 use crate::parser::formatting::Tokens;
 use crate::parser::formatting::Tree;
@@ -45,7 +45,10 @@ struct StackItem {
 impl StackItem {
     // 새로운 StckItem을 생성하는 함수입니다.
     fn from(state: usize, tree: Option<Node>) -> Self {
-        StackItem { state: state, tree: tree }
+        StackItem {
+            state: state,
+            tree: tree,
+        }
     }
 }
 
@@ -80,21 +83,26 @@ pub fn parse(tokens: Tokens) -> Result<Tree, ParsingError> {
         // parsing_table에 현재 state와 next token에 맞는 rule이 있다면
         // 해당 rule을 처리합니다.
         match parsing_table[current_state].get(&next_token) {
-            Some(behavior) => match behavior{
+            Some(behavior) => match behavior {
                 // 찾아진 rule에 따라 parsing을 진행합니다.
                 // shift와 goto를 하나의 함수로 구현하여 구현을 단순화 하였습니다.
                 // Shift, Reduce, Goto, Accepted 는 src/parser/parsing_table.rs에 TableElement로
                 // 정의되어 있으며, parsing table의 rule을 나타냅니다.
                 Shift(next_state) => shift_goto(&mut tokens, &mut stack, *next_state),
-                Reduce(reduction_index) => reduce(&mut tokens, &mut stack, reduction_table[*reduction_index]),
+                Reduce(reduction_index) => {
+                    reduce(&mut tokens, &mut stack, reduction_table[*reduction_index])
+                }
                 Goto(next_state) => shift_goto(&mut tokens, &mut stack, *next_state),
                 Accepted => break,
             },
             None => {
                 // 현재 state와 next token에 맞는 rule이 없다면 부가 정보를 담은 Error를
                 // return합니다.
-                return Err(ParsingError(parsing_table[current_state].keys().cloned().collect(), next_token));
-            },
+                return Err(ParsingError(
+                    parsing_table[current_state].keys().cloned().collect(),
+                    next_token,
+                ));
+            }
         };
     }
 
