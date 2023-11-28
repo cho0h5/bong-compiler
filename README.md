@@ -1,8 +1,6 @@
 # MIPS Compiler
 
 ## Grammer
-> Reference: https://go.dev/ref/spec#SimpleStmt  
-> Reference: https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.html
 
 ### Token
 ```
@@ -127,3 +125,14 @@ ContinueStmt -> continue
 | 3 | `+` `-` `\|` `^` |
 | 2 | `==` `!=` `<` `<=` `>` `>=` |
 | 1 | `&&` `\|\|` |
+
+# Reference
+## CFG, BNF
+- https://go.dev/ref/spec#SimpleStmt  
+- https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.html
+
+## Symbol Table
+- https://web.cs.wpi.edu/~kal/courses/compilers/module5/myst.html
+
+## Code Generation
+- https://web.cs.wpi.edu/~kal/courses/cs4533/module6/mycg.html
