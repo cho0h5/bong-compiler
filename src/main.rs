@@ -68,5 +68,6 @@ fn main() {
 
     // let assemply_code = generate_code(&tree, &symbol_table);
     print!("\x1b[32m[6/6]\x1b[37m ");
+    println!("Generated code:");
     // println!("Generated code:\n{}", assemply_code);
 }
