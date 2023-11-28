@@ -74,30 +74,29 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
     let mut tokens = VecDeque::new();
 
     let mut iter = contents.chars();
-    iter.next();
 
     for word in contents.split_whitespace() {
         let token = match word {
             "int" => Token::Int,
             "void" => Token::Void,
             "[" => Token::Lbracket,
-            "int_lit" => Token::IntLit, // TODO
+            "int_lit" => Token::IntLit, // TODO : 숫자로 시작, 또는 작은 따옴표
             "]" => Token::Rbracket,
-            "pointer" => Token::Pointer, // TODO
+            "pointer" => Token::Pointer, // TODO : *
             "{" => Token::Lbrace,
             "}" => Token::Rbrace,
             ";" => Token::Semicolon,
-            "identifier" => Token::Identifier, // TODO
+            "identifier" => Token::Identifier, // TODO : 문자로 시작
             "(" => Token::Lparen,
             ")" => Token::Rparen,
             "," => Token::Comma,
-            "string_lit" => Token::StringLit, // TODO
-            "log_op" => Token::LogOp,         // TODO
-            "rel_op" => Token::RelOp,         // TODO
-            "add_op" => Token::AddOp,         // TODO
-            "mul_op" => Token::MulOp,         // TODO
-            "unary_op" => Token::UnaryOp,     // TODO
-            "=" => Token::AssignOp,           // TODO
+            "string_lit" => Token::StringLit, // TODO : 따옴표 사이
+            "log_op" => Token::LogOp,         // TODO:: || &&
+            "rel_op" => Token::RelOp,         // TODO : == != < <= > >=
+            "add_op" => Token::AddOp,         // TODO : + - | ^
+            "mul_op" => Token::MulOp,         // TODO : * / % << >> &
+            "unary_op" => Token::UnaryOp,     // TODO : + - ! ~ * &
+            "=" => Token::AssignOp,
             "if" => Token::If,
             "while" => Token::While,
             "return" => Token::Return,
