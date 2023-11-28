@@ -73,6 +73,9 @@ pub enum Token {
 pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
     let mut tokens = VecDeque::new();
 
+    let mut iter = contents.chars();
+    iter.next();
+
     for word in contents.split_whitespace() {
         let token = match word {
             "int" => Token::Int,
