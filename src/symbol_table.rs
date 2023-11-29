@@ -1,11 +1,11 @@
 use core::panic;
 
+use crate::lexer::*;
 use crate::parser::formatting::Tree;
 use crate::parser::Node;
-use crate::{lexer::*, symbol_table};
 
-#[derive(Debug)]
-enum Address {
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+pub enum Address {
     Label(String),
     Offset(u32),
 }
@@ -94,7 +94,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         _ => panic!("var_type error"),
                     };
                     let id = match &children[1] {
-                        Node::Terminal(Token::Identifier(id)) => id,
+                        Node::Terminal(Token::Identifier(id, _)) => id,
                         _ => panic!("can't find type"),
                     };
                     let element = SymbolTableElement::new(
@@ -114,7 +114,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         _ => panic!("var_type error"),
                     };
                     let id = match &children[1] {
-                        Node::Terminal(Token::Identifier(id)) => id,
+                        Node::Terminal(Token::Identifier(id, _)) => id,
                         _ => panic!("can't find type"),
                     };
                     let func_name = find_function_name(&scope);
@@ -135,7 +135,7 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                         _ => panic!("var_type error"),
                     };
                     let id = match &children[1] {
-                        Node::Terminal(Token::Identifier(id)) => id,
+                        Node::Terminal(Token::Identifier(id, _)) => id,
                         _ => panic!("can't find type"),
                     };
                     let func_name = find_function_name(&scope);

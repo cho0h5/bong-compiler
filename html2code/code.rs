@@ -1,118 +1,4 @@
-// 이 파일은 parsing을 위해 필요한 정보인 CFG와 parsing table의 정보가
-// hard coding되어있습니다.
 
-use crate::lexer::Token::*;
-use crate::lexer::*;
-use crate::lexer::{LogicalOperator, Token};
-use std::collections::HashMap;
-use TableElement::*;
-
-// parsing table의 각 rule을 나타내는 enum입니다.
-#[derive(Debug, PartialEq)]
-pub enum TableElement {
-    Shift(usize),
-    Reduce(usize),
-    Goto(usize),
-    Accepted,
-}
-
-// reduction table의 각 rule을 나타내는 enum입니다.
-// left는 CFG의 좌항의 non-terminal을 나타내며,
-// right는 CFG 우항의 non-terminal, termianl의 수를 나타냅니다.
-// VDECL -> vtype id semi
-//     => Reduction { left: VDECL, right: 3 }
-#[derive(Clone)]
-pub struct Reduction {
-    pub left: Token,
-    pub right: usize,
-}
-
-impl Reduction {
-    // Reduction struct를 생성하는 함수입니다.
-    fn from(left: Token, right: usize) -> Reduction {
-        Reduction {
-            left: left,
-            right: right,
-        }
-    }
-}
-
-// 총 39개의 reduction rule 정보를 return합니다.
-pub fn get_reduction_table() -> Vec<Reduction> {
-    let mut table = vec![];
-
-    table.push(Reduction::from(PROGRAM_, 1)); //  0
-    table.push(Reduction::from(PROGRAM, 2)); //  0
-    table.push(Reduction::from(PROGRAM, 0)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(ARRAY_TYPE, 4)); //  0
-    table.push(Reduction::from(POINTER_TYPE, 2)); //  0
-    table.push(Reduction::from(BLOCK, 3)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 3)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 1)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 0)); //  0
-    table.push(Reduction::from(VAR_DECL, 2)); //  0
-    table.push(Reduction::from(FUNCTION_DECL, 4)); //  0
-    table.push(Reduction::from(PARAMETERS, 3)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 3)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 1)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 0)); //  0
-    table.push(Reduction::from(PARAMETER_DECL, 2)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 3)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 2)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 2)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 1)); //  0
-    table.push(Reduction::from(INDEX, 3)); //  0
-    table.push(Reduction::from(ARGUMENTS, 3)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 3)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 1)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 0)); //  0
-    table.push(Reduction::from(EXPRESSION, 1)); //  0
-    table.push(Reduction::from(LOGICAL_EXPR, 3)); //  0
-    table.push(Reduction::from(LOGICAL_EXPR, 1)); //  0
-    table.push(Reduction::from(RELATIONAL_EXPR, 3)); //  0
-    table.push(Reduction::from(RELATIONAL_EXPR, 1)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 1)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 1)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(ASSIGNMENT, 3)); //  0
-    table.push(Reduction::from(IF_STMT, 5)); //  0
-    table.push(Reduction::from(WHILE_STMT, 5)); //  0
-    table.push(Reduction::from(RETURN_STMT, 2)); //  0
-    table.push(Reduction::from(BREAK_STMT, 1)); //  0
-    table.push(Reduction::from(CONTINUE_STMT, 1)); //  0
-
-    table
-}
-
-// parsing table을 return합니다.
-// 반환 자료형인 Vec<HashMap<Token, TableElement>>는
-// usize(state)와 Token을 key로 하며 TableElement를 element로 가집니다.
-// 이 코드는 html2code/main.py에 의해 생성되었습니다.
-pub fn get_rule(state: usize, token: &Token) -> Option<TableElement> {
     if state == 0 {
         match token {
             Int => return Some(Shift(4)),
@@ -129,7 +15,7 @@ pub fn get_rule(state: usize, token: &Token) -> Option<TableElement> {
 
     if state == 1 {
         match token {
-            EOL => return Some(Accepted),
+            EOL => return Some(Goto(acc)),
             _ => return None,
         };
     }
@@ -4138,6 +4024,3 @@ pub fn get_rule(state: usize, token: &Token) -> Option<TableElement> {
             _ => return None,
         };
     }
-
-    None
-}

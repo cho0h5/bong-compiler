@@ -2,6 +2,7 @@ use std::collections::VecDeque;
 
 use crate::parser::formatting::Tokens;
 use crate::parser::Node::Terminal;
+use crate::symbol_table::Address;
 
 pub struct UnknownTokenError<'a>(pub &'a str);
 
@@ -59,7 +60,7 @@ pub enum Token {
     Lbrace,
     Rbrace,
     Semicolon,
-    Identifier(String),
+    Identifier(String, Option<Address>),
     Lparen,
     Rparen,
     Comma,
@@ -339,7 +340,7 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                     "return" => Token::Return,
                     "break" => Token::Break,
                     "continue" => Token::Continue,
-                    _ => Token::Identifier(temp.clone()),
+                    _ => Token::Identifier(temp.clone(), None),
                 }
             }
             Some(c) if c.is_whitespace() => {
