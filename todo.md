@@ -24,8 +24,8 @@
 // ParameterList -> ''
 // ParameterDecl -> Type identifier
 
-Operand -> int_lit
-Operand -> string_lit
+// Operand -> int_lit
+// Operand -> string_lit
 Operand -> identifier
 Operand -> lparen Expression rparen
 
@@ -40,13 +40,13 @@ ExpressionList -> Expression
 ExpressionList -> ''
 
 Expression -> LogicalExpr
-LogicalExpr -> LogicalExpr log_op RelationalExpr
-LogicalExpr -> RelationalExpr
+// LogicalExpr -> LogicalExpr log_op RelationalExpr
+// LogicalExpr -> RelationalExpr
 RelationalExpr -> RelationalExpr rel_op AdditiveExpr
 RelationalExpr -> AdditiveExpr
-AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
-AdditiveExpr -> AdditiveExpr add_minus MultiplicativeExpr
-AdditiveExpr -> MultiplicativeExpr
+// AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
+// AdditiveExpr -> AdditiveExpr add_minus MultiplicativeExpr
+// AdditiveExpr -> MultiplicativeExpr
 MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
 MultiplicativeExpr -> MultiplicativeExpr star UnaryExpr
 MultiplicativeExpr -> MultiplicativeExpr and UnaryExpr

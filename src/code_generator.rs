@@ -598,9 +598,38 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
 
 fn generate_primary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
 
-    for child in children {
-        traverse_debug(child);
+    match children[0] {
+        Node::Terminal(Token::StringLit(_)) => unimplemented!(),
+        Node::Terminal(Token::IntLit(number)) => {
+            code.push(Box::new(IFormat::new(
+                OpCode::Lui,
+                RegisterName::Zero,
+                RegisterName::T0,
+                4096,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Lui,
+                RegisterName::Zero,
+                RegisterName::T1,
+                (number >> 16) as i16,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Ori,
+                RegisterName::T1,
+                RegisterName::T1,
+                number as i16,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Sw,
+                RegisterName::T0,
+                RegisterName::T1,
+                this_offset,
+            )));
+        }
+        _ => (),
     }
 
     code

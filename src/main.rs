@@ -73,7 +73,7 @@ fn main() {
     println!("Generated code:");
     // TODO debug
     for line in assemply_code {
-        println!("{:?}", line);
+        println!("{}", line.to_string());
     }
     // println!("Generated code:\n{}", assemply_code);
 }
