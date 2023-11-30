@@ -89,6 +89,9 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &mut Node, sc
                     }
                 }
                 Token::FUNCTION_DECL => {
+                    if let Node::Terminal(Token::Identifier(id, address)) = &mut children[1] {
+                        *address = Some(Address::Label(id.clone()));
+                    }
                     let var_type = match &children[0] {
                         Node::NonTerminal(_, var_type) => &var_type[0],
                         _ => panic!("var_type error"),
@@ -128,6 +131,19 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &mut Node, sc
                     );
                     increase_function_size(symbol_table, &func_name, size);
                     symbol_table.push(element);
+                }
+                Token::PRIMARY_EXPR if children.len() >= 2 => {
+                    if let Node::NonTerminal(Token::ARGUMENTS, _) = children[1] {
+                        if let Node::NonTerminal(Token::PRIMARY_EXPR, operand) = &mut children[0] {
+                            if let Node::NonTerminal(Token::OPERAND, operand) = &mut operand[0] {
+                                if let Node::Terminal(Token::Identifier(id, address)) =
+                                    &mut operand[0]
+                                {
+                                    *address = Some(Address::Label(id.clone()));
+                                }
+                            }
+                        }
+                    }
                 }
                 Token::VAR_DECL => {
                     let var_type = match &children[0] {

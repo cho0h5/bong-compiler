@@ -8,7 +8,10 @@ void bar() {
 }
 
 int main(int a, int b) {
+  int c;
+  int d;
 	c = ( -20 - a ) * b;
+  int i;
 	if (c) {
 		bar();
 	};
