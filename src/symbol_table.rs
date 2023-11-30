@@ -185,7 +185,6 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &mut Node, sc
         }
         Node::Terminal(Token::Identifier(id, address)) => {
             let scopes = scopes(scope);
-            println!("{:?}:\t{}:\t{:?}", scopes, id, address);
             for e in symbol_table.iter().rev() {
                 if scopes.contains(&e.scope) && id == &e.identifier {
                     *address = Some(e.address.clone());
