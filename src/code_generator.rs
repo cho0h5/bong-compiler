@@ -303,7 +303,7 @@ fn generate_logical_expr(children: &[Node], mut offset: &mut i16) -> Vec<Box<dyn
             code.extend(generate_logical_expr(children2, offset));
 
             let child2_offset = *offset;
-            if let Node::NonTerminal(Token::LOGICAL_EXPR, children) = &children[2] {
+            if let Node::NonTerminal(Token::RELATIONAL_EXPR, children) = &children[2] {
                 code.extend(generate_relational_expr(children, offset));
             }
             code.extend(generate_load_2children_to_t1_t2(
