@@ -25,13 +25,13 @@
 // ParameterDecl -> Type identifier
 
 // Operand -> int_lit
-// Operand -> string_lit
+Operand -> string_lit
 Operand -> identifier
 Operand -> lparen Expression rparen
 
 PrimaryExpr -> PrimaryExpr Index
 PrimaryExpr -> PrimaryExpr Arguments
-PrimaryExpr -> Operand
+// PrimaryExpr -> Operand
 
 Index -> lbracket Expression rbracket
 Arguments -> lparen ExpressionList rparen

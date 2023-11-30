@@ -6,12 +6,56 @@ use crate::parser::Node;
 use crate::{lexer::*, symbol_table::*};
 
 pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Instruction>> {
-    let mut generated_code: Vec<Box<dyn Instruction>> = vec![
-        Box::new(JFormat::new_label(OpCode::Jal, "bong".to_string())),
-        Box::new(IFormat::new(
+    let mut generated_code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
+        OpCode::Jal,
+        "bong".to_string(),
+    ))];
+    generated_code.extend(generate_exit());
+
+    generated_code.extend(generate_print_int());
+
+    traverse_tree(&mut generated_code, symbol_table, &tree.0);
+
+    generated_code.extend(generate_exit());
+
+    generated_code
+}
+
+fn generate_print_int() -> Vec<Box<dyn Instruction>> {
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::label_new(
+            "print_int",
             OpCode::Addi,
-            RegisterName::V0,
             RegisterName::Zero,
+            RegisterName::V0,
+            1,
+        )),
+        Box::new(RFormat::new(
+            Funct::Syscall,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            0,
+        )),
+        Box::new(RFormat::new(
+            Funct::Jr,
+            RegisterName::RA,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            0,
+        )),
+    ];
+
+    code
+}
+
+fn generate_exit() -> Vec<Box<dyn Instruction>> {
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::label_new(
+            "exit",
+            OpCode::Addi,
+            RegisterName::Zero,
+            RegisterName::V0,
             10,
         )),
         Box::new(RFormat::new(
@@ -23,10 +67,9 @@ pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Ins
         )),
     ];
 
-    traverse_tree(&mut generated_code, symbol_table, &tree.0);
-
-    generated_code
+    code
 }
+
 fn traverse_tree(
     generated_code: &mut Vec<Box<dyn Instruction>>,
     symbol_table: &SymbolTable,
@@ -612,6 +655,178 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
 }
 
 fn generate_primary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
+    let child_offset = *offset;
+
+    if children.len() == 2 {
+        if let Node::NonTerminal(Token::INDEX, _) = children[1] {
+            unimplemented!()
+        }
+        if let Node::NonTerminal(Token::ARGUMENTS, children2) = &children[1] {
+            let mut offsets = Vec::new();
+            if let Node::NonTerminal(Token::EXPRESSION_LIST, children3) = &children2[1] {
+                code.extend(generate_expression_list(children3, offset, &mut offsets));
+            }
+            println!("no way {:?}", children[0]);
+            let label: String = match &children[0] {
+                Node::NonTerminal(Token::PRIMARY_EXPR, children) => match &children[0] {
+                    Node::NonTerminal(Token::OPERAND, children) => match &children[0] {
+                        Node::Terminal(Token::Identifier(id, _)) => id.to_string(),
+                        _ => panic!("no way"),
+                    },
+                    _ => panic!("no way"),
+                },
+                _ => panic!("no way"),
+            };
+            if let Some(arg1_offset) = offsets.first() {
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lui,
+                    RegisterName::Zero,
+                    RegisterName::T0,
+                    4096,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lw,
+                    RegisterName::T0,
+                    RegisterName::T1,
+                    *arg1_offset,
+                )));
+                code.push(Box::new(RFormat::new(
+                    Funct::Add,
+                    RegisterName::T1,
+                    RegisterName::Zero,
+                    RegisterName::A0,
+                    0,
+                )));
+            }
+            if let Some(arg2_offset) = offsets.get(1) {
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lui,
+                    RegisterName::Zero,
+                    RegisterName::T0,
+                    4096,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lw,
+                    RegisterName::T0,
+                    RegisterName::T1,
+                    *arg2_offset,
+                )));
+                code.push(Box::new(RFormat::new(
+                    Funct::Add,
+                    RegisterName::T1,
+                    RegisterName::Zero,
+                    RegisterName::A1,
+                    0,
+                )));
+            }
+            if let Some(arg3_offset) = offsets.get(2) {
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lui,
+                    RegisterName::Zero,
+                    RegisterName::T0,
+                    4096,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lw,
+                    RegisterName::T0,
+                    RegisterName::T1,
+                    *arg3_offset,
+                )));
+                code.push(Box::new(RFormat::new(
+                    Funct::Add,
+                    RegisterName::T1,
+                    RegisterName::Zero,
+                    RegisterName::A2,
+                    0,
+                )));
+            }
+            if let Some(arg4_offset) = offsets.get(3) {
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lui,
+                    RegisterName::Zero,
+                    RegisterName::T0,
+                    4096,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lw,
+                    RegisterName::T0,
+                    RegisterName::T1,
+                    *arg4_offset,
+                )));
+                code.push(Box::new(RFormat::new(
+                    Funct::Add,
+                    RegisterName::T1,
+                    RegisterName::Zero,
+                    RegisterName::A3,
+                    0,
+                )));
+            }
+
+            code.push(Box::new(IFormat::new(
+                OpCode::Addi,
+                RegisterName::SP,
+                RegisterName::SP,
+                -4,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Sw,
+                RegisterName::SP,
+                RegisterName::RA,
+                0,
+            )));
+            code.push(Box::new(JFormat::new_label(OpCode::Jal, label)));
+            code.push(Box::new(IFormat::new(
+                OpCode::Lw,
+                RegisterName::SP,
+                RegisterName::RA,
+                0,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Addi,
+                RegisterName::SP,
+                RegisterName::SP,
+                4,
+            )));
+        }
+    }
+    if let Node::NonTerminal(Token::OPERAND, children) = &children[0] {
+        code.extend(generate_operand(children, offset));
+        code.extend(generate_move(this_offset, child_offset));
+    }
+
+    code
+}
+
+fn generate_expression_list(
+    children: &[Node],
+    offset: &mut i16,
+    offsets: &mut Vec<i16>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
+    let child_offset = *offset;
+
+    if !children.is_empty() {
+        if let Node::NonTerminal(Token::EXPRESSION, children) = &children[0] {
+            offsets.push(child_offset);
+            code.extend(generate_expression(children, offset));
+        }
+        if children.len() >= 3 {
+            println!("asdf");
+            if let Node::NonTerminal(Token::EXPRESSION_LIST, children) = &children[2] {
+                code.extend(generate_expression_list(children, offset, offsets));
+            }
+        }
+    }
+
+    code
+}
+
+fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
     let this_offset = *offset;
     *offset += 4;

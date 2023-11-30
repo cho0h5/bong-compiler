@@ -180,6 +180,26 @@ impl Instruction for RFormat {
             Funct::Add
             | Funct::Addu
             | Funct::And
+            | Funct::Nor
+            | Funct::Or
+            | Funct::Slt
+            | Funct::Sltu
+            | Funct::Sll
+            | Funct::Srl
+            | Funct::Sub
+            | Funct::Subu
+            | Funct::Mfhi
+            | Funct::Mflo
+            | Funct::Sra => {
+                str.push_str(&self.rd.to_string());
+                str.push(' ');
+            }
+            _ => (),
+        }
+        match self.funct {
+            Funct::Add
+            | Funct::Addu
+            | Funct::And
             | Funct::Jr
             | Funct::Nor
             | Funct::Or
@@ -214,26 +234,6 @@ impl Instruction for RFormat {
             | Funct::Multu
             | Funct::Sra => {
                 str.push_str(&self.rt.to_string());
-                str.push(' ');
-            }
-            _ => (),
-        }
-        match self.funct {
-            Funct::Add
-            | Funct::Addu
-            | Funct::And
-            | Funct::Nor
-            | Funct::Or
-            | Funct::Slt
-            | Funct::Sltu
-            | Funct::Sll
-            | Funct::Srl
-            | Funct::Sub
-            | Funct::Subu
-            | Funct::Mfhi
-            | Funct::Mflo
-            | Funct::Sra => {
-                str.push_str(&self.rd.to_string());
                 str.push(' ');
             }
             _ => (),
@@ -380,20 +380,6 @@ impl Instruction for IFormat {
             | OpCode::Andi
             | OpCode::Beq
             | OpCode::Bne
-            | OpCode::Ori
-            | OpCode::Slti
-            | OpCode::Sltiu => {
-                str.push_str(&self.rs.to_string());
-                str.push(' ');
-            }
-            _ => (),
-        }
-        match self.opcode {
-            OpCode::Addi
-            | OpCode::Addiu
-            | OpCode::Andi
-            | OpCode::Beq
-            | OpCode::Bne
             | OpCode::Lbu
             | OpCode::Lhu
             | OpCode::Lui
@@ -405,6 +391,20 @@ impl Instruction for IFormat {
             | OpCode::Sh
             | OpCode::Sw => {
                 str.push_str(&self.rt.to_string());
+                str.push(' ');
+            }
+            _ => (),
+        }
+        match self.opcode {
+            OpCode::Addi
+            | OpCode::Addiu
+            | OpCode::Andi
+            | OpCode::Beq
+            | OpCode::Bne
+            | OpCode::Ori
+            | OpCode::Slti
+            | OpCode::Sltiu => {
+                str.push_str(&self.rs.to_string());
                 str.push(' ');
             }
             _ => (),
