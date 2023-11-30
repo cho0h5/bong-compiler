@@ -49,7 +49,7 @@ fn main() {
         }
     };
 
-    let tree = match parser::parse(tokens) {
+    let mut tree = match parser::parse(tokens) {
         Ok(tree) => {
             print!("\x1b[32m[4/6]\x1b[37m ");
             println!("Parse tree:\n{}\n", tree);
@@ -62,9 +62,10 @@ fn main() {
         }
     };
 
-    let symbol_table = generate_symbol_table(&tree);
+    let symbol_table = generate_symbol_table(&mut tree);
     print!("\x1b[32m[5/6]\x1b[37m ");
     println!("Symbol table:\n{}\n", symbol_table);
+    println!("Parse tree:\n{}\n", tree);
 
     // let assemply_code = generate_code(&tree, &symbol_table);
     print!("\x1b[32m[6/6]\x1b[37m ");

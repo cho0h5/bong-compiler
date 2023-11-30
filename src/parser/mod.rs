@@ -45,10 +45,7 @@ struct StackItem {
 impl StackItem {
     // 새로운 StckItem을 생성하는 함수입니다.
     fn from(state: usize, tree: Option<Node>) -> Self {
-        StackItem {
-            state: state,
-            tree: tree,
-        }
+        StackItem { state, tree }
     }
 }
 
@@ -78,7 +75,7 @@ pub fn parse(tokens: Tokens) -> Result<Tree, ParsingError> {
 
         // parsing_table에 현재 state와 next token에 맞는 rule이 있다면
         // 해당 rule을 처리합니다.
-        match parsing_table::get_rule(current_state, &next_token) {
+        match parsing_table::get_rule(current_state, next_token) {
             Some(behavior) => match behavior {
                 // 찾아진 rule에 따라 parsing을 진행합니다.
                 // shift와 goto를 하나의 함수로 구현하여 구현을 단순화 하였습니다.

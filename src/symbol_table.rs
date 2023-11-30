@@ -64,14 +64,14 @@ impl SymbolTableElement {
     }
 }
 
-pub fn generate_symbol_table(syntax_tree: &Tree) -> SymbolTable {
+pub fn generate_symbol_table(syntax_tree: &mut Tree) -> SymbolTable {
     let mut symbol_table = Vec::new();
-    traverse_tree(&mut symbol_table, &syntax_tree.0, "");
+    traverse_tree(&mut symbol_table, &mut syntax_tree.0, "");
 
     SymbolTable(symbol_table)
 }
 
-fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope: &str) {
+fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &mut Node, scope: &str) {
     match node {
         Node::NonTerminal(token, children) => {
             let mut scope = scope.to_string();
@@ -156,6 +156,17 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &Node, scope:
                 traverse_tree(symbol_table, child, &scope);
             }
         }
+        Node::Terminal(terminal) => {
+            if let Token::Identifier(id, address) = terminal {
+                let scopes = scopes(scope);
+                println!("{:?}:\t{}:\t{:?}", scopes, id, address);
+                for e in symbol_table.iter().rev() {
+                    if scopes.contains(&e.scope) && id == &e.identifier {
+                        *address = Some(e.address.clone());
+                    }
+                }
+            }
+        }
         _ => (),
     }
 }
@@ -192,4 +203,16 @@ fn increase_function_size(symbol_table: &mut Vec<SymbolTableElement>, func_name:
             break;
         }
     }
+}
+fn scopes(scope: &str) -> Vec<String> {
+    let mut tmp = String::new();
+    let mut iter = scope.split('/').into_iter();
+    let mut scopes = Vec::new();
+    iter.next();
+    for s in iter {
+        tmp.push('/');
+        tmp.push_str(s);
+        scopes.push(tmp.clone());
+    }
+    scopes
 }
