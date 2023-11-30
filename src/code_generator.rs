@@ -350,71 +350,70 @@ fn generate_load_2children_to_t1_t2(
     child1_offset: i16,
     child2_offset: i16,
 ) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-
-    code.push(Box::new(IFormat::new(
-        OpCode::Lui,
-        RegisterName::Zero,
-        RegisterName::T0,
-        4096,
-    )));
-    code.push(Box::new(IFormat::new(
-        OpCode::Lw,
-        RegisterName::T0,
-        RegisterName::T1,
-        child1_offset,
-    )));
-    code.push(Box::new(IFormat::new(
-        OpCode::Lw,
-        RegisterName::T0,
-        RegisterName::T2,
-        child2_offset,
-    )));
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::new(
+            OpCode::Lui,
+            RegisterName::Zero,
+            RegisterName::T0,
+            4096,
+        )),
+        Box::new(IFormat::new(
+            OpCode::Lw,
+            RegisterName::T0,
+            RegisterName::T1,
+            child1_offset,
+        )),
+        Box::new(IFormat::new(
+            OpCode::Lw,
+            RegisterName::T0,
+            RegisterName::T2,
+            child2_offset,
+        )),
+    ];
 
     code
 }
 
 fn generate_store_t1_to_offset(offset: i16) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-
-    code.push(Box::new(IFormat::new(
-        OpCode::Lui,
-        RegisterName::Zero,
-        RegisterName::T0,
-        4096,
-    )));
-
-    code.push(Box::new(IFormat::new(
-        OpCode::Sw,
-        RegisterName::T0,
-        RegisterName::T1,
-        offset,
-    )));
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::new(
+            OpCode::Lui,
+            RegisterName::Zero,
+            RegisterName::T0,
+            4096,
+        )),
+        Box::new(IFormat::new(
+            OpCode::Sw,
+            RegisterName::T0,
+            RegisterName::T1,
+            offset,
+        )),
+    ];
 
     code
 }
 
 fn generate_move(this_offset: i16, child_offset: i16) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-
-    code.push(Box::new(IFormat::new(
-        OpCode::Lui,
-        RegisterName::Zero,
-        RegisterName::T0,
-        4096,
-    )));
-    code.push(Box::new(IFormat::new(
-        OpCode::Lw,
-        RegisterName::T0,
-        RegisterName::T1,
-        child_offset,
-    )));
-    code.push(Box::new(IFormat::new(
-        OpCode::Sw,
-        RegisterName::T0,
-        RegisterName::T1,
-        this_offset,
-    )));
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::new(
+            OpCode::Lui,
+            RegisterName::Zero,
+            RegisterName::T0,
+            4096,
+        )),
+        Box::new(IFormat::new(
+            OpCode::Lw,
+            RegisterName::T0,
+            RegisterName::T1,
+            child_offset,
+        )),
+        Box::new(IFormat::new(
+            OpCode::Sw,
+            RegisterName::T0,
+            RegisterName::T1,
+            this_offset,
+        )),
+    ];
 
     code
 }
@@ -425,16 +424,29 @@ fn generate_relational_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn 
     *offset += 4;
     let child_offset = *offset;
 
-    // match &children[0] {}
+    match &children[0] {
+        Node::NonTerminal(Token::ADDITIVE_EXPR, children) => {
+            code.extend(generate_additive_expr(children, offset));
+            code.extend(generate_move(this_offset, child_offset));
+        }
+        _ => (),
+    }
 
     code
 }
 
 fn generate_additive_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
+    let child_offset = *offset;
 
-    for child in children {
-        traverse_debug(child);
+    match &children[0] {
+        Node::NonTerminal(Token::MULTIPLICATIVE_EXPR, children) => {
+            code.extend(generate_multiplicative_expr(children, offset));
+            code.extend(generate_move(this_offset, child_offset));
+        }
+        _ => (),
     }
 
     code
@@ -442,9 +454,16 @@ fn generate_additive_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn In
 
 fn generate_multiplicative_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
+    let child_offset = *offset;
 
-    for child in children {
-        traverse_debug(child);
+    match &children[0] {
+        Node::NonTerminal(Token::UNARY_EXPR, children) => {
+            code.extend(generate_unary_expr(children, offset));
+            code.extend(generate_move(this_offset, child_offset));
+        }
+        _ => (),
     }
 
     code
@@ -452,9 +471,16 @@ fn generate_multiplicative_expr(children: &[Node], offset: &mut i16) -> Vec<Box<
 
 fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let this_offset = *offset;
+    *offset += 4;
+    let child_offset = *offset;
 
-    for child in children {
-        traverse_debug(child);
+    match &children[0] {
+        Node::NonTerminal(Token::PRIMARY_EXPR, children) => {
+            code.extend(generate_primary_expr(children, offset));
+            code.extend(generate_move(this_offset, child_offset));
+        }
+        _ => (),
     }
 
     code
