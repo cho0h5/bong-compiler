@@ -65,7 +65,7 @@ fn generate_function_decl(
     )));
 
     if let Node::NonTerminal(Token::PARAMETERS, children) = &children[2] {
-        code.extend(generate_parameters(symbol_table, children));
+        code.extend(generate_parameters(children));
     }
 
     for child in children {
@@ -83,42 +83,31 @@ fn generate_function_decl(
     code
 }
 
-fn generate_parameters(
-    symbol_table: &SymbolTable,
-    children: &Vec<Node>,
-) -> Vec<Box<dyn Instruction>> {
+fn generate_parameters(children: &[Node]) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     if let Node::NonTerminal(Token::PARAMETER_LIST, children) = &children[1] {
-        code.extend(generate_parameter_list(symbol_table, children, 0));
+        code.extend(generate_parameter_list(children, 0));
     }
 
     code
 }
-fn generate_parameter_list(
-    symbol_table: &SymbolTable,
-    children: &Vec<Node>,
-    count: i16,
-) -> Vec<Box<dyn Instruction>> {
+fn generate_parameter_list(children: &[Node], count: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
     if !children.is_empty() {
-        if let Node::NonTerminal(Token::PARAMETER_DECL, children) = &children[0] {
-            code.extend(generate_parameter_decl(symbol_table, children, count));
+        if let Node::NonTerminal(Token::PARAMETER_DECL, _) = &children[0] {
+            code.extend(generate_parameter_decl(count));
         }
         if children.len() >= 3 {
             if let Node::NonTerminal(Token::PARAMETER_LIST, children) = &children[2] {
-                code.extend(generate_parameter_list(symbol_table, children, count + 1));
+                code.extend(generate_parameter_list(children, count + 1));
             }
         }
     }
     code
 }
 
-fn generate_parameter_decl(
-    symbol_table: &SymbolTable,
-    children: &Vec<Node>,
-    count: i16,
-) -> Vec<Box<dyn Instruction>> {
+fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     let source_register = match count {
