@@ -2,8 +2,8 @@
 // dummy struct(Tokens, Tree)를 정의하고
 // 그 자료형의 출력을 구현하고있습니다.
 
-use std::fmt;
 use std::collections::VecDeque;
+use std::fmt;
 
 use crate::parser::Node;
 use crate::parser::Node::*;
@@ -15,7 +15,7 @@ pub struct Tokens(pub VecDeque<Node>);
 impl fmt::Display for Tokens {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "[").ok();
-        if self.0.len() != 0 {
+        if !self.0.is_empty() {
             let mut iter = self.0.iter();
             let token = match iter.next().unwrap() {
                 Terminal(token) => token,
@@ -53,20 +53,20 @@ impl Node {
     fn fmt(&self, f: &mut fmt::Formatter, is_last: bool, bridge: Vec<bool>) {
         match self {
             Terminal(token) => {
-                for b in &bridge[..bridge.len()-1] {
+                for b in &bridge[..bridge.len() - 1] {
                     write!(f, "{}", if *b { "│   " } else { "    " }).ok();
                 }
                 write!(f, "{}", if is_last { "└── " } else { "├── " }).ok();
-                write!(f, "{:?}\n", token).ok();
-            },
+                writeln!(f, "{:?}", token).ok();
+            }
             NonTerminal(token, children) => {
-                if bridge.len() != 0 {
-                    for b in &bridge[..bridge.len()-1] {
+                if !bridge.is_empty() {
+                    for b in &bridge[..bridge.len() - 1] {
                         write!(f, "{}", if *b { "│   " } else { "    " }).ok();
                     }
                     write!(f, "{}", if is_last { "└── " } else { "├── " }).ok();
                 }
-                write!(f, "\x1b[36m{:?}\x1b[97m\n", token).ok();
+                writeln!(f, "\x1b[36m{:?}\x1b[97m", token).ok();
                 for i in 0..children.len() {
                     let mut _bridge = bridge.clone();
                     _bridge.push(i != children.len() - 1);

@@ -48,6 +48,8 @@ pub enum AddMinusOperator {
     Minus, // -
 }
 
+#[allow(clippy::all)]
+#[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub enum Token {
     // terminals
