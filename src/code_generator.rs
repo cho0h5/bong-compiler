@@ -6,7 +6,22 @@ use crate::parser::Node;
 use crate::{lexer::*, symbol_table::*};
 
 pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Instruction>> {
-    let mut generated_code = Vec::new();
+    let mut generated_code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(JFormat::new_label(OpCode::Jal, "bong".to_string())),
+        Box::new(IFormat::new(
+            OpCode::Addi,
+            RegisterName::V0,
+            RegisterName::Zero,
+            10,
+        )),
+        Box::new(RFormat::new(
+            Funct::Syscall,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            0,
+        )),
+    ];
 
     traverse_tree(&mut generated_code, symbol_table, &tree.0);
 

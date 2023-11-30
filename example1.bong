@@ -3,6 +3,6 @@ int fib (int n) {
 	a = 7 + 4;
 }
 
-void main () {
+void bong () {
 	fib(6);
 }

@@ -442,7 +442,7 @@ pub struct JFormat {
 
 #[allow(dead_code)]
 #[derive(Debug)]
-enum AddressOrLabel {
+pub enum AddressOrLabel {
     Address(u32),
     Label(String),
 }
