@@ -38,9 +38,9 @@ pub struct SymbolTableElement {
 
 impl std::fmt::Display for SymbolTableElement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
+        writeln!(
             f,
-            "{:20}\t{:10}\t{:20?}\t{:5}\t{:?}\n",
+            "{:20}\t{:10}\t{:20?}\t{:5}\t{:?}",
             self.scope, self.identifier, self.symbol_type, self.size, self.address
         )
     }
@@ -57,9 +57,9 @@ impl SymbolTableElement {
         SymbolTableElement {
             scope: scope.to_string(),
             identifier: identifier.to_string(),
-            symbol_type: symbol_type,
-            size: size,
-            address: address,
+            symbol_type,
+            size,
+            address,
         }
     }
 }
@@ -156,14 +156,12 @@ fn traverse_tree(symbol_table: &mut Vec<SymbolTableElement>, node: &mut Node, sc
                 traverse_tree(symbol_table, child, &scope);
             }
         }
-        Node::Terminal(terminal) => {
-            if let Token::Identifier(id, address) = terminal {
-                let scopes = scopes(scope);
-                println!("{:?}:\t{}:\t{:?}", scopes, id, address);
-                for e in symbol_table.iter().rev() {
-                    if scopes.contains(&e.scope) && id == &e.identifier {
-                        *address = Some(e.address.clone());
-                    }
+        Node::Terminal(Token::Identifier(id, address)) => {
+            let scopes = scopes(scope);
+            println!("{:?}:\t{}:\t{:?}", scopes, id, address);
+            for e in symbol_table.iter().rev() {
+                if scopes.contains(&e.scope) && id == &e.identifier {
+                    *address = Some(e.address.clone());
                 }
             }
         }
@@ -206,7 +204,7 @@ fn increase_function_size(symbol_table: &mut Vec<SymbolTableElement>, func_name:
 }
 fn scopes(scope: &str) -> Vec<String> {
     let mut tmp = String::new();
-    let mut iter = scope.split('/').into_iter();
+    let mut iter = scope.split('/');
     let mut scopes = Vec::new();
     iter.next();
     for s in iter {

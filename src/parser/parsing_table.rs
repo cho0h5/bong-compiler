@@ -1,10 +1,8 @@
 // 이 파일은 parsing을 위해 필요한 정보인 CFG와 parsing table의 정보가
 // hard coding되어있습니다.
 
+use crate::lexer::Token;
 use crate::lexer::Token::*;
-use crate::lexer::*;
-use crate::lexer::{LogicalOperator, Token};
-use std::collections::HashMap;
 use TableElement::*;
 
 // parsing table의 각 rule을 나타내는 enum입니다.
@@ -30,80 +28,77 @@ pub struct Reduction {
 impl Reduction {
     // Reduction struct를 생성하는 함수입니다.
     fn from(left: Token, right: usize) -> Reduction {
-        Reduction {
-            left: left,
-            right: right,
-        }
+        Reduction { left, right }
     }
 }
 
 // 총 39개의 reduction rule 정보를 return합니다.
 pub fn get_reduction_table() -> Vec<Reduction> {
-    let mut table = vec![];
-
-    table.push(Reduction::from(PROGRAM_, 1)); //  0
-    table.push(Reduction::from(PROGRAM, 2)); //  0
-    table.push(Reduction::from(PROGRAM, 0)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(TYPE, 1)); //  0
-    table.push(Reduction::from(ARRAY_TYPE, 4)); //  0
-    table.push(Reduction::from(POINTER_TYPE, 2)); //  0
-    table.push(Reduction::from(BLOCK, 3)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 3)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 1)); //  0
-    table.push(Reduction::from(STATEMENT_LIST, 0)); //  0
-    table.push(Reduction::from(VAR_DECL, 2)); //  0
-    table.push(Reduction::from(FUNCTION_DECL, 4)); //  0
-    table.push(Reduction::from(PARAMETERS, 3)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 3)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 1)); //  0
-    table.push(Reduction::from(PARAMETER_LIST, 0)); //  0
-    table.push(Reduction::from(PARAMETER_DECL, 2)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 1)); //  0
-    table.push(Reduction::from(OPERAND, 3)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 2)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 2)); //  0
-    table.push(Reduction::from(PRIMARY_EXPR, 1)); //  0
-    table.push(Reduction::from(INDEX, 3)); //  0
-    table.push(Reduction::from(ARGUMENTS, 3)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 3)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 1)); //  0
-    table.push(Reduction::from(EXPRESSION_LIST, 0)); //  0
-    table.push(Reduction::from(EXPRESSION, 1)); //  0
-    table.push(Reduction::from(LOGICAL_EXPR, 3)); //  0
-    table.push(Reduction::from(LOGICAL_EXPR, 1)); //  0
-    table.push(Reduction::from(RELATIONAL_EXPR, 3)); //  0
-    table.push(Reduction::from(RELATIONAL_EXPR, 1)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(ADDITIVE_EXPR, 1)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 3)); //  0
-    table.push(Reduction::from(MULTIPLICATIVE_EXPR, 1)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 2)); //  0
-    table.push(Reduction::from(UNARY_EXPR, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(STATEMENT, 1)); //  0
-    table.push(Reduction::from(ASSIGNMENT, 3)); //  0
-    table.push(Reduction::from(IF_STMT, 5)); //  0
-    table.push(Reduction::from(WHILE_STMT, 5)); //  0
-    table.push(Reduction::from(RETURN_STMT, 2)); //  0
-    table.push(Reduction::from(BREAK_STMT, 1)); //  0
-    table.push(Reduction::from(CONTINUE_STMT, 1)); //  0
+    let table = vec![
+        Reduction::from(PROGRAM_, 1),
+        Reduction::from(PROGRAM, 2),
+        Reduction::from(PROGRAM, 0),
+        Reduction::from(TYPE, 1),
+        Reduction::from(TYPE, 1),
+        Reduction::from(TYPE, 1),
+        Reduction::from(TYPE, 1),
+        Reduction::from(ARRAY_TYPE, 4),
+        Reduction::from(POINTER_TYPE, 2),
+        Reduction::from(BLOCK, 3),
+        Reduction::from(STATEMENT_LIST, 3),
+        Reduction::from(STATEMENT_LIST, 1),
+        Reduction::from(STATEMENT_LIST, 0),
+        Reduction::from(VAR_DECL, 2),
+        Reduction::from(FUNCTION_DECL, 4),
+        Reduction::from(PARAMETERS, 3),
+        Reduction::from(PARAMETER_LIST, 3),
+        Reduction::from(PARAMETER_LIST, 1),
+        Reduction::from(PARAMETER_LIST, 0),
+        Reduction::from(PARAMETER_DECL, 2),
+        Reduction::from(OPERAND, 1),
+        Reduction::from(OPERAND, 1),
+        Reduction::from(OPERAND, 1),
+        Reduction::from(OPERAND, 3),
+        Reduction::from(PRIMARY_EXPR, 2),
+        Reduction::from(PRIMARY_EXPR, 2),
+        Reduction::from(PRIMARY_EXPR, 1),
+        Reduction::from(INDEX, 3),
+        Reduction::from(ARGUMENTS, 3),
+        Reduction::from(EXPRESSION_LIST, 3),
+        Reduction::from(EXPRESSION_LIST, 1),
+        Reduction::from(EXPRESSION_LIST, 0),
+        Reduction::from(EXPRESSION, 1),
+        Reduction::from(LOGICAL_EXPR, 3),
+        Reduction::from(LOGICAL_EXPR, 1),
+        Reduction::from(RELATIONAL_EXPR, 3),
+        Reduction::from(RELATIONAL_EXPR, 1),
+        Reduction::from(ADDITIVE_EXPR, 3),
+        Reduction::from(ADDITIVE_EXPR, 3),
+        Reduction::from(ADDITIVE_EXPR, 1),
+        Reduction::from(MULTIPLICATIVE_EXPR, 3),
+        Reduction::from(MULTIPLICATIVE_EXPR, 3),
+        Reduction::from(MULTIPLICATIVE_EXPR, 3),
+        Reduction::from(MULTIPLICATIVE_EXPR, 1),
+        Reduction::from(UNARY_EXPR, 2),
+        Reduction::from(UNARY_EXPR, 2),
+        Reduction::from(UNARY_EXPR, 2),
+        Reduction::from(UNARY_EXPR, 2),
+        Reduction::from(UNARY_EXPR, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(STATEMENT, 1),
+        Reduction::from(ASSIGNMENT, 3),
+        Reduction::from(IF_STMT, 5),
+        Reduction::from(WHILE_STMT, 5),
+        Reduction::from(RETURN_STMT, 2),
+        Reduction::from(BREAK_STMT, 1),
+        Reduction::from(CONTINUE_STMT, 1),
+    ];
 
     table
 }

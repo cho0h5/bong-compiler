@@ -7,7 +7,6 @@ use std::env;
 use std::fs;
 use std::process;
 
-use code_generator::generate_code;
 use lexer::UnknownTokenError;
 use parser::ParsingError;
 use symbol_table::generate_symbol_table;
