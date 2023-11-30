@@ -151,10 +151,11 @@ impl Instruction for RFormat {
 
         if let Some(label) = &self.label {
             str.push_str(label);
+            str.push(':');
         }
         str.push('\t');
         match self.funct {
-            Funct::Add => str.push_str("and"),
+            Funct::Add => str.push_str("add "),
             Funct::Addu => str.push_str("addu "),
             Funct::And => str.push_str("and "),
             Funct::Jr => str.push_str("jr "),
@@ -175,12 +176,68 @@ impl Instruction for RFormat {
             Funct::Sra => str.push_str("sra "),
             Funct::Syscall => str.push_str("syscall "),
         }
-        str.push_str(&self.rs.to_string());
-        str.push(' ');
-        str.push_str(&self.rt.to_string());
-        str.push(' ');
-        str.push_str(&self.rd.to_string());
-        str.push(' ');
+        match self.funct {
+            Funct::Add
+            | Funct::Addu
+            | Funct::And
+            | Funct::Jr
+            | Funct::Nor
+            | Funct::Or
+            | Funct::Slt
+            | Funct::Sltu
+            | Funct::Sll
+            | Funct::Srl
+            | Funct::Sub
+            | Funct::Subu
+            | Funct::Div
+            | Funct::Divu
+            | Funct::Mult
+            | Funct::Multu => {
+                str.push_str(&self.rs.to_string());
+                str.push(' ');
+            }
+            _ => (),
+        }
+        match self.funct {
+            Funct::Add
+            | Funct::Addu
+            | Funct::And
+            | Funct::Nor
+            | Funct::Or
+            | Funct::Slt
+            | Funct::Sltu
+            | Funct::Sub
+            | Funct::Subu
+            | Funct::Div
+            | Funct::Divu
+            | Funct::Mult
+            | Funct::Multu
+            | Funct::Sra => {
+                str.push_str(&self.rt.to_string());
+                str.push(' ');
+            }
+            _ => (),
+        }
+        match self.funct {
+            Funct::Add
+            | Funct::Addu
+            | Funct::And
+            | Funct::Nor
+            | Funct::Or
+            | Funct::Slt
+            | Funct::Sltu
+            | Funct::Sll
+            | Funct::Srl
+            | Funct::Sub
+            | Funct::Subu
+            | Funct::Mfhi
+            | Funct::Mflo
+            | Funct::Sra => {
+                str.push_str(&self.rd.to_string());
+                str.push(' ');
+            }
+            _ => (),
+        }
         match self.funct {
             Funct::Sll | Funct::Srl | Funct::Sra => str.push_str(&self.shamt.to_string()),
             _ => (),
@@ -296,10 +353,11 @@ impl Instruction for IFormat {
 
         if let Some(label) = &self.label {
             str.push_str(label);
+            str.push(':');
         }
         str.push('\t');
         match self.opcode {
-            OpCode::Addi => str.push_str("addi"),
+            OpCode::Addi => str.push_str("addi "),
             OpCode::Addiu => str.push_str("addiu "),
             OpCode::Andi => str.push_str("andi "),
             OpCode::Beq => str.push_str("beq "),
@@ -316,17 +374,58 @@ impl Instruction for IFormat {
             OpCode::Sw => str.push_str("sw "),
             _ => panic!("no way"),
         }
-        str.push_str(&self.rs.to_string());
-        str.push(' ');
-        str.push_str(&self.rt.to_string());
-        str.push(' ');
-        match &self.immediate {
-            ImmediateOrLabel::Immediate(immediate) => {
-                str.push_str(&immediate.to_string());
+        match self.opcode {
+            OpCode::Addi
+            | OpCode::Addiu
+            | OpCode::Andi
+            | OpCode::Beq
+            | OpCode::Bne
+            | OpCode::Ori
+            | OpCode::Slti
+            | OpCode::Sltiu => {
+                str.push_str(&self.rs.to_string());
+                str.push(' ');
             }
-            ImmediateOrLabel::Label(label) => {
-                str.push_str(label);
+            _ => (),
+        }
+        match self.opcode {
+            OpCode::Addi
+            | OpCode::Addiu
+            | OpCode::Andi
+            | OpCode::Beq
+            | OpCode::Bne
+            | OpCode::Lbu
+            | OpCode::Lhu
+            | OpCode::Lui
+            | OpCode::Lw
+            | OpCode::Ori
+            | OpCode::Slti
+            | OpCode::Sltiu
+            | OpCode::Sb
+            | OpCode::Sh
+            | OpCode::Sw => {
+                str.push_str(&self.rt.to_string());
+                str.push(' ');
             }
+            _ => (),
+        }
+        match self.opcode {
+            OpCode::Lbu | OpCode::Lhu | OpCode::Lw | OpCode::Sb | OpCode::Sh | OpCode::Sw => {
+                if let ImmediateOrLabel::Immediate(immediate) = self.immediate {
+                    str.push_str(&immediate.to_string());
+                }
+                str.push('(');
+                str.push_str(&self.rs.to_string());
+                str.push(')');
+            }
+            _ => match &self.immediate {
+                ImmediateOrLabel::Immediate(immediate) => {
+                    str.push_str(&immediate.to_string());
+                }
+                ImmediateOrLabel::Label(label) => {
+                    str.push_str(label);
+                }
+            },
         }
 
         str
@@ -413,6 +512,7 @@ impl Instruction for JFormat {
 
         if let Some(label) = &self.label {
             str.push_str(label);
+            str.push(':');
         }
         str.push('\t');
         match self.opcode {
