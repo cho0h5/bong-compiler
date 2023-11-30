@@ -1,4 +1,5 @@
 mod code_generator;
+mod instruction;
 mod lexer;
 mod parser;
 mod symbol_table;
@@ -7,6 +8,7 @@ use std::env;
 use std::fs;
 use std::process;
 
+use code_generator::generate_code;
 use lexer::UnknownTokenError;
 use parser::ParsingError;
 use symbol_table::generate_symbol_table;
@@ -66,8 +68,12 @@ fn main() {
     println!("Symbol table:\n{}\n", symbol_table);
     println!("Parse tree:\n{}\n", tree);
 
-    // let assemply_code = generate_code(&tree, &symbol_table);
+    let assemply_code = generate_code(&tree, &symbol_table);
     print!("\x1b[32m[6/6]\x1b[37m ");
     println!("Generated code:");
+    // TODO debug
+    for line in assemply_code {
+        println!("{:?}", line);
+    }
     // println!("Generated code:\n{}", assemply_code);
 }

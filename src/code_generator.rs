@@ -1,5 +1,8 @@
+use crate::instruction::*;
 use crate::parser::formatting::Tree;
 use crate::parser::Node;
 use crate::{lexer::*, symbol_table::*};
 
-pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) {}
+pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Instruction>> {
+    vec![]
+}
