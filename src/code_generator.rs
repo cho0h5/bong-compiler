@@ -6,16 +6,14 @@ use crate::parser::Node;
 use crate::{lexer::*, symbol_table::*};
 
 pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Instruction>> {
-    let mut generated_code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
-        OpCode::Jal,
-        "bong".to_string(),
-    ))];
-    generated_code.extend(generate_exit());
-
-    generated_code.extend(generate_print_int());
+    let mut generated_code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(JFormat::new_label(OpCode::Jal, "bong".to_string())),
+        Box::new(JFormat::new_label(OpCode::Jump, "exit".to_string())),
+    ];
 
     traverse_tree(&mut generated_code, symbol_table, &tree.0);
-
+    generated_code.extend(generate_print_int());
+    generated_code.extend(generate_print_char());
     generated_code.extend(generate_exit());
 
     generated_code
@@ -29,6 +27,34 @@ fn generate_print_int() -> Vec<Box<dyn Instruction>> {
             RegisterName::Zero,
             RegisterName::V0,
             1,
+        )),
+        Box::new(RFormat::new(
+            Funct::Syscall,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            0,
+        )),
+        Box::new(RFormat::new(
+            Funct::Jr,
+            RegisterName::RA,
+            RegisterName::Zero,
+            RegisterName::Zero,
+            0,
+        )),
+    ];
+
+    code
+}
+
+fn generate_print_char() -> Vec<Box<dyn Instruction>> {
+    let code: Vec<Box<dyn Instruction>> = vec![
+        Box::new(IFormat::label_new(
+            "print_char",
+            OpCode::Addi,
+            RegisterName::Zero,
+            RegisterName::V0,
+            11,
         )),
         Box::new(RFormat::new(
             Funct::Syscall,
@@ -669,7 +695,6 @@ fn generate_primary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Ins
             if let Node::NonTerminal(Token::EXPRESSION_LIST, children3) = &children2[1] {
                 code.extend(generate_expression_list(children3, offset, &mut offsets));
             }
-            println!("no way {:?}", children[0]);
             let label: String = match &children[0] {
                 Node::NonTerminal(Token::PRIMARY_EXPR, children) => match &children[0] {
                     Node::NonTerminal(Token::OPERAND, children) => match &children[0] {
@@ -816,7 +841,6 @@ fn generate_expression_list(
             code.extend(generate_expression(children, offset));
         }
         if children.len() >= 3 {
-            println!("asdf");
             if let Node::NonTerminal(Token::EXPRESSION_LIST, children) = &children[2] {
                 code.extend(generate_expression_list(children, offset, offsets));
             }
