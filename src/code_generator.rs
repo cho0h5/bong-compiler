@@ -425,6 +425,25 @@ fn generate_relational_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn 
     let child_offset = *offset;
 
     match &children[0] {
+        Node::NonTerminal(Token::RELATIONAL_EXPR, children2) => {
+            code.extend(generate_relational_expr(children2, offset));
+
+            let child2_offset = *offset;
+            if let Node::NonTerminal(Token::ADDITIVE_EXPR, children) = &children[2] {
+                code.extend(generate_additive_expr(children, offset));
+            }
+            code.extend(generate_load_2children_to_t1_t2(
+                child_offset,
+                child2_offset,
+            ));
+
+            unimplemented!();
+            match children[1] {
+                // TODO bitwise or 말고 logical or로 바꿔야함
+                _ => panic!("no way"),
+            }
+            code.extend(generate_store_t1_to_offset(this_offset));
+        }
         Node::NonTerminal(Token::ADDITIVE_EXPR, children) => {
             code.extend(generate_additive_expr(children, offset));
             code.extend(generate_move(this_offset, child_offset));
@@ -442,6 +461,59 @@ fn generate_additive_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn In
     let child_offset = *offset;
 
     match &children[0] {
+        Node::NonTerminal(Token::ADDITIVE_EXPR, children2) => {
+            code.extend(generate_additive_expr(children2, offset));
+
+            let child2_offset = *offset;
+            if let Node::NonTerminal(Token::MULTIPLICATIVE_EXPR, children) = &children[2] {
+                code.extend(generate_multiplicative_expr(children, offset));
+            }
+            code.extend(generate_load_2children_to_t1_t2(
+                child_offset,
+                child2_offset,
+            ));
+
+            match children[1] {
+                Node::Terminal(Token::AddMinus(AddMinusOperator::Add)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Add,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::AddMinus(AddMinusOperator::Minus)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Sub,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::AddOp(AdditiveOperator::BitwiseOr)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Or,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::AddOp(AdditiveOperator::BitwiseAnd)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::And,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                _ => panic!("no way"),
+            }
+            code.extend(generate_store_t1_to_offset(this_offset));
+        }
         Node::NonTerminal(Token::MULTIPLICATIVE_EXPR, children) => {
             code.extend(generate_multiplicative_expr(children, offset));
             code.extend(generate_move(this_offset, child_offset));
@@ -459,6 +531,25 @@ fn generate_multiplicative_expr(children: &[Node], offset: &mut i16) -> Vec<Box<
     let child_offset = *offset;
 
     match &children[0] {
+        Node::NonTerminal(Token::MULTIPLICATIVE_EXPR, children2) => {
+            code.extend(generate_multiplicative_expr(children2, offset));
+
+            let child2_offset = *offset;
+            if let Node::NonTerminal(Token::UNARY_EXPR, children) = &children[2] {
+                code.extend(generate_unary_expr(children, offset));
+            }
+            code.extend(generate_load_2children_to_t1_t2(
+                child_offset,
+                child2_offset,
+            ));
+
+            unimplemented!();
+            match children[1] {
+                // TODO bitwise or 말고 logical or로 바꿔야함
+                _ => panic!("no way"),
+            }
+            code.extend(generate_store_t1_to_offset(this_offset));
+        }
         Node::NonTerminal(Token::UNARY_EXPR, children) => {
             code.extend(generate_unary_expr(children, offset));
             code.extend(generate_move(this_offset, child_offset));
@@ -476,6 +567,25 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
     let child_offset = *offset;
 
     match &children[0] {
+        Node::NonTerminal(Token::UNARY_EXPR, children2) => {
+            code.extend(generate_unary_expr(children2, offset));
+
+            let child2_offset = *offset;
+            if let Node::NonTerminal(Token::PRIMARY_EXPR, children) = &children[2] {
+                code.extend(generate_primary_expr(children, offset));
+            }
+            code.extend(generate_load_2children_to_t1_t2(
+                child_offset,
+                child2_offset,
+            ));
+
+            unimplemented!();
+            match children[1] {
+                // TODO bitwise or 말고 logical or로 바꿔야함
+                _ => panic!("no way"),
+            }
+            code.extend(generate_store_t1_to_offset(this_offset));
+        }
         Node::NonTerminal(Token::PRIMARY_EXPR, children) => {
             code.extend(generate_primary_expr(children, offset));
             code.extend(generate_move(this_offset, child_offset));
