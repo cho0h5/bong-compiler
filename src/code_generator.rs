@@ -32,6 +32,7 @@ fn traverse_tree(
 
 fn traverse_debug(node: &Node) {
     match node {
+        Node::NonTerminal(Token::PARAMETERS, _) => (),
         Node::Terminal(token) => {
             println!("{:?}", token)
         }
@@ -63,9 +64,81 @@ fn generate_function_decl(
         -func_size,
     )));
 
+    if let Node::NonTerminal(Token::PARAMETERS, children) = &children[2] {
+        code.extend(generate_parameters(symbol_table, children));
+    }
+
     for child in children {
         traverse_debug(child);
     }
+
+    code.push(Box::new(RFormat::new(
+        Funct::Jr,
+        RegisterName::RA,
+        RegisterName::Zero,
+        RegisterName::Zero,
+        0,
+    )));
+
+    code
+}
+
+fn generate_parameters(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    if let Node::NonTerminal(Token::PARAMETER_LIST, children) = &children[1] {
+        code.extend(generate_parameter_list(symbol_table, children, 0));
+    }
+
+    code
+}
+fn generate_parameter_list(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+    count: i16,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    if !children.is_empty() {
+        if let Node::NonTerminal(Token::PARAMETER_DECL, children) = &children[0] {
+            code.extend(generate_parameter_decl(symbol_table, children, count));
+        }
+        if children.len() >= 3 {
+            if let Node::NonTerminal(Token::PARAMETER_LIST, children) = &children[2] {
+                code.extend(generate_parameter_list(symbol_table, children, count + 1));
+            }
+        }
+    }
+    code
+}
+
+fn generate_parameter_decl(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+    count: i16,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    let source_register = match count {
+        0 => RegisterName::A0,
+        1 => RegisterName::A1,
+        2 => RegisterName::A2,
+        3 => RegisterName::A3,
+        _ => panic!(
+            "function parameter must be less than 4 (current: {})",
+            count
+        ),
+    };
+    let destination_memory_offset = -(4 * count);
+
+    code.push(Box::new(IFormat::new(
+        OpCode::Sw,
+        source_register,
+        RegisterName::SP,
+        destination_memory_offset,
+    )));
 
     code
 }
