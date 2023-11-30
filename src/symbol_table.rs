@@ -18,6 +18,17 @@ enum SymbolType {
 
 pub struct SymbolTable(Vec<SymbolTableElement>);
 
+impl SymbolTable {
+    pub fn get_function_size(&self, name: &str) -> u32 {
+        for element in &self.0 {
+            if element.scope.is_empty() && element.identifier == name {
+                return element.size;
+            }
+        }
+        0
+    }
+}
+
 impl std::fmt::Display for SymbolTable {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         for e in &self.0 {

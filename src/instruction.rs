@@ -114,8 +114,8 @@ impl RFormat {
             funct,
         }
     }
-    pub fn lebel_new(
-        label: String,
+    pub fn label_new(
+        label: &str,
         funct: Funct,
         rs: RegisterName,
         rt: RegisterName,
@@ -123,7 +123,7 @@ impl RFormat {
         shamt: u8,
     ) -> RFormat {
         RFormat {
-            label: Some(label),
+            label: Some(label.to_string()),
             rs,
             rt,
             rd,
@@ -187,14 +187,14 @@ impl IFormat {
     }
 
     pub fn label_new(
-        label: String,
+        label: &str,
         opcode: OpCode,
         rs: RegisterName,
         rt: RegisterName,
         immediate: i16,
     ) -> IFormat {
         IFormat {
-            label: Some(label),
+            label: Some(label.to_string()),
             opcode,
             rs,
             rt,
@@ -203,14 +203,14 @@ impl IFormat {
     }
 
     pub fn label_new_label(
-        label: String,
+        label: &str,
         opcode: OpCode,
         rs: RegisterName,
         rt: RegisterName,
         target_label: String,
     ) -> IFormat {
         IFormat {
-            label: Some(label),
+            label: Some(label.to_string()),
             opcode,
             rs,
             rt,
@@ -282,17 +282,17 @@ impl JFormat {
         }
     }
 
-    pub fn label_new(label: String, opcode: OpCode, address: u32) -> JFormat {
+    pub fn label_new(label: &str, opcode: OpCode, address: u32) -> JFormat {
         JFormat {
-            label: Some(label),
+            label: Some(label.to_string()),
             opcode,
             address: AddressOrLabel::Address(address),
         }
     }
 
-    pub fn label_new_label(label: String, opcode: OpCode, target_label: String) -> JFormat {
+    pub fn label_new_label(label: &str, opcode: OpCode, target_label: String) -> JFormat {
         JFormat {
-            label: Some(label),
+            label: Some(label.to_string()),
             opcode,
             address: AddressOrLabel::Label(target_label),
         }
