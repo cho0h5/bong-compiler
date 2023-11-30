@@ -1,4 +1,4 @@
-# bong Compiler
+# bong-lang Compiler
 
 ## Grammer
 
