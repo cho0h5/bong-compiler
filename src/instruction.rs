@@ -88,6 +88,7 @@ pub enum Funct {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct RFormat {
+    label: Option<String>,
     rs: RegisterName,
     rt: RegisterName,
     rd: RegisterName,
@@ -105,6 +106,24 @@ impl RFormat {
         shamt: u8,
     ) -> RFormat {
         RFormat {
+            label: None,
+            rs,
+            rt,
+            rd,
+            shamt,
+            funct,
+        }
+    }
+    pub fn lebel_new(
+        label: String,
+        funct: Funct,
+        rs: RegisterName,
+        rt: RegisterName,
+        rd: RegisterName,
+        shamt: u8,
+    ) -> RFormat {
+        RFormat {
+            label: Some(label),
             rs,
             rt,
             rd,
@@ -131,6 +150,7 @@ impl Instruction for RFormat {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct IFormat {
+    label: Option<String>,
     opcode: OpCode,
     rs: RegisterName,
     rt: RegisterName,
@@ -148,6 +168,7 @@ enum ImmediateOrLabel {
 impl IFormat {
     pub fn new(opcode: OpCode, rs: RegisterName, rt: RegisterName, immediate: i16) -> IFormat {
         IFormat {
+            label: None,
             opcode,
             rs,
             rt,
@@ -157,10 +178,43 @@ impl IFormat {
 
     pub fn new_label(opcode: OpCode, rs: RegisterName, rt: RegisterName, label: String) -> IFormat {
         IFormat {
+            label: None,
             opcode,
             rs,
             rt,
             immediate: ImmediateOrLabel::Label(label),
+        }
+    }
+
+    pub fn label_new(
+        label: String,
+        opcode: OpCode,
+        rs: RegisterName,
+        rt: RegisterName,
+        immediate: i16,
+    ) -> IFormat {
+        IFormat {
+            label: Some(label),
+            opcode,
+            rs,
+            rt,
+            immediate: ImmediateOrLabel::Immediate(immediate),
+        }
+    }
+
+    pub fn label_new_label(
+        label: String,
+        opcode: OpCode,
+        rs: RegisterName,
+        rt: RegisterName,
+        target_label: String,
+    ) -> IFormat {
+        IFormat {
+            label: Some(label),
+            opcode,
+            rs,
+            rt,
+            immediate: ImmediateOrLabel::Label(target_label),
         }
     }
 }
@@ -198,6 +252,7 @@ impl Instruction for IFormat {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct JFormat {
+    label: Option<String>,
     opcode: OpCode,
     address: AddressOrLabel,
 }
@@ -213,6 +268,7 @@ enum AddressOrLabel {
 impl JFormat {
     pub fn new(opcode: OpCode, address: u32) -> JFormat {
         JFormat {
+            label: None,
             opcode,
             address: AddressOrLabel::Address(address),
         }
@@ -220,8 +276,25 @@ impl JFormat {
 
     pub fn new_label(opcode: OpCode, label: String) -> JFormat {
         JFormat {
+            label: None,
             opcode,
             address: AddressOrLabel::Label(label),
+        }
+    }
+
+    pub fn label_new(label: String, opcode: OpCode, address: u32) -> JFormat {
+        JFormat {
+            label: Some(label),
+            opcode,
+            address: AddressOrLabel::Address(address),
+        }
+    }
+
+    pub fn label_new_label(label: String, opcode: OpCode, target_label: String) -> JFormat {
+        JFormat {
+            label: Some(label),
+            opcode,
+            address: AddressOrLabel::Label(target_label),
         }
     }
 }
