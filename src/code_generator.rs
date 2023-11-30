@@ -47,7 +47,7 @@ fn traverse_debug(node: &Node) {
 
 fn generate_function_decl(
     symbol_table: &SymbolTable,
-    children: &Vec<Node>,
+    children: &[Node],
 ) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
     let func_name = match &children[1] {
@@ -68,9 +68,16 @@ fn generate_function_decl(
         code.extend(generate_parameters(children));
     }
 
-    for child in children {
-        traverse_debug(child);
+    if let Node::NonTerminal(Token::BLOCK, children) = &children[3] {
+        code.extend(generate_block(symbol_table, children));
     }
+
+    code.push(Box::new(IFormat::new(
+        OpCode::Addi,
+        RegisterName::SP,
+        RegisterName::SP,
+        func_size,
+    )));
 
     code.push(Box::new(RFormat::new(
         Funct::Jr,
@@ -128,6 +135,160 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
         RegisterName::SP,
         destination_memory_offset,
     )));
+
+    code
+}
+
+fn generate_block(symbol_table: &SymbolTable, children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[1] {
+        code.extend(generate_statement_list(symbol_table, children));
+    }
+
+    code
+}
+
+fn generate_statement_list(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    if !children.is_empty() {
+        if let Node::NonTerminal(Token::STATEMENT, children) = &children[0] {
+            code.extend(generate_statement(symbol_table, children));
+        }
+
+        if children.len() >= 3 {
+            if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[2] {
+                code.extend(generate_statement_list(symbol_table, children));
+            }
+        }
+    }
+
+    code
+}
+
+fn generate_statement(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    match &children[0] {
+        Node::NonTerminal(Token::ASSIGNMENT, children) => {
+            code.extend(generate_assignment(symbol_table, children));
+        }
+        Node::NonTerminal(Token::VAR_DECL, _) => (),
+        Node::NonTerminal(Token::RETURN_STMT, children) => {
+            code.extend(generate_return_stmt(symbol_table, children));
+        }
+        Node::NonTerminal(Token::BREAK_STMT, children) => {
+            code.extend(generate_break_stmt(symbol_table, children));
+        }
+        Node::NonTerminal(Token::CONTINUE_STMT, children) => {
+            code.extend(generate_continue_stmt(symbol_table, children));
+        }
+        Node::NonTerminal(Token::IF_STMT, children) => {
+            code.extend(generate_if_stmt(symbol_table, children));
+        }
+        Node::NonTerminal(Token::WHILE_STMT, children) => {
+            code.extend(generate_while_stmt(symbol_table, children));
+        }
+        Node::NonTerminal(Token::EXPRESSION, children) => {
+            code.extend(generate_expression(symbol_table, children));
+        }
+        node => panic!("unvalid parse tree: {:?}", node),
+    }
+
+    code
+}
+
+fn generate_assignment(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_return_stmt(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_break_stmt(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_continue_stmt(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_if_stmt(symbol_table: &SymbolTable, children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_while_stmt(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
+
+    code
+}
+
+fn generate_expression(
+    symbol_table: &SymbolTable,
+    children: &Vec<Node>,
+) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+
+    for child in children {
+        traverse_debug(child);
+    }
 
     code
 }
