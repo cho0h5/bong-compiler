@@ -1099,30 +1099,67 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
     let child_offset = *offset;
 
     match &children[0] {
-        Node::NonTerminal(Token::UNARY_EXPR, children2) => {
-            code.extend(generate_unary_expr(children2, offset));
-
-            let child2_offset = *offset;
-            if let Node::NonTerminal(Token::PRIMARY_EXPR, children) = &children[2] {
-                code.extend(generate_primary_expr(children, offset));
-            }
-            code.extend(generate_load_2children_to_t1_t2(
-                child_offset,
-                child2_offset,
-            ));
-
-            unimplemented!();
-            match children[1] {
-                // TODO bitwise or 말고 logical or로 바꿔야함
-                _ => panic!("no way"),
-            }
-            code.extend(generate_store_t1_to_offset(this_offset));
-        }
         Node::NonTerminal(Token::PRIMARY_EXPR, children) => {
             code.extend(generate_primary_expr(children, offset));
             code.extend(generate_move(this_offset, child_offset));
         }
-        _ => (),
+        Node::Terminal(token) => {
+            if let Node::NonTerminal(Token::UNARY_EXPR, children2) = &children[1] {
+                code.extend(generate_unary_expr(children2, offset));
+            } else {
+                panic!("no way");
+            }
+            code.push(Box::new(IFormat::new(
+                OpCode::Lui,
+                RegisterName::Zero,
+                RegisterName::T0,
+                4096,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Lw,
+                RegisterName::T0,
+                RegisterName::T1,
+                child_offset,
+            )));
+
+            match token {
+                Token::UnaryOp(UnaryOperator::Not) => {
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        0,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Bne,
+                        RegisterName::T1,
+                        RegisterName::Zero,
+                        1,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        1,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Add,
+                        RegisterName::T3,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Token::UnaryOp(UnaryOperator::BitwiseNot) => {}
+                Token::Star => unimplemented!(),
+                Token::And => unimplemented!(),
+                Token::AddMinus(AddMinusOperator::Add) => {}
+                Token::AddMinus(AddMinusOperator::Minus) => {}
+                _ => panic!("no way"),
+            }
+            code.extend(generate_store_t1_to_offset(this_offset));
+        }
+        _ => panic!("no way"),
     }
 
     code

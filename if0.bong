@@ -1,10 +1,16 @@
 void bong() {
   int a;
   a = 0;
-  print_int(1 <= 2);
-  print_int(2 <= 2);
-  print_int(3 <= 2);
-  print_int(2 <= 1);
-  print_int(2 <= 2);
-  print_int(2 <= 3);
+  print_int(  1 == 2);
+  print_int(!(1 == 2));
+  print_int(  2 == 2);
+  print_int(!(2 == 2));
+  print_int(  3 == 2);
+  print_int(!(3 == 2));
+  print_int(  2 == 1);
+  print_int(!(2 == 1));
+  print_int(  2 == 2);
+  print_int(!(2 == 2));
+  print_int(  2 == 3);
+  print_int(!(2 == 3));
 }
