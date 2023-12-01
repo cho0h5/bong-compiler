@@ -1150,7 +1150,15 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
                         0,
                     )));
                 }
-                Token::UnaryOp(UnaryOperator::BitwiseNot) => {}
+                Token::UnaryOp(UnaryOperator::BitwiseNot) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Nor,
+                        RegisterName::T1,
+                        RegisterName::T1,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
                 Token::Star => unimplemented!(),
                 Token::And => unimplemented!(),
                 Token::AddMinus(AddMinusOperator::Add) => {}
