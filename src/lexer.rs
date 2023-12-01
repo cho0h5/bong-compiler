@@ -1,3 +1,4 @@
+use core::panic;
 use std::collections::VecDeque;
 
 use crate::parser::formatting::Tokens;
@@ -294,7 +295,17 @@ pub fn read_lexeme(contents: &str) -> Result<Tokens, UnknownTokenError> {
                         _ => panic!("lexer error"),
                     }
                 }
-                Token::IntLit(temp.chars().next().unwrap() as u32)
+                let c = temp.chars().next().unwrap();
+                if c != '\\' {
+                    Token::IntLit(c as u32)
+                } else {
+                    let c = temp.chars().nth(1).unwrap();
+                    match c {
+                        't' => Token::IntLit('\t' as u32),
+                        'n' => Token::IntLit('\n' as u32),
+                        _ => panic!("unhandled escape character: {}", c),
+                    }
+                }
             }
             Some(c) if c.is_numeric() => {
                 temp.clear();

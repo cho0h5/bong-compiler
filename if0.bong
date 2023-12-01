@@ -1,3 +1,10 @@
 void bong() {
   print_int(- 5 * 200);
+  print_char('\n');
+  print_char('h');
+  print_char('e');
+  print_char('l');
+  print_char('l');
+  print_char('o');
+  print_char('\n');
 }
