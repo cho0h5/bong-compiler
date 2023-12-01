@@ -51,10 +51,10 @@ Index -> lbracket Expression rbracket
 // MultiplicativeExpr -> MultiplicativeExpr star UnaryExpr
 // MultiplicativeExpr -> MultiplicativeExpr and UnaryExpr
 // MultiplicativeExpr -> UnaryExpr
-UnaryExpr -> unary_op UnaryExpr
+// UnaryExpr -> unary_op UnaryExpr
 UnaryExpr -> star UnaryExpr
 UnaryExpr -> and UnaryExpr
-UnaryExpr -> add_minus UnaryExpr
+// UnaryExpr -> add_minus UnaryExpr
 // UnaryExpr -> PrimaryExpr 
 
 // Statement -> Assignment
