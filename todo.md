@@ -43,19 +43,19 @@ Index -> lbracket Expression rbracket
 / LogicalExpr -> LogicalExpr log_op RelationalExpr
 / LogicalExpr -> RelationalExpr
 RelationalExpr -> RelationalExpr rel_op AdditiveExpr
-RelationalExpr -> AdditiveExpr
+// RelationalExpr -> AdditiveExpr
 // AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
 // AdditiveExpr -> AdditiveExpr add_minus MultiplicativeExpr
 // AdditiveExpr -> MultiplicativeExpr
-MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
-MultiplicativeExpr -> MultiplicativeExpr star UnaryExpr
-MultiplicativeExpr -> MultiplicativeExpr and UnaryExpr
-MultiplicativeExpr -> UnaryExpr
+/ MultiplicativeExpr -> MultiplicativeExpr mul_op UnaryExpr
+// MultiplicativeExpr -> MultiplicativeExpr star UnaryExpr
+// MultiplicativeExpr -> MultiplicativeExpr and UnaryExpr
+// MultiplicativeExpr -> UnaryExpr
 UnaryExpr -> unary_op UnaryExpr
 UnaryExpr -> star UnaryExpr
 UnaryExpr -> and UnaryExpr
 UnaryExpr -> add_minus UnaryExpr
-UnaryExpr -> PrimaryExpr 
+// UnaryExpr -> PrimaryExpr 
 
 // Statement -> Assignment
 // Statement -> VarDecl
