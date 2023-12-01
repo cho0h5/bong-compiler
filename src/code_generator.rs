@@ -284,12 +284,89 @@ fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruct
     code
 }
 
+//│       │       │   └── ASSIGNMENT
+//│       │       │       ├── EXPRESSION
+//│       │       │       │   └── LOGICAL_EXPR
+//│       │       │       │       └── RELATIONAL_EXPR
+//│       │       │       │           └── ADDITIVE_EXPR
+//│       │       │       │               └── MULTIPLICATIVE_EXPR
+//│       │       │       │                   └── UNARY_EXPR
+//│       │       │       │                       └── PRIMARY_EXPR
+//│       │       │       │                           └── OPERAND
+//│       │       │       │                               └── Identifier("a", Some(Offset(0)))
+//│       │       │       ├── AssignOp
+//│       │       │       └── EXPRESSION
 fn generate_assignment(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
-    for child in children {
-        traverse_debug(child);
+    // 변수 offset 가져오기
+    let var_offset = match &children[0] {
+        Node::NonTerminal(Token::EXPRESSION, children1) => match &children1[0] {
+            Node::NonTerminal(Token::LOGICAL_EXPR, children2) => match &children2[0] {
+                Node::NonTerminal(Token::RELATIONAL_EXPR, children3) => match &children3[0] {
+                    Node::NonTerminal(Token::ADDITIVE_EXPR, children4) => match &children4[0] {
+                        Node::NonTerminal(Token::MULTIPLICATIVE_EXPR, children5) => {
+                            match &children5[0] {
+                                Node::NonTerminal(Token::UNARY_EXPR, children6) => {
+                                    match &children6[0] {
+                                        Node::NonTerminal(Token::PRIMARY_EXPR, children7) => {
+                                            match &children7[0] {
+                                                Node::NonTerminal(Token::OPERAND, children8) => {
+                                                    match &children8[0] {
+                                                        Node::Terminal(Token::Identifier(
+                                                            _,
+                                                            Some(Address::Offset(offset)),
+                                                        )) => offset,
+                                                        _ => panic!("no way"),
+                                                    }
+                                                }
+                                                _ => panic!("no way"),
+                                            }
+                                        }
+                                        _ => panic!("no way"),
+                                    }
+                                }
+                                _ => panic!("no way"),
+                            }
+                        }
+                        _ => panic!("no way"),
+                    },
+                    _ => panic!("no way"),
+                },
+                _ => panic!("no way"),
+            },
+            _ => panic!("no way"),
+        },
+        _ => panic!("no way"),
+    };
+
+    // evaluate expression
+    let mut offset = 0;
+
+    if let Node::NonTerminal(Token::EXPRESSION, children) = &children[2] {
+        code.extend(generate_expression(children, &mut offset));
+    } else {
+        panic!("no way");
     }
+
+    code.push(Box::new(IFormat::new(
+        OpCode::Lui,
+        RegisterName::Zero,
+        RegisterName::T0,
+        4096,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Lw,
+        RegisterName::T0,
+        RegisterName::T1,
+        0,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Sw,
+        RegisterName::SP,
+        RegisterName::T1,
+        *var_offset as i16,
+    )));
 
     code
 }

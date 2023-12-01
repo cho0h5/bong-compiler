@@ -1,7 +1,5 @@
 void bong() {
-    print_int(foo() + 4);
-}
-
-void foo() {
-    return 4;
+  int a;
+  a = 42;
+  print_int(a);
 }
