@@ -1,0 +1,7 @@
+void foo(int a) {
+    print_int(a)
+}
+
+void bong() {
+    foo(3)
+}

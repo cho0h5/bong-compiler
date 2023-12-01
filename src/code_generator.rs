@@ -215,8 +215,8 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
 
     code.push(Box::new(IFormat::new(
         OpCode::Sw,
-        source_register,
         RegisterName::SP,
+        source_register,
         destination_memory_offset,
     )));
 
@@ -855,7 +855,7 @@ fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruct
     let this_offset = *offset;
     *offset += 4;
 
-    match children[0] {
+    match &children[0] {
         Node::Terminal(Token::StringLit(_)) => unimplemented!(),
         Node::Terminal(Token::IntLit(number)) => {
             code.push(Box::new(IFormat::new(
@@ -874,7 +874,7 @@ fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruct
                 OpCode::Ori,
                 RegisterName::T1,
                 RegisterName::T1,
-                number as i16,
+                *number as i16,
             )));
             code.push(Box::new(IFormat::new(
                 OpCode::Sw,
@@ -882,6 +882,30 @@ fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruct
                 RegisterName::T1,
                 this_offset,
             )));
+        }
+        Node::Terminal(Token::Identifier(_, address)) => {
+            if let Some(Address::Offset(address)) = address {
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lui,
+                    RegisterName::Zero,
+                    RegisterName::T0,
+                    4096,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Lw,
+                    RegisterName::SP,
+                    RegisterName::T1,
+                    *address as i16,
+                )));
+                code.push(Box::new(IFormat::new(
+                    OpCode::Sw,
+                    RegisterName::T0,
+                    RegisterName::T1,
+                    this_offset,
+                )));
+            } else {
+                panic!("no way");
+            }
         }
         _ => (),
     }
