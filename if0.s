@@ -68,7 +68,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
@@ -146,7 +147,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
@@ -224,7 +226,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
@@ -302,7 +305,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
@@ -380,7 +384,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
@@ -458,7 +463,8 @@ bong:	addi $sp $sp -4
 	lw $t1 44($t0)
 	lw $t2 68($t0)
 	addi $t3 $zero 0
-	bne $t2 $t1 1
+	slt $t1 $t1 $t2 
+	bne $zero $t1 1
 	addi $t3 $zero 1
 	add $t1 $t3 $zero 
 	lui $t0 4096
