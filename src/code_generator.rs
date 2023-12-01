@@ -834,7 +834,40 @@ fn generate_relational_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn 
                         0,
                     )));
                 }
-                Node::Terminal(Token::RelOp(RelativeOperator::LessEqual)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::LessEqual)) => {
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        0,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Slt,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        RegisterName::T1,
+                        0,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Bne,
+                        RegisterName::T1,
+                        RegisterName::Zero,
+                        1,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        1,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Add,
+                        RegisterName::T3,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
                 Node::Terminal(Token::RelOp(RelativeOperator::Greater)) => {
                     code.push(Box::new(RFormat::new(
                         Funct::Slt,
