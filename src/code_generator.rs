@@ -7,7 +7,7 @@ use crate::{lexer::*, symbol_table::*};
 
 pub fn generate_code(tree: &Tree, symbol_table: &SymbolTable) -> Vec<Box<dyn Instruction>> {
     let mut generated_code: Vec<Box<dyn Instruction>> = vec![
-        Box::new(JFormat::new_label(OpCode::Jal, "bong".to_string())),
+        Box::new(JFormat::new_label(OpCode::Jal, "main".to_string())),
         Box::new(JFormat::new_label(OpCode::Jump, "exit".to_string())),
     ];
 
