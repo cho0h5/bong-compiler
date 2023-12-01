@@ -42,7 +42,7 @@ Index -> lbracket Expression rbracket
 // Expression -> LogicalExpr
 / LogicalExpr -> LogicalExpr log_op RelationalExpr
 / LogicalExpr -> RelationalExpr
-RelationalExpr -> RelationalExpr rel_op AdditiveExpr
+// RelationalExpr -> RelationalExpr rel_op AdditiveExpr
 // RelationalExpr -> AdditiveExpr
 // AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
 // AdditiveExpr -> AdditiveExpr add_minus MultiplicativeExpr
