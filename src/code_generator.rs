@@ -153,7 +153,7 @@ fn generate_function_decl(
     }
 
     if let Node::NonTerminal(Token::BLOCK, children) = &children[3] {
-        code.extend(generate_block(children));
+        code.extend(generate_block(children, func_size));
     }
 
     code.push(Box::new(IFormat::new(
@@ -223,27 +223,27 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
     code
 }
 
-fn generate_block(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_block(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[1] {
-        code.extend(generate_statement_list(children));
+        code.extend(generate_statement_list(children, func_size));
     }
 
     code
 }
 
-fn generate_statement_list(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_statement_list(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     if !children.is_empty() {
         if let Node::NonTerminal(Token::STATEMENT, children) = &children[0] {
-            code.extend(generate_statement(children));
+            code.extend(generate_statement(children, func_size));
         }
 
         if children.len() >= 3 {
             if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[2] {
-                code.extend(generate_statement_list(children));
+                code.extend(generate_statement_list(children, func_size));
             }
         }
     }
@@ -251,7 +251,7 @@ fn generate_statement_list(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
     code
 }
 
-fn generate_statement(children: &[Node]) -> Vec<Box<dyn Instruction>> {
+fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     match &children[0] {
@@ -260,7 +260,7 @@ fn generate_statement(children: &[Node]) -> Vec<Box<dyn Instruction>> {
         }
         Node::NonTerminal(Token::VAR_DECL, _) => (),
         Node::NonTerminal(Token::RETURN_STMT, children) => {
-            code.extend(generate_return_stmt(children));
+            code.extend(generate_return_stmt(children, func_size));
         }
         Node::NonTerminal(Token::BREAK_STMT, children) => {
             code.extend(generate_break_stmt(children));
@@ -294,12 +294,49 @@ fn generate_assignment(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
     code
 }
 
-fn generate_return_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_return_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
+    let mut offset = 0;
 
-    for child in children {
-        traverse_debug(child);
+    if let Node::NonTerminal(Token::EXPRESSION, children) = &children[1] {
+        code.extend(generate_expression(children, &mut offset));
+    } else {
+        panic!("no way");
     }
+
+    code.push(Box::new(IFormat::new(
+        OpCode::Lui,
+        RegisterName::Zero,
+        RegisterName::T0,
+        4096,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Lw,
+        RegisterName::T0,
+        RegisterName::T1,
+        0,
+    )));
+    code.push(Box::new(RFormat::new(
+        Funct::Add,
+        RegisterName::T1,
+        RegisterName::Zero,
+        RegisterName::V0,
+        0,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Addi,
+        RegisterName::SP,
+        RegisterName::SP,
+        func_size,
+    )));
+
+    code.push(Box::new(RFormat::new(
+        Funct::Jr,
+        RegisterName::RA,
+        RegisterName::Zero,
+        RegisterName::Zero,
+        0,
+    )));
 
     code
 }
@@ -814,6 +851,20 @@ fn generate_primary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Ins
                 RegisterName::SP,
                 RegisterName::SP,
                 4,
+            )));
+
+            // 반환값
+            code.push(Box::new(IFormat::new(
+                OpCode::Lui,
+                RegisterName::Zero,
+                RegisterName::T0,
+                4096,
+            )));
+            code.push(Box::new(IFormat::new(
+                OpCode::Sw,
+                RegisterName::T0,
+                RegisterName::V0,
+                this_offset,
             )));
         }
     }

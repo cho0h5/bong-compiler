@@ -1,7 +1,7 @@
 void foo(int a, int b, int c, int d) {
     print_int(a);
     print_int(b);
-    print_int(0);
+    print_int(1 - 1 + 1 - 1 + 1 - 1);
     bar(c, d);
 }
 
