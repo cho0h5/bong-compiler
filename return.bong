@@ -1,5 +1,23 @@
+int one() {
+  return 1;
+}
+
+int double(int x) {
+  return x + x;
+}
+
 void bong() {
   int a;
-  a = 42;
+  a = 1;
+  print_int(a);
+  a = double(a);
+  print_int(a);
+  a = double(a);
+  print_int(a);
+  a = double(a);
+  print_int(a);
+  a = double(a);
+  print_int(a);
+  a = double(a);
   print_int(a);
 }

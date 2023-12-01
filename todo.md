@@ -66,7 +66,7 @@ UnaryExpr -> PrimaryExpr
 // Statement -> WhileStmt
 // Statement -> Expression
 
-Assignment -> Expression assign_op Expression
+// Assignment -> Expression assign_op Expression
 IfStmt -> if lparen Expression rparen Block
 WhileStmt -> while lparen Expression rparen Block
 // ReturnStmt -> return Expression
