@@ -110,7 +110,6 @@ while0:	add $t0 $t0 $zero
 	lui $t0 4096
 	lw $t1 4($t0)
 	sw $t1 0($t0)
-	j while0
 	lui $t0 4096
 	lw $t1 0($sp)
 	sw $t1 32($t0)

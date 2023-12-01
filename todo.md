@@ -26,7 +26,7 @@
 
 // Operand -> int_lit
 Operand -> string_lit
-Operand -> identifier
+// Operand -> identifier
 Operand -> lparen Expression rparen
 
 PrimaryExpr -> PrimaryExpr Index
@@ -34,14 +34,14 @@ PrimaryExpr -> PrimaryExpr Arguments
 // PrimaryExpr -> Operand
 
 Index -> lbracket Expression rbracket
-Arguments -> lparen ExpressionList rparen
-ExpressionList -> Expression comma ExpressionList
-ExpressionList -> Expression
-ExpressionList -> ''
+// Arguments -> lparen ExpressionList rparen
+// ExpressionList -> Expression comma ExpressionList
+// ExpressionList -> Expression
+// ExpressionList -> ''
 
-Expression -> LogicalExpr
-// LogicalExpr -> LogicalExpr log_op RelationalExpr
-// LogicalExpr -> RelationalExpr
+// Expression -> LogicalExpr
+/ LogicalExpr -> LogicalExpr log_op RelationalExpr
+/ LogicalExpr -> RelationalExpr
 RelationalExpr -> RelationalExpr rel_op AdditiveExpr
 RelationalExpr -> AdditiveExpr
 // AdditiveExpr -> AdditiveExpr add_op MultiplicativeExpr
