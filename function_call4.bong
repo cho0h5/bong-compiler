@@ -1,7 +1,8 @@
-void foo(int a) {
-    print_int(a)
+void foo(int a, int b) {
+    print_int(a);
+    print_int(b);
 }
 
 void bong() {
-    foo(3)
+    foo(3, 4)
 }

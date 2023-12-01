@@ -211,7 +211,7 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
             count
         ),
     };
-    let destination_memory_offset = -(4 * count);
+    let destination_memory_offset = 4 * count;
 
     code.push(Box::new(IFormat::new(
         OpCode::Sw,
