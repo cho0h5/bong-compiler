@@ -19,9 +19,14 @@ use symbol_table::generate_symbol_table;
 fn main() {
     let filename = match env::args().nth(1) {
         Some(filename) => {
-            print!("\x1b[32m[1/7]\x1b[37m ");
-            println!("File name: {}\n", filename);
-            filename
+            if check_file_extension(&filename) {
+                print!("\x1b[32m[1/7]\x1b[37m ");
+                println!("File name: {}\n", filename);
+                filename
+            } else {
+                println!("\x1b[31m[1/7] error\x1b[37m: file extension is not .bong");
+                process::exit(1);
+            }
         }
         None => {
             println!("\x1b[31m[1/7] error\x1b[37m: no input file");
@@ -75,12 +80,10 @@ fn main() {
     let assemply_code = generate_code(&tree, &symbol_table);
     print!("\x1b[32m[6/7]\x1b[37m ");
     println!("Generated code:");
-    // TODO debug
     for line in &assemply_code {
         println!("{}", line.to_string());
     }
-    println!("");
-    // println!("Generated code:\n{}", assemply_code);
+    println!();
 
     let mut target_filename = Path::new(&filename)
         .file_stem()
@@ -93,11 +96,19 @@ fn main() {
         print!("\x1b[32m[7/7]\x1b[37m ");
         println!("Writing code to {}...", target_filename);
         for line in &assemply_code {
-            file.write(line.to_string().as_bytes());
-            file.write(b"\n");
+            file.write(line.to_string().as_bytes()).ok();
+            file.write(b"\n").ok();
         }
     } else {
         println!("\x1b[31m[7/7] error\x1b[37m: file open error");
         process::exit(1);
     }
+}
+
+fn check_file_extension(filename: &str) -> bool {
+    let splited_str = filename.split('.').last();
+    if let Some(extension) = splited_str {
+        return extension == "bong";
+    }
+    false
 }
