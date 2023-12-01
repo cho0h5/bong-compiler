@@ -1,8 +1,13 @@
 void foo(int a, int b, int c, int d) {
     print_int(a);
     print_int(b);
-    print_int(c);
-    print_int(d);
+    print_int(0);
+    bar(c, d);
+}
+
+void bar(int x, int y) {
+    print_int(x);
+    print_int(y);
 }
 
 void bong() {
