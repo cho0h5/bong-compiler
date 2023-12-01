@@ -770,9 +770,21 @@ fn generate_relational_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn 
                 child2_offset,
             ));
 
-            unimplemented!();
             match children[1] {
-                // TODO bitwise or 말고 logical or로 바꿔야함
+                Node::Terminal(Token::RelOp(RelativeOperator::Equal)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::NotEqual)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::Less)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Slt,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::RelOp(RelativeOperator::LessEqual)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::Greater)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::GreaterEqual)) => {}
                 _ => panic!("no way"),
             }
             code.extend(generate_store_t1_to_offset(this_offset));
