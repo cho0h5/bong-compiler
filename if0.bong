@@ -1,0 +1,5 @@
+void bong() {
+  if (1) {
+      print_int(1);
+  };
+}

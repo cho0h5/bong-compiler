@@ -269,7 +269,7 @@ fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruct
             code.extend(generate_continue_stmt(children));
         }
         Node::NonTerminal(Token::IF_STMT, children) => {
-            code.extend(generate_if_stmt(children));
+            code.extend(generate_if_stmt(children, func_size));
         }
         Node::NonTerminal(Token::WHILE_STMT, children) => {
             code.extend(generate_while_stmt(children));
@@ -342,7 +342,6 @@ fn generate_assignment(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
 
     // evaluate expression
     let mut offset = 0;
-
     if let Node::NonTerminal(Token::EXPRESSION, children) = &children[2] {
         code.extend(generate_expression(children, &mut offset));
     } else {
@@ -438,12 +437,59 @@ fn generate_continue_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
     code
 }
 
-fn generate_if_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
-    for child in children {
-        traverse_debug(child);
+    let if_label = match &children[0] {
+        Node::Terminal(Token::If(label)) => label,
+        _ => panic!("no way: {:?}", children[0]),
+    };
+    let mut ifend_label = if_label.to_string();
+    ifend_label.push_str("end");
+
+    let mut offset = 0;
+    if let Node::NonTerminal(Token::EXPRESSION, children) = &children[2] {
+        code.extend(generate_expression(children, &mut offset));
+    } else {
+        panic!("no way");
     }
+    // expression 평가 결과를 T1으로 가져옴
+    code.push(Box::new(IFormat::new(
+        OpCode::Lui,
+        RegisterName::Zero,
+        RegisterName::T0,
+        4096,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Lw,
+        RegisterName::T0,
+        RegisterName::T1,
+        0,
+    )));
+
+    // beq
+    code.push(Box::new(IFormat::new_label(
+        OpCode::Beq,
+        RegisterName::T1,
+        RegisterName::Zero,
+        ifend_label.clone(),
+    )));
+
+    // block
+    if let Node::NonTerminal(Token::BLOCK, children) = &children[4] {
+        code.extend(generate_block(children, func_size));
+    } else {
+        panic!("no way");
+    }
+
+    code.push(Box::new(RFormat::label_new(
+        &ifend_label,
+        Funct::Add,
+        RegisterName::T0,
+        RegisterName::Zero,
+        RegisterName::T0,
+        0,
+    )));
 
     code
 }
