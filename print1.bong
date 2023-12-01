@@ -1,7 +1,0 @@
-void bong() {
-    print_int(1);
-    print_int(1 + 1);
-    print_int(1 + 1 + 1);
-    print_int(1 + 1 + 1 + 1);
-    print_int(1 + 1 + 1 + 1 + 1);
-}

@@ -1,8 +1,0 @@
-int fib (int n) {
-	int a;
-	a = 7 + 4;
-}
-
-void bong () {
-	fib(6);
-}
