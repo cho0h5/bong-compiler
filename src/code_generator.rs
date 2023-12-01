@@ -1,5 +1,4 @@
 use core::panic;
-use std::boxed;
 
 use crate::instruction::*;
 use crate::parser::formatting::Tree;
@@ -115,21 +114,6 @@ fn traverse_tree(
     }
 }
 
-fn traverse_debug(node: &Node) {
-    match node {
-        Node::NonTerminal(Token::PARAMETERS, _) => (),
-        Node::Terminal(token) => {
-            println!("{:?}", token)
-        }
-        Node::NonTerminal(token, children) => {
-            println!("{:?}", token);
-            for child in children {
-                traverse_debug(child);
-            }
-        }
-    }
-}
-
 fn generate_function_decl(
     symbol_table: &SymbolTable,
     children: &[Node],
@@ -225,7 +209,7 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
 }
 
 fn generate_block(
-    children: &Vec<Node>,
+    children: &[Node],
     func_size: i16,
     start_label: &str,
     end_label: &str,
@@ -293,11 +277,11 @@ fn generate_statement(
         Node::NonTerminal(Token::RETURN_STMT, children) => {
             code.extend(generate_return_stmt(children, func_size));
         }
-        Node::NonTerminal(Token::BREAK_STMT, children) => {
-            code.extend(generate_break_stmt(children, end_label));
+        Node::NonTerminal(Token::BREAK_STMT, _) => {
+            code.extend(generate_break_stmt(end_label));
         }
-        Node::NonTerminal(Token::CONTINUE_STMT, children) => {
-            code.extend(generate_continue_stmt(children, start_label));
+        Node::NonTerminal(Token::CONTINUE_STMT, _) => {
+            code.extend(generate_continue_stmt(start_label));
         }
         Node::NonTerminal(Token::IF_STMT, children) => {
             code.extend(generate_if_stmt(children, func_size));
@@ -315,7 +299,7 @@ fn generate_statement(
     code
 }
 
-fn generate_assignment(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_assignment(children: &[Node]) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     // 변수 offset 가져오기
@@ -436,23 +420,23 @@ fn generate_return_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Ins
     code
 }
 
-fn generate_break_stmt(children: &Vec<Node>, end_label: &str) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
+fn generate_break_stmt(end_label: &str) -> Vec<Box<dyn Instruction>> {
+    let code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
         OpCode::Jump,
         end_label.to_string(),
     ))];
     code
 }
 
-fn generate_continue_stmt(children: &Vec<Node>, start_label: &str) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
+fn generate_continue_stmt(start_label: &str) -> Vec<Box<dyn Instruction>> {
+    let code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
         OpCode::Jump,
         start_label.to_string(),
     ))];
     code
 }
 
-fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
+fn generate_if_stmt(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     let if_label = match &children[0] {
@@ -501,7 +485,7 @@ fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruc
 
     // block
     if let Node::NonTerminal(Token::BLOCK, children) = &children[4] {
-        code.extend(generate_block(children, func_size, &if_label, &ifend_label));
+        code.extend(generate_block(children, func_size, if_label, &ifend_label));
     } else {
         panic!("no way");
     }
@@ -518,7 +502,7 @@ fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruc
     code
 }
 
-fn generate_while_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
+fn generate_while_stmt(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     let while_label = match &children[0] {
@@ -570,7 +554,7 @@ fn generate_while_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Inst
         code.extend(generate_block(
             children,
             func_size,
-            &while_label,
+            while_label,
             &whileend_label,
         ));
     } else {
@@ -625,7 +609,7 @@ fn generate_expression(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
     code
 }
 
-fn generate_logical_expr(children: &[Node], mut offset: &mut i16) -> Vec<Box<dyn Instruction>> {
+fn generate_logical_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
     let this_offset = *offset;
     *offset += 4;
@@ -1346,7 +1330,6 @@ fn generate_expression_list(
     offsets: &mut Vec<i16>,
 ) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-    let this_offset = *offset;
     *offset += 4;
     let child_offset = *offset;
 
