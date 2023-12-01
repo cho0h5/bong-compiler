@@ -771,7 +771,33 @@ fn generate_relational_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn 
             ));
 
             match children[1] {
-                Node::Terminal(Token::RelOp(RelativeOperator::Equal)) => {}
+                Node::Terminal(Token::RelOp(RelativeOperator::Equal)) => {
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        0,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Bne,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        1,
+                    )));
+                    code.push(Box::new(IFormat::new(
+                        OpCode::Addi,
+                        RegisterName::Zero,
+                        RegisterName::T3,
+                        1,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Add,
+                        RegisterName::T3,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
                 Node::Terminal(Token::RelOp(RelativeOperator::NotEqual)) => {}
                 Node::Terminal(Token::RelOp(RelativeOperator::Less)) => {
                     code.push(Box::new(RFormat::new(

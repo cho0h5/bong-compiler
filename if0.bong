@@ -1,5 +1,5 @@
 void bong() {
-  if (1) {
-      print_int(1);
-  };
+  int a;
+  a = 0;
+  print_int(2 == 1);
 }

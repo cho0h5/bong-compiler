@@ -1,9 +1,9 @@
 	jal bong
 	j exit
-bong:	addi $sp $sp 0
+bong:	addi $sp $sp -4
 	lui $t0 4096
 	lui $t1 0
-	ori $t1 $t1 1
+	ori $t1 $t1 0
 	sw $t1 28($t0)
 	lui $t0 4096
 	lw $t1 28($t0)
@@ -28,10 +28,13 @@ bong:	addi $sp $sp 0
 	sw $t1 0($t0)
 	lui $t0 4096
 	lw $t1 0($t0)
-	beq $zero $t1 if0end
+	sw $t1 0($sp)
 	lui $t0 4096
 	lui $t1 0
-	ori $t1 $t1 1
+	ori $t1 $t1 2
+	sw $t1 64($t0)
+	lui $t0 4096
+	lw $t1 64($t0)
 	sw $t1 60($t0)
 	lui $t0 4096
 	lw $t1 60($t0)
@@ -46,7 +49,29 @@ bong:	addi $sp $sp 0
 	lw $t1 48($t0)
 	sw $t1 44($t0)
 	lui $t0 4096
+	lui $t1 0
+	ori $t1 $t1 1
+	sw $t1 84($t0)
+	lui $t0 4096
+	lw $t1 84($t0)
+	sw $t1 80($t0)
+	lui $t0 4096
+	lw $t1 80($t0)
+	sw $t1 76($t0)
+	lui $t0 4096
+	lw $t1 76($t0)
+	sw $t1 72($t0)
+	lui $t0 4096
+	lw $t1 72($t0)
+	sw $t1 68($t0)
+	lui $t0 4096
 	lw $t1 44($t0)
+	lw $t2 68($t0)
+	addi $t3 $zero 0
+	bne $t2 $t1 1
+	addi $t3 $zero 1
+	add $t1 $t3 $zero 
+	lui $t0 4096
 	sw $t1 40($t0)
 	lui $t0 4096
 	lw $t1 40($t0)
@@ -82,8 +107,7 @@ bong:	addi $sp $sp 0
 	lui $t0 4096
 	lw $t1 4($t0)
 	sw $t1 0($t0)
-if0end:	add $t0 $t0 $zero 
-	addi $sp $sp 0
+	addi $sp $sp 4
 	jr $ra 
 print_int:	addi $v0 $zero 1
 	syscall 
