@@ -1,0 +1,25 @@
+void print_ok(int n) {
+  print_char('o');
+  print_char('k');
+  print_char(' ');
+  print_int(n);
+  print_char('\n');
+}
+
+void main() {
+  int a;
+  a = 726;
+
+  if (a == 729) {
+    print_ok(729);
+  };
+  if (a == 728) {
+    print_ok(728);
+  };
+  if (a == 727) {
+    print_ok(727);
+  };
+  if (a == 726) {
+    print_ok(726);
+  };
+}

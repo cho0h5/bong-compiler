@@ -1,0 +1,22 @@
+void main() {
+  print_int(-1);
+  print_char('\n');
+
+  print_int(0);
+  print_char('\n');
+
+  print_int(1);
+  print_char('\n');
+
+  print_int(-10);
+  print_char('\n');
+
+  print_int(10);
+  print_char('\n');
+
+  print_int(2147483647);
+  print_char('\n');
+
+  print_int(-2147483648);
+  print_char('\n');
+}

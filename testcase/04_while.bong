@@ -1,0 +1,14 @@
+void main() {
+  int n;
+  n = 10;
+  int sum;
+  sum = 0;
+
+  while (n >= 0){
+    sum = sum + n;
+    n = n - 1;
+  };
+
+  print_int(sum);
+  print_char('\n');
+}

@@ -1,0 +1,37 @@
+void main() {
+  print_hello();
+
+  print_int(max(-5, 8));
+  print_char('\n');
+
+  int sum;
+  sum = sum_upto(100);
+  print_int(sum);
+  print_char('\n');
+}
+
+void print_hello() {
+  print_char('h');
+  print_char('e');
+  print_char('l');
+  print_char('l');
+  print_char('o');
+  print_char('\n');
+}
+
+int max(int x, int y) {
+  if (x > y) {
+    return x;
+  };
+  return y;
+}
+
+int sum_upto(int n) {
+  int sum;
+  sum = 0;
+  while (n >= 0) {
+    sum = sum + n;
+    n = n - 1;
+  };
+  return sum;
+}

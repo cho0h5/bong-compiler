@@ -1,0 +1,23 @@
+void main() {
+  int a;
+
+  a = 1 + 1;
+  print_int(a);
+  print_char('\n');
+
+  a = 4 * 4 + 3 * 3;
+  print_int(a);
+  print_char('\n');
+
+  a = (10 + 9 + 11) / 3;
+  print_int(a);
+  print_char('\n');
+
+  a = 11 / 3 + 11 % 3;
+  print_int(a);
+  print_char('\n');
+
+  a = 10 & 3;
+  print_int(a);
+  print_char('\n');
+}
