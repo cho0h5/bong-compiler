@@ -1,3 +1,3 @@
 void bong() {
-  print_int(~113125);
+  print_int(- 5 * 200);
 }

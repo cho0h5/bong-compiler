@@ -2,22 +2,39 @@
 	j exit
 bong:	addi $sp $sp 0
 	lui $t0 4096
-	lui $t1 1
-	ori $t1 $t1 -17947
+	lui $t1 0
+	ori $t1 $t1 5
+	sw $t1 68($t0)
+	lui $t0 4096
+	lw $t1 68($t0)
 	sw $t1 64($t0)
 	lui $t0 4096
 	lw $t1 64($t0)
 	sw $t1 60($t0)
 	lui $t0 4096
 	lw $t1 60($t0)
+	sub $t1 $zero $t1 
+	lui $t0 4096
 	sw $t1 56($t0)
 	lui $t0 4096
 	lw $t1 56($t0)
-	nor $t1 $t1 $t1 
-	lui $t0 4096
 	sw $t1 52($t0)
 	lui $t0 4096
+	lui $t1 0
+	ori $t1 $t1 200
+	sw $t1 80($t0)
+	lui $t0 4096
+	lw $t1 80($t0)
+	sw $t1 76($t0)
+	lui $t0 4096
+	lw $t1 76($t0)
+	sw $t1 72($t0)
+	lui $t0 4096
 	lw $t1 52($t0)
+	lw $t2 72($t0)
+	mult $t1 $t2 
+	mflo $t1 
+	lui $t0 4096
 	sw $t1 48($t0)
 	lui $t0 4096
 	lw $t1 48($t0)

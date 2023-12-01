@@ -1162,7 +1162,15 @@ fn generate_unary_expr(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instr
                 Token::Star => unimplemented!(),
                 Token::And => unimplemented!(),
                 Token::AddMinus(AddMinusOperator::Add) => {}
-                Token::AddMinus(AddMinusOperator::Minus) => {}
+                Token::AddMinus(AddMinusOperator::Minus) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Sub,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
                 _ => panic!("no way"),
             }
             code.extend(generate_store_t1_to_offset(this_offset));
