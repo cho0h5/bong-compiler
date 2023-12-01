@@ -1,4 +1,5 @@
 use core::panic;
+use std::boxed;
 
 use crate::instruction::*;
 use crate::parser::formatting::Tree;
@@ -875,9 +876,70 @@ fn generate_multiplicative_expr(children: &[Node], offset: &mut i16) -> Vec<Box<
                 child2_offset,
             ));
 
-            unimplemented!();
             match children[1] {
-                // TODO bitwise or 말고 logical or로 바꿔야함
+                Node::Terminal(Token::MulOp(MultiplicativeOperator::Div)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Div,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::Zero,
+                        0,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Mflo,
+                        RegisterName::Zero,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::MulOp(MultiplicativeOperator::Mod)) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Div,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::Zero,
+                        0,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Mflo,
+                        RegisterName::Zero,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::MulOp(MultiplicativeOperator::LeftShift)) => {
+                    panic!("shift is not implemented")
+                }
+                Node::Terminal(Token::MulOp(MultiplicativeOperator::RightShift)) => {
+                    panic!("shift is not implemented")
+                }
+                Node::Terminal(Token::Star) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::Mult,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::Zero,
+                        0,
+                    )));
+                    code.push(Box::new(RFormat::new(
+                        Funct::Mflo,
+                        RegisterName::Zero,
+                        RegisterName::Zero,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
+                Node::Terminal(Token::And) => {
+                    code.push(Box::new(RFormat::new(
+                        Funct::And,
+                        RegisterName::T1,
+                        RegisterName::T2,
+                        RegisterName::T1,
+                        0,
+                    )));
+                }
                 _ => panic!("no way"),
             }
             code.extend(generate_store_t1_to_offset(this_offset));
@@ -1116,6 +1178,7 @@ fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruct
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
     let this_offset = *offset;
     *offset += 4;
+    let child_offset = *offset;
 
     match &children[0] {
         Node::Terminal(Token::StringLit(_)) => unimplemented!(),
@@ -1169,7 +1232,13 @@ fn generate_operand(children: &[Node], offset: &mut i16) -> Vec<Box<dyn Instruct
                 panic!("no way");
             }
         }
-        _ => (),
+        Node::Terminal(Token::Lparen) => {
+            if let Node::NonTerminal(Token::EXPRESSION, children1) = &children[1] {
+                code.extend(generate_expression(children1, offset));
+                code.extend(generate_move(this_offset, child_offset));
+            }
+        }
+        _ => panic!("no way"),
     }
 
     code

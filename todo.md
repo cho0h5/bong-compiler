@@ -27,10 +27,10 @@
 // Operand -> int_lit
 Operand -> string_lit
 // Operand -> identifier
-Operand -> lparen Expression rparen
+// Operand -> lparen Expression rparen
 
 PrimaryExpr -> PrimaryExpr Index
-PrimaryExpr -> PrimaryExpr Arguments
+// PrimaryExpr -> PrimaryExpr Arguments
 // PrimaryExpr -> Operand
 
 Index -> lbracket Expression rbracket
