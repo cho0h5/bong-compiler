@@ -153,7 +153,7 @@ fn generate_function_decl(
     }
 
     if let Node::NonTerminal(Token::BLOCK, children) = &children[3] {
-        code.extend(generate_block(children, func_size));
+        code.extend(generate_block(children, func_size, "exit", "exit"));
     }
 
     code.push(Box::new(IFormat::new(
@@ -223,27 +223,52 @@ fn generate_parameter_decl(count: i16) -> Vec<Box<dyn Instruction>> {
     code
 }
 
-fn generate_block(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
+fn generate_block(
+    children: &Vec<Node>,
+    func_size: i16,
+    start_label: &str,
+    end_label: &str,
+) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[1] {
-        code.extend(generate_statement_list(children, func_size));
+        code.extend(generate_statement_list(
+            children,
+            func_size,
+            start_label,
+            end_label,
+        ));
     }
 
     code
 }
 
-fn generate_statement_list(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
+fn generate_statement_list(
+    children: &Vec<Node>,
+    func_size: i16,
+    start_label: &str,
+    end_label: &str,
+) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     if !children.is_empty() {
         if let Node::NonTerminal(Token::STATEMENT, children) = &children[0] {
-            code.extend(generate_statement(children, func_size));
+            code.extend(generate_statement(
+                children,
+                func_size,
+                start_label,
+                end_label,
+            ));
         }
 
         if children.len() >= 3 {
             if let Node::NonTerminal(Token::STATEMENT_LIST, children) = &children[2] {
-                code.extend(generate_statement_list(children, func_size));
+                code.extend(generate_statement_list(
+                    children,
+                    func_size,
+                    start_label,
+                    end_label,
+                ));
             }
         }
     }
@@ -251,7 +276,12 @@ fn generate_statement_list(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn 
     code
 }
 
-fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruction>> {
+fn generate_statement(
+    children: &[Node],
+    func_size: i16,
+    start_label: &str,
+    end_label: &str,
+) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
     match &children[0] {
@@ -263,16 +293,16 @@ fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruct
             code.extend(generate_return_stmt(children, func_size));
         }
         Node::NonTerminal(Token::BREAK_STMT, children) => {
-            code.extend(generate_break_stmt(children));
+            code.extend(generate_break_stmt(children, end_label));
         }
         Node::NonTerminal(Token::CONTINUE_STMT, children) => {
-            code.extend(generate_continue_stmt(children));
+            code.extend(generate_continue_stmt(children, start_label));
         }
         Node::NonTerminal(Token::IF_STMT, children) => {
             code.extend(generate_if_stmt(children, func_size));
         }
         Node::NonTerminal(Token::WHILE_STMT, children) => {
-            code.extend(generate_while_stmt(children));
+            code.extend(generate_while_stmt(children, func_size));
         }
         Node::NonTerminal(Token::EXPRESSION, children) => {
             let mut offset = 0;
@@ -284,18 +314,6 @@ fn generate_statement(children: &[Node], func_size: i16) -> Vec<Box<dyn Instruct
     code
 }
 
-//│       │       │   └── ASSIGNMENT
-//│       │       │       ├── EXPRESSION
-//│       │       │       │   └── LOGICAL_EXPR
-//│       │       │       │       └── RELATIONAL_EXPR
-//│       │       │       │           └── ADDITIVE_EXPR
-//│       │       │       │               └── MULTIPLICATIVE_EXPR
-//│       │       │       │                   └── UNARY_EXPR
-//│       │       │       │                       └── PRIMARY_EXPR
-//│       │       │       │                           └── OPERAND
-//│       │       │       │                               └── Identifier("a", Some(Offset(0)))
-//│       │       │       ├── AssignOp
-//│       │       │       └── EXPRESSION
 fn generate_assignment(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
@@ -417,23 +435,19 @@ fn generate_return_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Ins
     code
 }
 
-fn generate_break_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-
-    for child in children {
-        traverse_debug(child);
-    }
-
+fn generate_break_stmt(children: &Vec<Node>, end_label: &str) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
+        OpCode::Jump,
+        end_label.to_string(),
+    ))];
     code
 }
 
-fn generate_continue_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
-    let mut code: Vec<Box<dyn Instruction>> = Vec::new();
-
-    for child in children {
-        traverse_debug(child);
-    }
-
+fn generate_continue_stmt(children: &Vec<Node>, start_label: &str) -> Vec<Box<dyn Instruction>> {
+    let mut code: Vec<Box<dyn Instruction>> = vec![Box::new(JFormat::new_label(
+        OpCode::Jump,
+        start_label.to_string(),
+    ))];
     code
 }
 
@@ -446,6 +460,15 @@ fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruc
     };
     let mut ifend_label = if_label.to_string();
     ifend_label.push_str("end");
+
+    code.push(Box::new(RFormat::label_new(
+        if_label,
+        Funct::Add,
+        RegisterName::T0,
+        RegisterName::Zero,
+        RegisterName::T0,
+        0,
+    )));
 
     let mut offset = 0;
     if let Node::NonTerminal(Token::EXPRESSION, children) = &children[2] {
@@ -477,7 +500,7 @@ fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruc
 
     // block
     if let Node::NonTerminal(Token::BLOCK, children) = &children[4] {
-        code.extend(generate_block(children, func_size));
+        code.extend(generate_block(children, func_size, &if_label, &ifend_label));
     } else {
         panic!("no way");
     }
@@ -494,12 +517,77 @@ fn generate_if_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruc
     code
 }
 
-fn generate_while_stmt(children: &Vec<Node>) -> Vec<Box<dyn Instruction>> {
+fn generate_while_stmt(children: &Vec<Node>, func_size: i16) -> Vec<Box<dyn Instruction>> {
     let mut code: Vec<Box<dyn Instruction>> = Vec::new();
 
-    for child in children {
-        traverse_debug(child);
+    let while_label = match &children[0] {
+        Node::Terminal(Token::While(label)) => label,
+        _ => panic!("no way: {:?}", children[0]),
+    };
+    let mut whileend_label = while_label.to_string();
+    whileend_label.push_str("end");
+
+    code.push(Box::new(RFormat::label_new(
+        while_label,
+        Funct::Add,
+        RegisterName::T0,
+        RegisterName::Zero,
+        RegisterName::T0,
+        0,
+    )));
+
+    let mut offset = 0;
+    if let Node::NonTerminal(Token::EXPRESSION, children) = &children[2] {
+        code.extend(generate_expression(children, &mut offset));
+    } else {
+        panic!("no way");
     }
+
+    // expression 평가 결과를 T1으로 가져옴
+    code.push(Box::new(IFormat::new(
+        OpCode::Lui,
+        RegisterName::Zero,
+        RegisterName::T0,
+        4096,
+    )));
+    code.push(Box::new(IFormat::new(
+        OpCode::Lw,
+        RegisterName::T0,
+        RegisterName::T1,
+        0,
+    )));
+    // beq
+    code.push(Box::new(IFormat::new_label(
+        OpCode::Beq,
+        RegisterName::T1,
+        RegisterName::Zero,
+        whileend_label.clone(),
+    )));
+
+    // block
+    if let Node::NonTerminal(Token::BLOCK, children) = &children[4] {
+        code.extend(generate_block(
+            children,
+            func_size,
+            &while_label,
+            &whileend_label,
+        ));
+    } else {
+        panic!("no way");
+    }
+    code.push(Box::new(JFormat::new_label(
+        OpCode::Jump,
+        while_label.to_string(),
+    )));
+
+    code.push(Box::new(RFormat::label_new(
+        &whileend_label,
+        Funct::Add,
+        RegisterName::T0,
+        RegisterName::Zero,
+        RegisterName::T0,
+        0,
+    )));
 
     code
 }

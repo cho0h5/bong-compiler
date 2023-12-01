@@ -1,0 +1,11 @@
+void bong() {
+  int a;
+  a = 50;
+
+  while(a) {
+    print_int(1);
+      continue;
+    a = a - 1;
+  };
+  print_int(0);
+}
