@@ -1024,7 +1024,7 @@ fn generate_multiplicative_expr(children: &[Node], offset: &mut i16) -> Vec<Box<
                         0,
                     )));
                     code.push(Box::new(RFormat::new(
-                        Funct::Mflo,
+                        Funct::Mfhi,
                         RegisterName::Zero,
                         RegisterName::Zero,
                         RegisterName::T1,
