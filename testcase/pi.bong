@@ -1,0 +1,26 @@
+void main() {
+	int pi;
+	pi = 0;
+	int sign;
+	sign = 0;
+	int denominator;
+	denominator = 1;
+	int i;
+	i = 100000;
+
+	while (i >= 0) {
+		if (sign == 0) {
+			pi = pi + 1000000 / denominator;
+		};
+
+		if (sign == 1) {
+			pi = pi - 1000000 / denominator;
+		};
+
+		denominator = denominator + 2;
+		i = i - 1;
+		sign = 1 - sign;
+	};
+	print_int(pi * 4);
+	print_char('\n');
+}
