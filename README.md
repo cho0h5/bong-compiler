@@ -140,3 +140,10 @@ ContinueStmt -> continue
 ## Code
 - https://github.com/cho0h5/simple-java-parser
 - https://github.com/cho0h5/simple-parser
+
+## Authors
+| Name | Student No. |
+|---|---|
+| 이규성 | 20204946 |
+| 이병구 | 20203436 |
+| 조영호 | 20203458 |
