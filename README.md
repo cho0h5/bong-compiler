@@ -1,5 +1,24 @@
 # bong-lang Compiler
 
+# Build and Execute
+## Prerequirement
+- Rust (https://www.rust-lang.org/learn/get-started)
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+## Build
+```sh
+git clone https://github.com/cho0h5/bong-compiler.git
+cd bong-compiler
+cargo build --release
+mv target/release/bong-compiler .
+```
+## Execute
+```sh
+./bong-compiler testcase/fibonacci.bong
+```
+Then, you can generate fibonacci.s!
+
 ## Grammer
 
 ### Token
