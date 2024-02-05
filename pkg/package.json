@@ -1,0 +1,14 @@
+{
+  "name": "bong-compiler",
+  "version": "0.1.0",
+  "files": [
+    "bong_compiler_bg.wasm",
+    "bong_compiler.js",
+    "bong_compiler.d.ts"
+  ],
+  "module": "bong_compiler.js",
+  "types": "bong_compiler.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

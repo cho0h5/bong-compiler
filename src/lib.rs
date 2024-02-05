@@ -4,8 +4,6 @@ mod lexer;
 mod parser;
 mod symbol_table;
 
-use std::fs::File;
-use std::io::Write;
 use std::process;
 
 use code_generator::generate_code;
@@ -14,21 +12,6 @@ use parser::ParsingError;
 use symbol_table::generate_symbol_table;
 
 use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-extern {
-    pub fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    alert(&format!("Hello, {}!", name));
-}
-
-#[wasm_bindgen]
-pub fn add(a: i32, b: i32) -> i32 {
-    a + b
-}
 
 #[wasm_bindgen]
 pub fn compile(raw_contents: &str) -> String {
