@@ -8,7 +8,7 @@
 		<textarea id="code-input" rows="10" cols="30">void main() {}</textarea>
 		<div id="output"></div>
 		<script type="module">
-		import init, { greet, add, compile } from "./pkg/bong_compiler.js";
+		import init, { compile } from "./pkg/bong_compiler.js";
 		init().then(() => {
             const textarea = document.getElementById('code-input');
 			const outputDiv = document.getElementById('output');
