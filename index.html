@@ -5,11 +5,28 @@
 		<title>hello-wasm example</title>
 	</head>
 	<body>
+		<textarea id="code-input" rows="10" cols="30">void main() {}</textarea>
+		<div id="output"></div>
 		<script type="module">
 		import init, { greet, add, compile } from "./pkg/bong_compiler.js";
 		init().then(() => {
-			console.log(compile("void main() { print_int(4); print_int(2); }"));
-		});
+            const textarea = document.getElementById('code-input');
+			const outputDiv = document.getElementById('output');
+			try {
+                    const result = compile(textarea.value);
+                    outputDiv.innerText = result;
+                } catch (error) {
+                    outputDiv.innerText = "error";
+			}
+            textarea.addEventListener('input', () => {
+				try {
+                    const result = compile(textarea.value);
+                    outputDiv.innerText = result;
+                } catch (error) {
+                    outputDiv.innerText = "error";
+                }
+            });
+        });
 		</script>
 	</body>
 </html>
