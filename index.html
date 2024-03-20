@@ -5,7 +5,31 @@
 		<title>hello-wasm example</title>
 	</head>
 	<body>
-		<textarea id="code-input" rows="10" cols="30">void main() {}</textarea>
+		<textarea id="code-input" rows="10" cols="30">void main() {
+  int i;
+  i = 0;
+  while (i <= 10) {
+    print_int(fibonacci(i));
+    print_char('\n');
+    i = i + 1;
+  };
+}
+
+int fibonacci(int n) {
+  if (n <= 0) {
+    return 0;
+  };
+  if (n == 1) {
+    return 1;
+  };
+
+  int fib2;
+  fib2 = fibonacci(n - 2);
+  int fib1;
+  fib1 = fibonacci(n - 1);
+
+  return fib2 + fib1;
+}</textarea>
 		<div id="output"></div>
 		<script type="module">
 		import init, { compile } from "./pkg/bong_compiler.js";
@@ -23,7 +47,7 @@
                     const result = compile(textarea.value);
                     outputDiv.innerText = result;
                 } catch (error) {
-                    outputDiv.innerText = "error";
+                    outputDiv.innerText = "compile error";
                 }
             });
         });
