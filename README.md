@@ -3,6 +3,16 @@
 You can try demo [here](https://cho0h5.github.io/bong-compiler/)!  
 And test cases are in [testcase/](https://github.com/cho0h5/bong-compiler/tree/main/testcase)
 
+## Feature
+- variable
+- if statement
+- while statement
+- function
+
+## Known Bugs
+- It do not check type of variables and return value. So `void` and `int` type are considered same each other.
+- You can not evaluation expression and call function together (in one line). You must split them across different lines.
+
 # Build and Execute
 ## Prerequirement
 - Rust (https://www.rust-lang.org/learn/get-started)
