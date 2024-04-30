@@ -11,7 +11,7 @@ And test cases are in [testcase/](https://github.com/cho0h5/bong-compiler/tree/m
 
 ## Known Bugs
 - It do not check type of variables and return value. So `void` and `int` type are considered same each other.
-- You can not evaluation expression and call function together (in one line). You must split them across different lines.
+- You can not evaluate expression and call function together (in one line). You must split them across different lines.
 
 # Build and Execute
 ## Prerequirement
