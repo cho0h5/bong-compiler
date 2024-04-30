@@ -1,6 +1,7 @@
 # bong-lang Compiler
 ## Demo
-You can try demo [here](https://cho0h5.github.io/bong-compiler/)
+You can try demo [here](https://cho0h5.github.io/bong-compiler/)!  
+And test cases are in [testcase/](https://github.com/cho0h5/bong-compiler/tree/main/testcase)
 
 # Build and Execute
 ## Prerequirement
